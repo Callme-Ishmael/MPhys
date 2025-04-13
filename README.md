@@ -313,6 +313,37 @@ In addition to the wide range of internal BSM models it is possible to use most 
 > Negative potential consequences of an action.
 > 
 
+-------------------------------
+### Week 10 (31.03 - 6.04)
+
+Something that has been bothering me for a while but I had no time to address it is the skewed. Let's try to make sense of it. One way to do this is cross checking with what MadGraph generates for the same settings. 
+
+We use the fact that we do not shower with Herwig this time. 
+
+
+**1. Philosophy of MadGraph:**
+
+- MadGraph is primarily focused on generating **parton-level events** from **hard scatterings**.
+- It works with **on-shell particles** for final states.
+- You must **explicitly specify decays** in the process definition if you want the decays to be handled correctly.
+- MadGraph assumes **final states** are **stable** or at least **treated as stable** during the event generation.
+#### **Why MadGraph Doesn't Automatically Handle Decays:**
+
+- MadGraph performs **matrix element calculations** for the **hard scattering process** and not for the **decays**.
+- The decays must be **explicitly included in the process definition**, as they are treated as **subprocesses**.
+- It does **not handle decays on the fly** because that would **mix parton-level generation with hadronization**, which is against the modular philosophy of MadGraph.
+
+ **2. Philosophy of Herwig:**
+
+- Herwig is primarily a **Monte Carlo event generator** that handles both **hard scattering (like MadGraph)** and **full event simulation (including showers and hadronization)**.
+- It has **built-in decay tables** and **decay widths** from the **UFO model files**.
+- Herwig **automatically decays** any unstable particles it encounters during the event generation, unless explicitly told not to.
+
+**Why Herwig Handles Decays Differently:**
+- Herwig, through **UFO2Herwig**, imports all **interactions and decay widths** from the **UFO model file**.
+- Once the **Higgs production process** is defined, Herwig **automatically applies** the **decay branching ratios** based on the **decay width table**.
+- You don't need to specify **decay chains explicitly**. Herwig will decay **all unstable particles** unless explicitly prevented from doing so.
+  ![image](https://github.com/user-attachments/assets/aa06bd91-625b-4d9c-8a4f-d45a7abbea7f)
 
 
 -------------------------------
