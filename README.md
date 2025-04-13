@@ -311,3 +311,34 @@ In addition to the wide range of internal BSM models it is possible to use most 
 
 > [!CAUTION]
 > Negative potential consequences of an action.
+> 
+
+
+
+-------------------------------
+### Week 11 (7.04 - 13.04)
+
+#### 07.04.2025 — Scaled-Up Production & DAGMan Job Management
+
+We were given access to **8 bulks of 96 cores each** on the Noether cluster. This allowed us to parallelize large-scale event generation for our `pp → H → gg` process.
+
+To avoid cluster congestion and job losses due to time limits, we used **HTCondor’s DAGMan** system to control the submission of batches. Each DAG node manages a group of **26 subjobs**, corresponding to `(nstart, nstop)` ranges with `--sample` either `odd` or `even`.
+
+Each subjob runs a command of the form:
+`python3 manager_jobs_modified_96.py --nstart 0 --nstop 24 --sample even`
+
+[[manager_jobs_dag.py]]
+#### 09.04.2025 
+
+Persistent Monitoring (Experimental Idea):
+
+Tested a remote control method to monitor or trigger runs from outside Noether:
+1. Created a **GitHub Gist** with an executable bash snippet.
+2. Launched a **`tmux` session** on Noether containing:
+
+`while true; do   curl -s https://gist.githubusercontent.com/ana-gist-id/raw/script.sh | bash   sleep 60 done`
+
+This allowed for live script updates without re-login. **NOTE:** This approach was later abandoned due to security concerns, as flagged by Andy and others. [[09.04.2025 - email]]
+
+#### 13.04.2025
+All JOBS done and uploaded on drive (3B events for each sample - odd/even   pi/4, -pi/4).
