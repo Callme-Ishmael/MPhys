@@ -1,0 +1,23 @@
+
+> [!NOTE]
+> Hi both,  
+>   
+> I spoke to Valentina (in cc) today about the final steps for the project. She convinced me that GN2 is going to be implementable.  
+>   
+> To use GN2 you need a .h5 file. It seems at first sight** that we can produce this directly from a .csv file. This would mean outputting the information needed to a .csv from Rivet.  
+>   
+> ** Aside: Valentina is going to check whether her colleagues in Genoa have a direct .h5 writeri implemented in Rivet.  
+>   
+> (1) First test: write a .csv for the decay chain you have been analysing, i.e. H->b bbar, with b->gb and g-> q qbar [same for bbar decay]. This means 6 particles being written out to the final state and each particle has 5 pieces of information: E, px, py, pz, ID. Hence we get a .csv with 30 columns.  
+>   
+> (2) At this point you write the python code to convert the .csv to .h5  
+>   
+> (3) Then use GN2…..Valentina to send tutorial and publicly available code.  
+>   
+> (4) After this first test, you can [with time] extend the .csv to include more branchings. WE can discuss this at the point you get to (2) as this can be done in parallel with (2) and (3). The advantage is using more branching in the Lund Plane.  
+>   
+> Hope this is clear. Find me or Valwntina to discuss over the next day or so if needed.  
+>   
+> Cheers  
+>   
+> Andy
