@@ -324,7 +324,8 @@ First test: write a .csv for the decay chain you have been analysing, i.e. H->b 
 As a matter of fact. We have already done everything he asked. We’re at step 4
 
 Andy suggests contour plot to check 
-![image](https://github.com/user-attachments/assets/102e2e33-b1be-440f-a683-6a61fa97fea0)
+<img src="https://github.com/user-attachments/assets/102e2e33-b1be-440f-a683-6a61fa97fea0" width="100" height="100"/>
+
 
 ![image](https://github.com/user-attachments/assets/2a7ec977-1ac8-459a-b681-77429c8771b7)
 
@@ -381,6 +382,11 @@ dot -Tpng LHC-Matchbox-Plot-106.dot > plot.png
 
 -------------------------------
 ### Week 10 (31.03 - 6.04)
+
+#### 02.04.2025
+Karim changes the python analysis into a contour plot of the Asymmetry term. The stats are not the issue - we do not in fact see a 2sigma difference
+
+
 
 Something that has been bothering me for a while but I had no time to address it is the skewed. Let's try to make sense of it. One way to do this is cross checking with what MadGraph generates for the same settings. 
 
