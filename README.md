@@ -313,6 +313,72 @@ In addition to the wide range of internal BSM models it is possible to use most 
 > Negative potential consequences of an action.
 > 
 
+
+-------------------------------
+### Week 9 (24.03 - 30.03)
+
+Andy sends in [email](emails/26.03.2025.md) 
+how many events do we even have of this
+
+First test: write a .csv for the decay chain you have been analysing, i.e. H->b bbar, with b->gb and g-> q qbar [same for bbar decay].
+As a matter of fact. We have already done everything he asked. We’re at step 4
+
+Andy suggests contour plot to check 
+![image](https://github.com/user-attachments/assets/102e2e33-b1be-440f-a683-6a61fa97fea0)
+
+![image](https://github.com/user-attachments/assets/2a7ec977-1ac8-459a-b681-77429c8771b7)
+
+we need better stats 
+
+#### Re-alignment and Dataset Preparation for Gluon Splitting Study
+
+##### 25.03.2025 — Recalibrating Goals, Preparing Gluon Splitting Analysis
+
+- After reading Mike's feedback, we realised we had already progressed beyond his outlined steps.
+- I suggested we meet to realign our goals and focus on building the GNN pipeline with the remaining time.
+- Karim began writing a Rivet analysis to:
+    - Count gluons and quarks in the final state.
+    - Specifically trace decay chains: H → b b̄, then b → b g, and finally g → q q̄ or g → g g.
+- We clarified that g→gg is much more likely than g→qq̄, and that both types of events should be accepted.
+    
+
+##### 26.03.2025 — First Parquet → HDF5 Conversion, Rivet CSV Format
+
+- Reviewed our infrastructure: CSVs from Rivet output (initially Parquet) can be converted to HDF5.
+- Using DuckDB to handle large files and filter before writing.
+- Final CSV format began to take shape, recording:
+    - The **child b-quark** from b → b g (not the parent),
+    - Children of the gluon: q₁/q₂ and q₃/q₄, for each branch.
+- Removed redundant columns: gluon itself, Higgs children.
+- We decided to filter out events where both gluon branches don't produce at least **one valid split**, to reduce CSV size.
+- Began debugging why only ~44K out of 82K H→bb̄ events showed valid decay chains — suspected asymmetric showering.
+
+##### 27.03.2025 — Matching Analyses and Visual Debugging
+
+- Visualised suspect events using `pyhepmc` and `graphviz`. Inspected events 1, 2, 5, 6.
+- Karim confirmed that the Richardson routine matched the Rivet output exactly, with correct PID and momentum conservation.
+- Confirmed that **hadronisation being turned on** is the likely reason for getting more g→qq̄ events (~28% hit rate vs 0.015% without).
+- New filtering logic added in Rivet: remove all-zero rows, only write events where both b and b̄ split via b→b g, and the g splits.
+
+Herwig run structure for visualisation:
+
+```
+cd /Herwig/Generators
+set /Herwig/Analysis/Plot:EventNumber 106
+insert EventGenerator:AnalysisHandlers 0 /Herwig/Analysis/Plot
+Herwig run runfile.run -N100000000 -j16
+dot -Tpng LHC-Matchbox-Plot-106.dot > plot.png
+```
+
+##### 28.03.2025 — Full Integration of Rivet into Herwig
+
+- Karim managed to run **Rivet from inside Herwig**, on multiple cores, without producing `.hepmc` output.
+- Each job writes a single `.csv` file with Rivet output — massive performance gain.
+- Estimated: 100M events in ~2 hours on 16 cores.
+- This becomes our new strategy for handling large-scale analysis with minimal disk I/O.
+
+
+
 -------------------------------
 ### Week 10 (31.03 - 6.04)
 
