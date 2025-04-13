@@ -338,7 +338,7 @@ Tested a remote control method to monitor or trigger runs from outside Noether:
 
 `while true; do   curl -s https://gist.githubusercontent.com/ana-gist-id/raw/script.sh | bash   sleep 60 done`
 
-This allowed for live script updates without re-login. **NOTE:** This approach was later abandoned due to security concerns, as flagged by Andy and others. [[09.04.2025 - email]]
+This allowed for live script updates without re-login. **NOTE:** This approach was later abandoned due to security concerns, as flagged by Andy and others. [see emails](emails/09.04.2025.md)
 
 #### 13.04.2025
 All JOBS done and uploaded on drive (3B events for each sample - odd/even   pi/4, -pi/4).
