@@ -592,13 +592,9 @@ These are the theoretical quantities they aim to measure.
 ---
 
 In practice, they construct CP-odd observables like:
-\[
-\mathcal{E}_1 = \langle \hat{k}_t \cdot \hat{p}_{\ell^+}^* \rangle_{\mathcal{A}} + \langle \hat{k}_t \cdot \hat{p}_{\ell^-}^* \rangle_{\bar{\mathcal{A}}}
-\]
+\[\mathcal{E}_1 = \langle \hat{k}_t \cdot \hat{p}_{\ell^+}^* \rangle_{\mathcal{A}} + \langle \hat{k}_t \cdot \hat{p}_{\ell^-}^* \rangle_{\bar{\mathcal{A}}}\]
 and
-\[
-\mathcal{E}_2 = \langle \hat{k}_t \cdot (\hat{p}_{\ell^+}^* \times \hat{p}_{\bar{b}}^*) \rangle_{\mathcal{A}} - \langle \hat{k}_t \cdot (\hat{p}_{\ell^-}^* \times \hat{p}_b^*) \rangle_{\bar{\mathcal{A}}}
-\]
+\[\mathcal{E}_2 = \langle \hat{k}_t \cdot (\hat{p}_{\ell^+}^* \times \hat{p}_{\bar{b}}^*) \rangle_{\mathcal{A}} - \langle \hat{k}_t \cdot (\hat{p}_{\ell^-}^* \times \hat{p}_b^*) \rangle_{\bar{\mathcal{A}}}\]
 These are **averages over events**, and that’s the key point — spin correlations aren’t extracted from a single decay but from statistical asymmetries over many events. \( \mathcal{E}_2 \), in particular, is sensitive to spin-spin interference and is strongly CP-odd.
 
 ---
@@ -622,6 +618,13 @@ This procedure is entirely at truth level and gives us a well-defined way to ver
   ![image](https://github.com/user-attachments/assets/31b31e17-a126-489a-9efa-16e0bf7024a9)
 
 ---
+~ reference rivet analysis LAMBDAB, HIGG2BB
+
+![image](https://github.com/user-attachments/assets/a93604af-150a-4260-aaff-9d1226ea7fef)![image](https://github.com/user-attachments/assets/a8b6759e-4578-4178-a239-126d4b7fd4aa)
+![image](https://github.com/user-attachments/assets/21dbe7e6-b539-440d-b98d-85f6a606273d)![image](https://github.com/user-attachments/assets/1e1273f7-192c-4a95-8f32-8b43044068c3)
+
+
+
 
 ### Outstanding Issues
 
@@ -631,6 +634,7 @@ This procedure is entirely at truth level and gives us a well-defined way to ver
 - **Christoph’s UFO model may be misconfigured.**  
   Approximately 17% of events show bottom-loop contributions, which should not be allowed by the model. This may be a limitation of the UFO → Herwig translation (e.g., via UFO2Herwig). Needs further inspection.
 
+issue with Higgs decay ~ reference HIGGS_DECAY_HISTO, HIGGS_2PLUS, HIGGS_DECAY_ALL
 ---
 
 ### Final Note
@@ -720,10 +724,15 @@ Reading about the general state of event generators made something clear:
 
 
 ![image](https://github.com/user-attachments/assets/e91bfd89-5559-43ff-9173-dd235835b79b)
+![image](https://github.com/user-attachments/assets/55db4483-acd8-47d0-a2ef-3d3a46a29b91)
+
 
 08.03.2025 - week 6 is ending shortly. At the moment we have trouble picking out why our branching ratios do not match the real world ones. As it has been proven difficult to force the specific decay of the Higgs in the input file - there should be no reason for the ratios to differ. But this could be specific to how Christoph's model is built. This needs to be verified using the SM model that Madgraph uses (CRT model was built on top of this one)
 
-The current focus is devising a sure-fire test for the activation of spin correlations. With several papers in mind:
+I'm trying out different models: see picture above. UFO2HERWIG and afterwards I look inside the anatomy of the event: ~reference HIGGS_DECAY_ALL
+
+
+The current focus is on devising a sure-fire test for the activation of spin correlations. With several papers in mind:
 
 - Berheuter:
 - Uzan:
@@ -769,6 +778,15 @@ H ----> g g -----> q q q' q'   (100K ---> 400 events) statistic can be forcefull
 interestingly enough they don claim any z cuts on this process - this clashes with the PanScales paper that recognises that z cuts should pe imposed on this one
 
 It is encouraged to do this one -- however our quarks are massive
+
+In PanScales: about the Richardson algorithm
+That algorithm continuously boosts between the lab frame and frames specific to each individual collinear splitting, where individual Collins-Knowles steps may be applied directly
+
+Finlly here is the way I understand it 
+
+![Drawing 2025-03-12 11 14 512 excalidraw (1)](https://github.com/user-attachments/assets/c08aa6e2-de0c-4aeb-9c71-19cdd30f3260)
+
+Karim implements this analysis I ask for in python: 
 
 
 -------------------------------
