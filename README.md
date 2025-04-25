@@ -455,6 +455,21 @@ Yes, b-hadrons are formed **after** the initial parton showering. The process is
 
 Paragraph on Anti -k
 
+-----------------------------------
+### How to make your own Rivet Analysis
+
+```bash
+mkdir ANALYSIS_X
+cd ANALYSIS_X
+rivet-mkanalysis ANALYSIS_X
+# Edit and work in the ANALYSIS_X.cc file
+rivet-build RivetANALYSIS_X.so ANALYSIS_X.cc
+export RIVET_ANALYSIS_PATH=$PWD
+rivet --analysis=ANALYSIS_X /data/LHC-PPZHbbee_odd.hepmc
+rivet-mkhtml /data/ANALYSIS_X/Rivet.yoda -o /data/ANALYSIS_X/html_plots
+```
+
+
 -------------------------------
 # Week 5 (24.02 - 2.03)
 
