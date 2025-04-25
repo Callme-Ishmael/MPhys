@@ -755,6 +755,7 @@ The current focus is on devising a sure-fire test for the activation of spin cor
 
 --------------------------------
 # Week 7 (10.03 - 16.03)
+## Deconstructing the Richardson and closely related PanScales paper: Spin Correlations 
 
 ## 1. Richardson & Webster, _“Spin Correlations in Parton Shower Simulations”_  
 *(Eur. Phys. J. C 80 (2020) 83, arXiv:1807.01955)*
@@ -771,9 +772,21 @@ The current focus is on devising a sure-fire test for the activation of spin cor
 
 ---
 
-Deconstructing the Richardson and closely related PanScales paper
+## 2. Karlberg _et al._, _“Spin correlations in final-state parton showers and jet observables”_  
+*(arXiv:2103.16526)*
 
-Detailed Theory Note: Spin Correlations in Richardson and PanScales
+| Aspect | Author’s construction |
+|--------|------------------------|
+| **Azimuth in a shower tree** | In the PanScales implementation each branching node holds a normalised cross-product **n̂** of daughter momenta. The azimuth of node _i_ is built recursively:<br>  ψ₀ = 0;<br>  ψᵢ = ψᵢ₋₁ + Δψ(i−1,i), where Δψ(i−1,i) is the signed angle between successive **n̂**’s. |
+| **Lund-declustered observables** | Embedded in a **Cambridge/Aachen Lund diagram**:<br>• _Primary_ splitting = hardest-kₜ declustering on the **primary** Lund plane with _z > z_cut_;<br>• _Secondary_ = hardest-kₜ on the **secondary** Lund plane of that primary, again with _z > z_cut_. |
+| **Core variables** | • **Δψ₁₂** = ψ(secondary) − ψ(primary) (intra-jet).<br>• **Δψ₁1′** = difference between the two primary splittings in opposite hemispheres (e.g. H → g g). |
+| **Fixed-order template** | In the strict collinear limit:<br>  dσ/dΔψ = a₀ [1 + A(z₁) B(z₂) cos (2 Δψ)] (Eq. 11)<br>They list analytic A,B for every flavour channel (Table 2). |
+| **Three-point EEEC** | As a complementary _z_-independent probe they adopt the **spin-sensitive 3-point energy–energy correlator**:<br>  (1/σ) d³Σ/dΔψ dθ_S dθ_L (Eq. 12)<br>Here Δψ is the angle between the _(ij)–k_ and _i–j_ planes, θ_S the soft opening, θ_L the larger opening. |
+| **Infra-red safety & cuts** | • _z_cut_ (usually 0.1) ensures IR safety of the Lund observable at all orders.<br>• They exploit freedom in z₁,z₂ cuts to **magnify** the modulation (cf. Table 3).<br>EEEC needs no _z_cut_ but its energy weighting suppresses extreme-z regions. |
+| **All-order validation** | The analytic cos(2Δψ) template survives single-log resummation; toy-shower and PanScales results agree to NLL accuracy (Figs. 17–18). |
+| **Design philosophy** | • Observable must be computable in fixed-order **and** resummed frameworks.<br>• Must separate flavour channels to avoid g→gg / g→qq̄ cancellations. |
+
+----------
 
 This week I focused on understanding in full detail the theoretical and algorithmic construction of spin correlations as implemented in the Herwig (Richardson) and PanScales frameworks.
 
@@ -834,7 +847,7 @@ Thus, both in Richardson and PanScales, spin correlations are not simply an "on/
 In our case, applying these methods to \( H \to gg \) or \( H \to b\bar{b} \), we must carefully account for the energy fractions of the subsequent splittings and their angular distributions, as spin correlations will be strongest only in specific regions of phase space.
 
 
-Finlly here is the way I understand it 
+Finlly here is the way I understand it: an ilustration of the steps Richardson takes
 
 ![Drawing 2025-03-12 11 14 512 excalidraw (1)](https://github.com/user-attachments/assets/c08aa6e2-de0c-4aeb-9c71-19cdd30f3260)
 
