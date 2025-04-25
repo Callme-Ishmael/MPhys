@@ -532,6 +532,78 @@ QCD background removal is tempting to do at truth level, but that’s not how re
   - Medium: 75 < pT^V < 150 GeV
 
 
+  ![image](https://github.com/user-attachments/assets/31b31e17-a126-489a-9efa-16e0bf7024a9)
+
+------------------------------
+### Week 6
+
+Attempt at SHERPA
+
+https://sherpa.hepforge.org/doc/SHERPA-MC-2.2.2.html
+
+- HADRONS++
+    
+    HADRONS++ is the module for simulating hadron and tau-lepton decays. The resulting decay products respect full spin correlations (if desired). Several matrix elements and form-factor models have been implemented, such as the Kühn-Santamaría model, form-factor parametrizations from Resonance Chiral Theory for the tau and form factors from heavy quark effective theory or light cone sum rules for hadron decays.
+    
+
+5.9.3 HARD_SPIN_CORRELATIONS
+
+Spin correlations between the hard scattering process and the following decay processes are enabled by default. If you want to disable them, e.g. for spin correlation studies, you can specify the option ‘HARD_SPIN_CORRELATIONS=0’.
+
+ Hadronization
+
+The hadronization setup is covered by the ‘(fragmentation)’ section of the steering file or the fragmentation data file ‘Fragmentation.dat’, respectively.
+
+It covers the fragmentation of partons into primordial hadrons as well as the decays of unstable hadrons into stable final states.
+
+Hadron decays
+
+The treatment of hadron and tau decays is specified by `DECAYMODEL`. Its allowed values are either the default choice ‘Hadrons’, which renders the HADRONS++ module responsible for performing the decays, or the hadron decays can be disabled with the option ‘Off’.
+
+HADRONS++ is the module within the Sherpa framework which is responsible for treating hadron and tau decays. It contains decay tables with branching ratios for approximately 2500 decay channels, of which many have their kinematics modelled according to a matrix element with corresponding form factors. Especially decays of the tau lepton and heavy mesons have form factor models similar to dedicated codes like Tauola [[Jad93](https://sherpa.hepforge.org/doc/SHERPA-MC-2.2.2.html#Jadach1993hs)] and EvtGen [[Lan01](https://sherpa.hepforge.org/doc/SHERPA-MC-2.2.2.html#Lange2001uf)].
+
+Some general switches which relate to hadron decays can be adjusted in the `(fragmentation)` section:
+
+- `DECAYPATH` The path to the parameter files for the hadron and tau decays (default: `Decaydata/`). It is important to note that the path has to be given relative to the current working directory. If it doesn’t exist, the default Decaydata directory (`<prefix>/share/SHERPA-MC/Decaydata`) will be used.
+- Hadron properties like mass, width, stable/unstable and active can be set in full analogy to the settings for fundamental particles in the `(model)` section (cf. [Models](https://sherpa.hepforge.org/doc/SHERPA-MC-2.2.2.html#Models)).
+- `SOFT_MASS_SMEARING = [0,1,2]` (default: 1) Determines whether particles entering the hadron decay event phase should be put off-shell according to their mass distribution. It is taken care that no decay mode is suppressed by a potentially too low mass. While HADRONS++ determines this dynamically from the chosen decay channel, for `Pythia` as hadron decay handler its `w-cut` parameter is employed. Choosing option 2 instead of 1 will only set unstable (decayed) particles off-shell, but leave stable particles on-shell.
+- `MAX_PROPER_LIFETIME = [mm]` Parameter for maximum proper lifetime (in mm) up to which particles are considered unstable. If specified, this will make long-living particles stable, even if they are set unstable by default or by the user.
+
+Many aspects of the above mentioned “Decaydata” can be adjusted. There exist three levels of data files, which are explained in the following sections. As with all other setup files, the user can either employ the default “Decaydata” in `<prefix>/share/SHERPA-MC/Decaydata`, or overwrite it (also selectively) by creating the appropriate files in the directory specified by `DECAYPATH`.
+
+
+#### 5.12.2.5 Further remarks
+
+> [!NOTE]
+> **Spin correlations:** a spin correlation algorithm is implemented. It can be switched on through the keyword ‘SOFT_SPIN_CORRELATIONS=1’ in the `(run)` section.
+> 
+> If spin correlations for tau leptons produced in the hard scattering process are supposed to be taken into account, one needs to specify ‘HARD_SPIN_CORRELATIONS=1’ as well. If using AMEGIC++ as ME generator, note that the Process libraries have to be re-created if this is changed.
+
+**Adding new channels:** if new channels are added to HADRONS++ (choosing isotropic decay kinematics) a new decay table must be defined and the corresponding hadron must be added to `HadronDecays.dat`. The decay table merely needs to consist of the outgoing particles and branching ratios, i.e. the last column (the one with the decay channel file name) can safely be dropped. By running Sherpa it will automatically produce the decay channel files and write their names in the decay table.
+
+|   |   |   |
+|---|---|---|
+|[5.12.1 Fragmentation](https://sherpa.hepforge.org/doc/SHERPA-MC-2.2.2.html#Fragmentation)||The fragmentation module, and its parameters.|
+|[5.12.2 Hadron decays](https://sherpa.hepforge.org/doc/SHERPA-MC-2.2.2.html#Hadron-decays)||The hadron decay module, and its parameters.|
+
+
+5.9.4 Spin_Correlations Spin correlations between the hard scattering process and the following decay processes are enabled by default. If you want to disable them, e.g. for spin correlation studies, you can specify the option Spin_Correlations: 0.
+
+
+HADRONS++ is the built-in module within the Sherpa framework which is responsible for treating hadron and tau decays. It contains decay tables with branching ratios for approximately 2500 decay channels, of which many have their kinematics modelled according to a matrix element with corresponding form factors. Especially decays of the tau lepton and heavy mesons have form factor models similar to dedicated codes like Tauola [JWDK93] and EvtGen [Lan01]. Its settings are also steered within the HADRON_DECAYS block as follows: • Mass_Smearing: [0,1,2] (default: 1) Determines whether particles entering the hadron decay event phase should be put off-shell according to their mass distribution. It is taken care that no decay mode is suppressed by a potentially too low mass. HADRONS++ determines this dynamically from the chosen decay channel. Choosing option 2 instead of 1 will only set unstable (decayed) particles off-shell, but leave stable particles on-shell. 96 Chapter 5. Parameters Sherpa Manual, Release 3.0.0 • Spin_Correlations: [0,1] (default: 0) A spin correlation algorithm is implemented and can be switched on with this setting. This might slow down event generation slightly.
+
+Looking at this paper: The state of current mc generators - it is clear. Herwig is the only collaboration to have ever implemented spin correlations inside the shower.
+
+![image](https://github.com/user-attachments/assets/e91bfd89-5559-43ff-9173-dd235835b79b)
+
+08.03.2025 - week 6 is ending shortly. At the moment we have trouble picking out why our branching ratios do not match the real world ones. As it has been proven difficult to force the specific decay of the Higgs in the input file - there should be no reason for the ratios to differ. But this could be specific to how Christoph's model is built. This needs to be verified using the SM model that Madgraph uses (CRT model was built on top of this one)
+
+The current focus is devising a sure-fire test for the activation of spin correlations. With several papers in mind:
+
+- Berheuter:
+- Uzan:
+- Richardson & Webster: 
+
 
 -------------------------------
 ### Week 9 (24.03 - 30.03)
