@@ -788,7 +788,6 @@ The current focus is on devising a sure-fire test for the activation of spin cor
 
 ----------
 
-## Week 7 – Detailed Theory Note: Spin Correlations in Richardson and PanScales
 
 This week I focused on understanding in full detail the theoretical and algorithmic construction of spin correlations as implemented in the Herwig (Richardson) and PanScales frameworks.
 
@@ -852,6 +851,12 @@ To consolidate the method, I’ve sketched the full variable construction as imp
 ![Drawing 2025-03-12 11 14 512 excalidraw (1)](https://github.com/user-attachments/assets/c08aa6e2-de0c-4aeb-9c71-19cdd30f3260)
 
 Karim implements this analysis I ask for in python: 
+
+### References
+
+- P. Richardson, *Spin correlations in Monte Carlo simulations*, [arXiv:1807.01955](https://arxiv.org/abs/1807.01955)
+- PanScales Collaboration, *Towards parton shower precision*, [arXiv:2103.16526](https://arxiv.org/abs/2103.16526)
+
 
 
 -------------------------------
