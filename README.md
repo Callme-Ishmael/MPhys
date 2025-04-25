@@ -1,8 +1,8 @@
 # MPhys
 
-### Week 1
+# Week 1
 
-#### 30.01.2025
+## 30.01.2025
 
 Summary of last semester
 ##### Noether Cluster
@@ -90,7 +90,7 @@ Herwig 7.1.3 docker commands
 docker run --rm -it -v /mnt/d/Samples:/data herwigcollaboration/herwig-7.3:7.3.0 Herwig bash
 ```
 
-#### 01.02.2025
+## 01.02.2025
 
 Getting used to Herwig. What can it do?
 
@@ -103,7 +103,7 @@ set EventHandler:HadronizationHandler NULL
 
 ```
 
-#### 02.02.2025
+## 02.02.2025
 
 Because SMEFTsim (or our adapted Chritoph model) are the only
 
@@ -247,7 +247,7 @@ saverun LHE EventGenerator
 ```
 
 
-### Week 2
+# Week 2
 
 > [!success] Meeting Verbatim
 > To do - truth level analysis (whatever sophisticated analysis we want)
@@ -313,13 +313,13 @@ In addition to the wide range of internal BSM models it is possible to use most 
 > Negative potential consequences of an action.
 > 
 
-### Week 3 (10.02 - 16.02)
+# Week 3 (10.02 - 16.02)
 
 ![image](https://github.com/user-attachments/assets/fe26d12b-1d49-419a-bf92-8cf59f5d6e62)
 
 
 -------------------------------
-### Week 4 (17.02 - 23.02)
+# Week 4 (17.02 - 23.02)
 
 We performed a basic truth-level analysis using the **MC_VH2BB** Rivet routine:  
 🔗 [MC_VH2BB Analysis Page](https://heprivet.gitlab.io/analysis/analist/mc_vh2bb/)
@@ -456,8 +456,9 @@ Yes, b-hadrons are formed **after** the initial parton showering. The process is
 Paragraph on Anti -k
 
 -------------------------------
-### Week 5 (24.02 - 2.03)
+# Week 5 (24.02 - 2.03)
 
+~ this needs a lot of Rivet details
 
 ### Deconstructing the Rivet Analysis
 
@@ -512,6 +513,7 @@ QCD background removal is tempting to do at truth level, but that’s not how re
 ---
 
 ### ATLAS ZH Paper Notes (27.01.2025)
+https://arxiv.org/pdf/1808.08238
 
 - `H → bb̄` = 58% branching ratio.
 - ggF production swamped by QCD → VH production (Z or W + H) is preferred for cleaner triggering.
@@ -530,9 +532,110 @@ QCD background removal is tempting to do at truth level, but that’s not how re
 - Boost regions:
   - High: pT^V > 150 GeV
   - Medium: 75 < pT^V < 150 GeV
+ 
+### Key Observations
+
+- The `MC_VH2BB` Rivet analysis functions correctly. We've now fully understood its logic and structure.
+- It mirrors the ATLAS Run 2 analysis for \( ZH, H \to b\bar{b} \) closely, including:
+  - A 30 GeV minimum \( p_T \) cut on jets, which is justified.
+  - Use of `DileptonFinder` to dress and veto leptons before jet clustering via FastJet, reducing lepton–jet overlap issues.
+
+In principle, this analysis provides a robust starting point for our study.
+ 
+----------
+### Theoretical Note on Spin Correlations
+
+This week I focused entirely on understanding the Rivet framework in depth. I implemented custom projections, which now allow me to search the event record at truth level. This includes access to the full decay structure and particle ancestry, enabling me to track spin-relevant quantities from the initial hard process down to the final-state observables.
+
+### Spin Correlation Test (Adapted from Bernreuther)
+
+Using the method from [hep-ph/9701347](https://arxiv.org/pdf/hep-ph/9701347), originally developed for studying spin correlations in \( t\bar{t} \) decays, I constructed a test to assess whether spin information is preserved in our simulation of \( H \to b\bar{b} \). The procedure is:
+
+- Identify the Higgs boson in the event record.
+- Follow its decay to the two b-quarks.
+- Define two decay branches from the b and \( \bar{b} \), and trace each branch through the parton shower and hadronization.
+- For each branch, identify the **last B-hadron** before decay.
+- Store the momentum and decay structure of that B-hadron as a proxy for the original b-quark spin information.
+
+This allows for a truth-level observable that can potentially capture spin correlations passed down from the Higgs decay.
+
+A second reference [arXiv:1410.6362](https://arxiv.org/pdf/1410.6362) provides context on using truth-level observables to probe CP and spin effects in hadronic decays. Relevant for validating the above method.
+
+
+As part of validating whether Herwig is correctly preserving spin correlations in \( H \to b\bar{b} \), I took a closer look at the theoretical framework laid out in Bernreuther et al. ([hep-ph/9701347](https://arxiv.org/pdf/hep-ph/9701347)). Their analysis is built for the case of \( \phi \to t\bar{t} \), but the methodology generalizes.
+
+They start from a Yukawa-like interaction for a mixed CP Higgs:
+\[
+\mathcal{L}_Y = -\frac{m_f}{v} \bar{f} (a_f + i \gamma_5 \tilde{a}_f) f \, \phi
+\]
+so the decay products can carry scalar and pseudoscalar components depending on \( a_f, \tilde{a}_f \). The key insight is that this structure imprints itself in the **spin density matrix** of the final-state fermion pair. They write this matrix as:
+\[
+R = A \cdot \mathbb{1} \otimes \mathbb{1} + B_i^+ \sigma^i \otimes \mathbb{1} + B_i^- \mathbb{1} \otimes \sigma^i + C_{ij} \sigma^i \otimes \sigma^j
+\]
+where the \( C_{ij} \) term encodes the spin-spin correlation — the main object of interest.
+
+To quantify the effect of CP violation, they build a basis of spin observables:
+\[
+\begin{aligned}
+\mathcal{O}_1 &= \hat{k} \cdot (\vec{s}_1 - \vec{s}_2) \quad &\text{(CP-odd)} \\
+\mathcal{O}_2 &= \hat{k} \cdot (\vec{s}_1 \times \vec{s}_2) \quad &\text{(CP-odd)} \\
+\mathcal{O}_3 &= \vec{s}_1 \cdot \vec{s}_2 \quad &\text{(CP-even)} \\
+\mathcal{O}_4 &= (\hat{k} \cdot \vec{s}_1)(\hat{k} \cdot \vec{s}_2) \quad &\text{(CP-even)}
+\end{aligned}
+\]
+and define expectation values:
+\[
+\langle \mathcal{O}_i \rangle = \frac{\text{Tr}(R \, \mathcal{O}_i)}{\text{Tr}(R)}
+\]
+These are the theoretical quantities they aim to measure.
+
+---
+
+In practice, they construct CP-odd observables like:
+\[
+\mathcal{E}_1 = \langle \hat{k}_t \cdot \hat{p}_{\ell^+}^* \rangle_{\mathcal{A}} + \langle \hat{k}_t \cdot \hat{p}_{\ell^-}^* \rangle_{\bar{\mathcal{A}}}
+\]
+and
+\[
+\mathcal{E}_2 = \langle \hat{k}_t \cdot (\hat{p}_{\ell^+}^* \times \hat{p}_{\bar{b}}^*) \rangle_{\mathcal{A}} - \langle \hat{k}_t \cdot (\hat{p}_{\ell^-}^* \times \hat{p}_b^*) \rangle_{\bar{\mathcal{A}}}
+\]
+These are **averages over events**, and that’s the key point — spin correlations aren’t extracted from a single decay but from statistical asymmetries over many events. \( \mathcal{E}_2 \), in particular, is sensitive to spin-spin interference and is strongly CP-odd.
+
+---
+
+### Adaptation to \( H \to b\bar{b} \)
+
+Because b-quarks hadronize, we can’t use spinors directly — but we can still probe spin-sensitive structure if we trace:
+- Higgs → b, \( \bar{b} \)
+- Follow both decay branches forward to the last B-hadron before decay.
+- Use the 3-momenta of the resulting B-hadrons and their decay products as spin analyzers.
+
+By analyzing angular distributions (e.g. triple products), we can reconstruct CP-odd observables analogously to \( \mathcal{E}_2 \). In particular, we implement:
+\[
+\vec{k}_b \cdot (\vec{n}_{bb} \times \vec{n}_{ee})
+\]
+as a Rivet observable, where \( \vec{n}_{bb} \) and \( \vec{n}_{ee} \) are plane normals built from the decay products of each b-branch and the Z → \( \ell^+ \ell^- \) system respectively.
+
+This procedure is entirely at truth level and gives us a well-defined way to verify whether spin correlations survive in our event generator output.
 
 
   ![image](https://github.com/user-attachments/assets/31b31e17-a126-489a-9efa-16e0bf7024a9)
+
+---
+
+### Outstanding Issues
+
+- **Spin correlations may not be enabled.**  
+  Based on our truth-level observables, we do not see evidence of spin structure being preserved in the decay. Need to verify if Herwig is including spin correlations by default. Request: check with Mike whether there is any verbose Herwig output or flag that confirms spin density matrices are being calculated.
+
+- **Christoph’s UFO model may be misconfigured.**  
+  Approximately 17% of events show bottom-loop contributions, which should not be allowed by the model. This may be a limitation of the UFO → Herwig translation (e.g., via UFO2Herwig). Needs further inspection.
+
+---
+
+### Final Note
+
+We now have a working Rivet setup capable of tracing the full event structure and performing spin-sensitive truth-level observables. However, the physical validity of the results — especially regarding spin correlations and model consistency — remains uncertain and requires further checks.
 
 ------------------------------
 ### Week 6 (starting 03.02.2025)
