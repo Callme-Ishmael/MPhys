@@ -788,19 +788,23 @@ The current focus is on devising a sure-fire test for the activation of spin cor
 
 ----------
 
+## Week 7 – Detailed Theory Note: Spin Correlations in Richardson and PanScales
+
 This week I focused on understanding in full detail the theoretical and algorithmic construction of spin correlations as implemented in the Herwig (Richardson) and PanScales frameworks.
 
 In the Richardson paper (Herwig shower with spin correlations), the central idea is that spin effects are captured by assigning a spin density matrix to each particle at the moment of production or branching. Specifically, when a gluon is produced, for example from a hard process such as \( H \to gg \), it is assigned a spin density matrix \( \rho \) determined by the helicity amplitudes of the production process:
 
-\[\rho_{\lambda_g \lambda'_g} = \frac{1}{N} \sum_{\text{other helicities}} M_{\lambda_g} M^*_{\lambda'_g}\]
+$$
+\rho_{\lambda_g \lambda'_g} = \frac{1}{N} \sum_{\text{other helicities}} M_{\lambda_g} M^*_{\lambda'_g}
+$$
 
 where \( M_{\lambda_g} \) is the helicity amplitude for the gluon with helicity \( \lambda_g \), and \( N \) is a normalization factor ensuring \( \text{Tr}(\rho) = 1 \).
 
 When the gluon subsequently branches, for instance via \( g \to q\bar{q} \), the azimuthal angle \( \phi \) of the branching is not chosen randomly, but according to a distribution proportional to
 
-\[
+$$
 \rho_{\lambda_g \lambda'_g} M_{\lambda_g \lambda_q \lambda_{\bar{q}}} M^*_{\lambda'_g \lambda_q \lambda_{\bar{q}}}
-\]
+$$
 
 where \( M_{\lambda_g \lambda_q \lambda_{\bar{q}}} \) are the helicity amplitudes for the branching. This construction ensures that the azimuthal distribution between the daughter partons encodes the spin information of the parent particle.
 
@@ -808,17 +812,17 @@ After the branching, new spin density matrices are assigned to the daughters, ca
 
 Observables sensitive to these correlations are typically built from the relative azimuthal angles between the planes defined by two successive branchings. For example, for two correlated emissions, the distribution of the azimuthal angle difference \( \Delta\phi \) between the planes satisfies:
 
-\[
+$$
 \frac{d\sigma}{d\Delta\phi} \propto 1 + A \cos(2\Delta\phi)
-\]
+$$
 
-where the modulation amplitude \( A \) quantifies the strength of the spin correlation. A positive \( A \) corresponds to correlated emissions favoring aligned spin planes, while negative \( A \) indicates anticorrelations.
+where the modulation amplitude \( A \) quantifies the strength of the spin correlation. A positive \( A \) corresponds to correlated emissions favoring aligned spin planes, while a negative \( A \) indicates anticorrelations.
 
 The PanScales paper develops a similar but more general formalism, applicable to dipole and antenna showers beyond the angular-ordered case. They formulate the emission probability from a parent parton (say parton 0 splitting into partons 1 and 2) in terms of a spin-correlated matrix element:
 
-\[
+$$
 |M_{0\to12}|^2 = \sum_{\lambda_0, \lambda_1, \lambda_2} M_{\lambda_0 \lambda_1 \lambda_2} M^*_{\lambda_0 \lambda_1 \lambda_2}
-\]
+$$
 
 where \( \lambda_i \) denote the helicities. At each branching, a spin density matrix is assigned, and the azimuthal angle of the emission is sampled according to the interference between different helicity amplitudes, ensuring spin correlations are preserved.
 
@@ -826,9 +830,9 @@ Importantly, PanScales carefully treats the correlation between different splitt
 
 They show that in a fixed-order calculation at \( \mathcal{O}(\alpha_s^2) \), spin correlations between two emissions manifest as modulations in the azimuthal angle difference \( \Delta\psi \) between the two splitting planes, again following a form:
 
-\[
+$$
 \frac{d\sigma}{d\Delta\psi} \propto 1 + A(z_1)B(z_2) \cos(2\Delta\psi)
-\]
+$$
 
 where \( z_1 \) and \( z_2 \) are the energy fractions carried by the emissions, and \( A(z) \), \( B(z) \) are functions encoding how the energy distribution affects the strength of the spin correlation.
 
@@ -836,13 +840,13 @@ In Figure 6 of the PanScales paper, they plot the ratio \( a_2/a_0 \) as a funct
 
 PanScales also places this discussion in the context of Lund planes. In their setup, a Lund plane parametrization is introduced to organize emissions according to their transverse momentum and energy fraction. Each point on the Lund plane corresponds to an emission characterized by:
 
-\[
+$$
 \log\left(\frac{1}{\theta}\right), \quad \log(z\theta)
-\]
+$$
 
 where \( \theta \) is the angle between the emitting and emitted parton, and \( z \) is the energy fraction. Spin correlations manifest as modulations across the Lund plane, particularly visible when emissions are symmetric in energy fraction and at moderate angles.
 
-Thus, both in Richardson and PanScales, spin correlations are not simply an "on/off" effect but are **modulated depending on the kinematics** of the splittings. The maximal sensitivity is in configurations where splittings are symmetric in energy sharing, and small in asymmetric emissions.
+Thus, both in Richardson and PanScales, spin correlations are not simply an "on/off" effect but are modulated depending on the kinematics of the splittings. The maximal sensitivity is in configurations where splittings are symmetric in energy sharing, and suppressed in strongly asymmetric emissions.
 
 In our case, applying these methods to \( H \to gg \) or \( H \to b\bar{b} \), we must carefully account for the energy fractions of the subsequent splittings and their angular distributions, as spin correlations will be strongest only in specific regions of phase space.
 
