@@ -535,64 +535,86 @@ QCD background removal is tempting to do at truth level, but that’s not how re
   ![image](https://github.com/user-attachments/assets/31b31e17-a126-489a-9efa-16e0bf7024a9)
 
 ------------------------------
-### Week 6
+### Week 6 (starting 03.02.2025)
 
-Attempt at SHERPA
+#### Attempt at SHERPA
 
-https://sherpa.hepforge.org/doc/SHERPA-MC-2.2.2.html
+[🔗 Sherpa 2.2.2 Manual](https://sherpa.hepforge.org/doc/SHERPA-MC-2.2.2.html)
 
-- HADRONS++
-    
-    HADRONS++ is the module for simulating hadron and tau-lepton decays. The resulting decay products respect full spin correlations (if desired). Several matrix elements and form-factor models have been implemented, such as the Kühn-Santamaría model, form-factor parametrizations from Resonance Chiral Theory for the tau and form factors from heavy quark effective theory or light cone sum rules for hadron decays.
-    
+Investigating Sherpa as an alternative to Herwig, because Herwig steering turned out to be painful and Sherpa has way better documentation.
 
-5.9.3 HARD_SPIN_CORRELATIONS
+---
 
-Spin correlations between the hard scattering process and the following decay processes are enabled by default. If you want to disable them, e.g. for spin correlation studies, you can specify the option ‘HARD_SPIN_CORRELATIONS=0’.
+### Hadronization and Spin Correlations
 
- Hadronization
+#### HADRONS++
 
-The hadronization setup is covered by the ‘(fragmentation)’ section of the steering file or the fragmentation data file ‘Fragmentation.dat’, respectively.
+- Module responsible for simulating hadron and tau-lepton decays.
+- Full spin correlations can be included if desired.
+- Several matrix elements and form-factor models implemented (e.g., Kühn-Santamaría model, Resonance Chiral Theory, heavy quark effective theory).
 
-It covers the fragmentation of partons into primordial hadrons as well as the decays of unstable hadrons into stable final states.
+#### Spin correlations (hard process)
 
-Hadron decays
+- **HARD_SPIN_CORRELATIONS** is **enabled by default**.
+- To disable: set `HARD_SPIN_CORRELATIONS=0`.
 
-The treatment of hadron and tau decays is specified by `DECAYMODEL`. Its allowed values are either the default choice ‘Hadrons’, which renders the HADRONS++ module responsible for performing the decays, or the hadron decays can be disabled with the option ‘Off’.
+#### Hadron Decays
 
-HADRONS++ is the module within the Sherpa framework which is responsible for treating hadron and tau decays. It contains decay tables with branching ratios for approximately 2500 decay channels, of which many have their kinematics modelled according to a matrix element with corresponding form factors. Especially decays of the tau lepton and heavy mesons have form factor models similar to dedicated codes like Tauola [[Jad93](https://sherpa.hepforge.org/doc/SHERPA-MC-2.2.2.html#Jadach1993hs)] and EvtGen [[Lan01](https://sherpa.hepforge.org/doc/SHERPA-MC-2.2.2.html#Lange2001uf)].
+- Handled by HADRONS++ by default.
+- Controlled via `DECAYMODEL = Hadrons` (default) or can be turned off (`DECAYMODEL = Off`).
+- Massive decay tables (~2500 channels).
+- Dynamical mass smearing and matrix-element modeling for realistic decays.
 
-Some general switches which relate to hadron decays can be adjusted in the `(fragmentation)` section:
+**Relevant options:**
 
-- `DECAYPATH` The path to the parameter files for the hadron and tau decays (default: `Decaydata/`). It is important to note that the path has to be given relative to the current working directory. If it doesn’t exist, the default Decaydata directory (`<prefix>/share/SHERPA-MC/Decaydata`) will be used.
-- Hadron properties like mass, width, stable/unstable and active can be set in full analogy to the settings for fundamental particles in the `(model)` section (cf. [Models](https://sherpa.hepforge.org/doc/SHERPA-MC-2.2.2.html#Models)).
-- `SOFT_MASS_SMEARING = [0,1,2]` (default: 1) Determines whether particles entering the hadron decay event phase should be put off-shell according to their mass distribution. It is taken care that no decay mode is suppressed by a potentially too low mass. While HADRONS++ determines this dynamically from the chosen decay channel, for `Pythia` as hadron decay handler its `w-cut` parameter is employed. Choosing option 2 instead of 1 will only set unstable (decayed) particles off-shell, but leave stable particles on-shell.
-- `MAX_PROPER_LIFETIME = [mm]` Parameter for maximum proper lifetime (in mm) up to which particles are considered unstable. If specified, this will make long-living particles stable, even if they are set unstable by default or by the user.
+- `SOFT_MASS_SMEARING = [0,1,2]`  
+- `MAX_PROPER_LIFETIME = [mm]`  
+- `DECAYPATH` sets where decay tables are read from.
 
-Many aspects of the above mentioned “Decaydata” can be adjusted. There exist three levels of data files, which are explained in the following sections. As with all other setup files, the user can either employ the default “Decaydata” in `<prefix>/share/SHERPA-MC/Decaydata`, or overwrite it (also selectively) by creating the appropriate files in the directory specified by `DECAYPATH`.
+---
 
-
-#### 5.12.2.5 Further remarks
+### Further Spin Correlations
 
 > [!NOTE]
-> **Spin correlations:** a spin correlation algorithm is implemented. It can be switched on through the keyword ‘SOFT_SPIN_CORRELATIONS=1’ in the `(run)` section.
-> 
-> If spin correlations for tau leptons produced in the hard scattering process are supposed to be taken into account, one needs to specify ‘HARD_SPIN_CORRELATIONS=1’ as well. If using AMEGIC++ as ME generator, note that the Process libraries have to be re-created if this is changed.
+> Spin correlations can be turned on with `SOFT_SPIN_CORRELATIONS=1` in the `(run)` section.  
+>  
+> For spin correlations in **tau leptons produced in the hard scattering**, also set `HARD_SPIN_CORRELATIONS=1`.  
+>  
+> If using AMEGIC++ as matrix element generator, recompile libraries if spin settings are changed.
 
-**Adding new channels:** if new channels are added to HADRONS++ (choosing isotropic decay kinematics) a new decay table must be defined and the corresponding hadron must be added to `HadronDecays.dat`. The decay table merely needs to consist of the outgoing particles and branching ratios, i.e. the last column (the one with the decay channel file name) can safely be dropped. By running Sherpa it will automatically produce the decay channel files and write their names in the decay table.
+---
 
-|   |   |   |
-|---|---|---|
-|[5.12.1 Fragmentation](https://sherpa.hepforge.org/doc/SHERPA-MC-2.2.2.html#Fragmentation)||The fragmentation module, and its parameters.|
-|[5.12.2 Hadron decays](https://sherpa.hepforge.org/doc/SHERPA-MC-2.2.2.html#Hadron-decays)||The hadron decay module, and its parameters.|
+### Observations from Sherpa Documentation
 
+- **Spin correlations between hard scattering and decays are ON by default**.
+- Hadrons++ module provides a very complete decay modeling, similar to Tauola and EvtGen.
+- Sherpa allows fairly fine-grained steering without having to hack the codebase.
 
-5.9.4 Spin_Correlations Spin correlations between the hard scattering process and the following decay processes are enabled by default. If you want to disable them, e.g. for spin correlation studies, you can specify the option Spin_Correlations: 0.
+---
 
+## Context Check: Event Generators
 
-HADRONS++ is the built-in module within the Sherpa framework which is responsible for treating hadron and tau decays. It contains decay tables with branching ratios for approximately 2500 decay channels, of which many have their kinematics modelled according to a matrix element with corresponding form factors. Especially decays of the tau lepton and heavy mesons have form factor models similar to dedicated codes like Tauola [JWDK93] and EvtGen [Lan01]. Its settings are also steered within the HADRON_DECAYS block as follows: • Mass_Smearing: [0,1,2] (default: 1) Determines whether particles entering the hadron decay event phase should be put off-shell according to their mass distribution. It is taken care that no decay mode is suppressed by a potentially too low mass. HADRONS++ determines this dynamically from the chosen decay channel. Choosing option 2 instead of 1 will only set unstable (decayed) particles off-shell, but leave stable particles on-shell. 96 Chapter 5. Parameters Sherpa Manual, Release 3.0.0 • Spin_Correlations: [0,1] (default: 0) A spin correlation algorithm is implemented and can be switched on with this setting. This might slow down event generation slightly.
+Reading about the general state of event generators made something clear:
 
-Looking at this paper: The state of current mc generators - it is clear. Herwig is the only collaboration to have ever implemented spin correlations inside the shower.
+- **Herwig is currently the only major generator that implements spin correlations inside the parton shower.**
+- Other generators like Sherpa and Pythia typically implement spin correlations for hard scattering and decays, but not inside the parton shower.
+
+(Reference: *The State of Current MC Generators*)
+
+---
+
+## References
+
+- [ISAJET 7.91: A Monte Carlo Event Generator for pp, p¯p, and e⁺e⁻ Reactions](https://www.nhn.ou.edu/~isajet/isajet791.pdf)
+- [Scholar search: Status of High Energy Physics Event Generators (2024+)](https://scholar.google.co.uk/scholar?as_ylo=2024&q=status+of+high+energy+physics+event+generators&hl=en&as_sdt=0,5)
+- [Status of C++ Event Generators (indico)](https://indico.cern.ch/event/411610/contributions/985714/attachments/838223/1164753/summaryMC.pdf)
+- [Event Generators for High-Energy Physics Experiments (SciPostPhys 16.5.130)](https://www.scipost.org/SciPostPhys.16.5.130/pdf)
+- [Event Generators for High-Energy Physics Experiments (UZH/Fermilab)](https://www.zora.uzh.ch/id/eprint/229175/1/fermilab_pub_22_116_scd_t.pdf)
+- [General-Purpose Event Generators for LHC Physics (arXiv 1101.2599)](https://arxiv.org/pdf/1101.2599)
+- [PEPPER: A Portable Parton-Level Event Generator](https://indico.cern.ch/event/1330797/papers/5791236/files/13277-Enrico-Bothmann-Pepper-Portable-Event-Generation.pdf)
+
+---
+
 
 ![image](https://github.com/user-attachments/assets/e91bfd89-5559-43ff-9173-dd235835b79b)
 
@@ -602,7 +624,48 @@ The current focus is devising a sure-fire test for the activation of spin correl
 
 - Berheuter:
 - Uzan:
-- Richardson & Webster: 
+- Richardson & Webster:
+
+--------------------------------
+### Week 7 (10.03 - 16.03)
+
+Deconstructing the Richardson and closley related PanScales paper
+
+. In Fig. 6 we show the ratio a2/a0 as a function of the energy fractions z1 and z1 0. In all three cases the ratio is peaked when z1 = z1 0 = 0.5 and is largest in magnitude when both gluons split into quark-antiquark pairs. When only one gluon splits into a quark-antiquark pair the ratio becomes negative and −11.1% around the peak. When both gluons split into gluons the spin correlations almost vanish. In all three cases the ratio vanishes when either of the energy fractions approach 0 or 1.
+
+What This Means:
+
+- In QCD, calculations are performed as a power series expansion in **αs**, which is a small parameter at high energies.
+- The leading-order (LO) term in this expansion corresponds to **O(αs⁰)** (tree-level diagrams).
+- The next-to-leading order (NLO) corresponds to **O(αs¹)** (one-loop corrections).
+- The next-to-next-to-leading order (NNLO) corresponds to **O(αs²)** (two-loop corrections or two additional emissions in real corrections).
+
+Context in This Paper:
+
+- The authors mention **O(αs²)** because they are working with **two collinear splittings** (branchings).
+- In order to study **azimuthal correlations** between splitting planes, they need at least two emissions, which naturally arises at **O(αs²)** in perturbation theory.
+- This is a **fixed-order** calculation, meaning they do not include effects from all higher orders in αs, but rather stop at αs².
+
+Why **O(αs²)** is Special Here:
+
+- Since a single splitting happens at **O(αs¹)** (e.g., a quark emits a gluon), observing **correlations between two splittings** requires an additional emission, bringing the total order to **O(αs²)**.
+- They aim to measure how spin effects from different splittings correlate by analyzing the azimuthal angle **Δψ** between the splitting planes.
+
+Going back to the Richardson paper - they specify they work in the massless quark limit -whatever that means and how we could activate it to replicate it exactly we don't know
+
+Question - how do we turn the massless approx. on so that we can fully replicate the Richardson paper.
+Question - why does Herwig have so much more g--->gg events than g --->qq 
+
+
+3.1 Correlations inside the Parton Shower
+Subsequent splitting. Needs the intermediate gluon (stronger correlations)
+
+3.2 
+probe the correlations between the parton shower and the hard process.
+H ----> g g -----> q q q' q'   (100K ---> 400 events) statistic can be forcefully improved
+interestingly enough they don claim any z cuts on this process - this clashes with the PanScales paper that recognises that z cuts should pe imposed on this one
+
+It is encouraged to do this one -- however our quarks are massive
 
 
 -------------------------------
