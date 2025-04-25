@@ -756,6 +756,21 @@ The current focus is on devising a sure-fire test for the activation of spin cor
 --------------------------------
 # Week 7 (10.03 - 16.03)
 
+## 1. Richardson & Webster, _“Spin Correlations in Parton Shower Simulations”_  
+*(Eur. Phys. J. C 80 (2020) 83, arXiv:1807.01955)*
+
+| Aspect | Author’s construction |
+|--------|------------------------|
+| **Elementary geometry** | Every splitting _i → jk_ defines a plane **P** spanned by the three-momenta of the daughters. The azimuth of that plane, φ, is measured in the rest frame in which the emitter is chosen to lie on the _z_ axis. |
+| **Core variable** | For two successive branchings 0 → 12 followed by 2 → 34 they study:<br>  **Δφ ≡ φ₂ − φ₁** – the signed angle between the two planes. |
+| **Analytic structure** | In the collinear limit:<br>  (1/2π) dσ/dΔφ = (1/2π) [1 + A(z₁) B(z₂) cos (2 Δφ)]<br>Coefficients A and B depend **only** on the light-cone momentum fractions _z₁_ and _z₂_. They tabulate A,B for all four helicity chains (q→qg then g→qq̄, etc.) – see Table 1 of the paper. |
+| **Illustrative example** | _H_ → g g followed by g → qq̄ on each leg. Using the Collins–Knowles density–matrix algebra they derive:<br>  dσ/dΔφ ∝ 3 + 2 cos²Δφ (after z-integration). |
+| **Measurement prescription** | Δφ is always taken **in the frame of the second splitting**, guaranteeing that the recoil does not spoil the plane definition. For dipole showers they enforce one common spectator so that both splittings share the same boost sequence. |
+| **ISR analogue** | Replace final–state correlation by initial–state chains (e.g. g→qq̄ backwards splittings). The same Δφ observable is used; analytic expressions analogous to Eq. (20) are given and validated (Figs. 5–8). |
+| **Decay observables** | For top decays they propagate the hard-process density matrix into the W→ℓν decay and study the charged–lepton azimuthal separation; the same plane formalism applies. |
+
+---
+
 Deconstructing the Richardson and closely related PanScales paper
 
 Detailed Theory Note: Spin Correlations in Richardson and PanScales
