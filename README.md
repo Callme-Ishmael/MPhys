@@ -329,12 +329,6 @@ We performed a basic truth-level analysis using the **MC_VH2BB** Rivet routine:
 
 ---
 
-Solarized dark             |  Solarized Ocean
-:-------------------------:|:-------------------------:
-![image](https://github.com/user-attachments/assets/f87c8ed1-9171-4387-a0c2-8daec2bfeaee)
-  |  
-![image](https://github.com/user-attachments/assets/6230b8c0-2e00-4197-84f6-7ec436875a6a)
-
 #### **Jet Multiplicity**
 
 We observe events with **0 to 3 b-jets**, despite the boost applied to the Z.  
@@ -346,8 +340,7 @@ While some jet merging or splitting effects are expected, the frequency of **0 o
 - Jet–lepton **overlap removal** may discard valid b-jets,
 - Limitations in the **Rivet projection logic**.
 
-![image](https://github.com/user-attachments/assets/f87c8ed1-9171-4387-a0c2-8daec2bfeaee)
-
+<img src="https://github.com/user-attachments/assets/f87c8ed1-9171-4387-a0c2-8daec2bfeaee" width="500" height="500"/>
 
 ---
 
@@ -368,6 +361,8 @@ In a typical truth-level analysis, we would expect a roughly Gaussian peak centr
 - Mismatched jet pairing (e.g., using jets not from the Higgs decay),
 - Misidentified or missed b-jets,
 - Energy mismeasurement or clustering artifacts.
+
+  
 
 > [!TIP]
 >   Meeting Verbatim – 20 February 2025  
