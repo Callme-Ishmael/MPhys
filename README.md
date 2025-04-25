@@ -329,6 +329,12 @@ We performed a basic truth-level analysis using the **MC_VH2BB** Rivet routine:
 
 ---
 
+Solarized dark             |  Solarized Ocean
+:-------------------------:|:-------------------------:
+![image](https://github.com/user-attachments/assets/f87c8ed1-9171-4387-a0c2-8daec2bfeaee)
+  |  
+![image](https://github.com/user-attachments/assets/6230b8c0-2e00-4197-84f6-7ec436875a6a)
+
 #### **Jet Multiplicity**
 
 We observe events with **0 to 3 b-jets**, despite the boost applied to the Z.  
