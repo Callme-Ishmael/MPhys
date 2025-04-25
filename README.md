@@ -316,6 +316,53 @@ In addition to the wide range of internal BSM models it is possible to use most 
 -------------------------------
 ### Week 4 (17.02 - 23.02)
 
+We performed a basic truth-level analysis using the **MC_VH2BB** Rivet routine:  
+🔗 [MC_VH2BB Analysis Page](https://heprivet.gitlab.io/analysis/analist/mc_vh2bb/)
+
+#### **Run Details**
+
+- **Simulated process**: `pp → V H → (ℓν / ℓ⁺ℓ⁻)(b b̄)`,  
+  where the Higgs decays hadronically to $b\bar{b}$, and the vector boson decays leptonically (electron or muon channels).
+- Applied a **transverse momentum cut**:  
+  $p_T(Z) > 100 \, \text{GeV}$,  
+  placing us in a **boosted regime**.
+
+---
+
+#### **Jet Multiplicity**
+
+We observe events with **0 to 3 b-jets**, despite the boost applied to the Z.  
+While some jet merging or splitting effects are expected, the frequency of **0 or 1 b-jet events** is somewhat surprising and warrants further investigation.
+
+**Possible contributing factors:**
+- Particle-level b-tagging inefficiencies  
+  (e.g., b-hadrons falling outside the jet cone or below the tagging threshold),
+- Jet–lepton **overlap removal** may discard valid b-jets,
+- Limitations in the **Rivet projection logic**.
+
+![image](https://github.com/user-attachments/assets/f87c8ed1-9171-4387-a0c2-8daec2bfeaee)
+
+
+---
+
+#### **Invariant Mass of $b\bar{b}$ Pair**
+
+The invariant mass distribution of the leading two b-jets **does not resemble a clean Higgs peak**.
+
+While there is an enhancement near $m_H \sim 125\, \text{GeV}$,  
+the distribution exhibits a **significant asymmetric tail towards lower masses**.
+
+This **low-mass tail** is unexpected for well-reconstructed $H \to b\bar{b}$ decays.  
+In a typical truth-level analysis, we would expect a roughly Gaussian peak centred at the Higgs mass.
+
+![image](https://github.com/user-attachments/assets/6230b8c0-2e00-4197-84f6-7ec436875a6a)
+
+
+**Potential causes:**
+- Mismatched jet pairing (e.g., using jets not from the Higgs decay),
+- Misidentified or missed b-jets,
+- Energy mismeasurement or clustering artifacts.
+
 > [!TIP]
 >   Meeting Verbatim – 20 February 2025  
 > - We produced two samples of pure CP-even and CP-odd events.  
