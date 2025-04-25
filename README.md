@@ -340,7 +340,7 @@ While some jet merging or splitting effects are expected, the frequency of **0 o
 - Jet–lepton **overlap removal** may discard valid b-jets,
 - Limitations in the **Rivet projection logic**.
 
-<img src="https://github.com/user-attachments/assets/f87c8ed1-9171-4387-a0c2-8daec2bfeaee" width="500" height="500"/>
+<img src="https://github.com/user-attachments/assets/f87c8ed1-9171-4387-a0c2-8daec2bfeaee" width="500" height="500"/><img src="https://github.com/user-attachments/assets/6230b8c0-2e00-4197-84f6-7ec436875a6a" width="500" height="500"/>
 
 ---
 
@@ -354,7 +354,8 @@ the distribution exhibits a **significant asymmetric tail towards lower masses**
 This **low-mass tail** is unexpected for well-reconstructed $H \to b\bar{b}$ decays.  
 In a typical truth-level analysis, we would expect a roughly Gaussian peak centred at the Higgs mass.
 
-![image](https://github.com/user-attachments/assets/6230b8c0-2e00-4197-84f6-7ec436875a6a)
+
+
 
 
 **Potential causes:**
