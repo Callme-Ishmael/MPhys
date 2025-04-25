@@ -313,6 +313,67 @@ In addition to the wide range of internal BSM models it is possible to use most 
 > Negative potential consequences of an action.
 > 
 
+-------------------------------
+### Week 4 (17.02 - 23.02)
+
+> [!TIP] Week 4 (17.02 – 23.02) Meeting Verbatim – 20 February 2025  
+> - We produced two samples of pure CP-even and CP-odd events.  
+> - The framework is designed to track spin correlations. Spin correlations should be implemented here, but we’re not yet certain that they are.  
+> - **Action:** Ask Mike if Herwig provides any verbose output confirming that the spin density matrix has been calculated.  
+> - **Question:** What plots would you generate as a Herwig developer? There’s a difference between making fancy plots and verifying that spin correlations are enabled—perhaps there is an output option that confirms their inclusion.  
+> - A pTₘᵢₙ cut of 100 GeV is applied to the Z boson itself, giving it a slight boost.  
+> - A histogram of jet multiplicity shows 0–3 b-jets.  
+> - **Next step:** Ask Sid to review how Rivet is configured. Broadly speaking, Rivet projects observables and performs particle-level b-tagging by identifying a b-hadron within the jet cone with pT above a threshold.  
+> - **Clarification:** In a highly boosted system, both b-hadrons could merge into one jet, yielding only one b-jet. Although this is unlikely for a 100 GeV cut on the Z, it’s worth understanding.  
+> - Alternatively, a b-hadron might fall below the pT threshold or outside the cone. I expect these to be few-percent effects; if higher, our truth-level definition is problematic. We need to inspect whether Rivet correctly traces upstream cascade particles and uses PDG IDs to tag b-hadrons.  
+> - At detector level, observing 0 or 1 b-jets is acceptable (∼60 % efficiency). How can there be zero? Neither jet contains a b-hadron.  
+> - Overlap removal can also remove jets: if a lepton overlaps a jet, the jet is excluded.  
+> - **To do:** Document each stage’s cuts and prepare a list to share over Skype.  
+> - **Question:** Why do the jets appear back-to-back? (Answer: by construction—need to specify which step enforces this.)  
+> - Applying a 30 GeV cut on jets causes significant loss because boosting the Higgs system shifts events into the high-pT tail. The isotropic pT distribution of a Higgs decaying at rest changes when boosted, and a tight cut selects only the tail.  
+> - **Test:** Lower the jet pT threshold and see if b-jet multiplicity increases.  
+> - **Proposal:** Require exactly two jets for the selection, then proceed with further analysis.  
+> - I will apply the jet-finder algorithm; then use object-level cuts to remove jets overlapping leptons. Select events with exactly two jets, reconstruct their invariant mass, and check for a peak at the Higgs mass.  
+> - For examples of selection cuts, see the ATLAS ZH observation paper—its kinematic cuts will guide our ZH analysis.  
+> - Compare and contrast their cuts in your report. Also review the b-tag definition: it includes a pT cut on the hadron and should be configurable, since FastJet does clustering but not b-tagging (handled by Rivet).  
+> - We suspect Rivet tags b-hadrons at truth level by inspecting the HepMC record. Experimentally, you must correct detector-level b-jet definitions to a consistent truth-level definition. At detector level, a b-jet is identified via a reconstructed secondary vertex within the jet, displaced from the primary vertex (reflecting the b-hadron’s finite lifetime), along with other kinematic variables.  
+> - **Send:** ATLAS truth-particle note from the Top group, outlining the rationale and principles behind the truth-level particle definition.
+
+---------
+#### Detangling the Jets Algorithms
+
+b-tagging = technique  to identify jets that likely originated from bottom (b) quarks. This process involves analyzing several distinctive features of b-quark jets:
+
+- **Displaced Vertices:** B-hadrons (particles containing a b-quark) have a relatively long lifetime, so they decay at a measurable distance from the primary collision point. This decay produces a secondary vertex that is displaced from the primary vertex.
+- **Impact Parameters:** The tracks of particles from b-hadron decays tend to have large impact parameters (the shortest distance between the track and the primary vertex), which is a signature used in b-tagging.
+- **Other Characteristics:** Additional variables, such as the presence of soft leptons from semileptonic decays, help in distinguishing b-jets from jets initiated by lighter quarks or gluons.
+
+**1. Does the b-hadron appear after initial showering, which is supposed to take place instantaneously very near the primary vertex?**
+
+![image](https://github.com/user-attachments/assets/15f4039d-839b-4556-a305-6f7f251b4495)
+
+Yes, b-hadrons are formed **after** the initial parton showering. The process is as follows:
+
+1. **Primary Vertex Production**:
+    
+    - In your process (pp→Z→ZHpp \to Z \to ZHpp→Z→ZH, with H→bbˉH \to b \bar{b}H→bbˉ), the Higgs boson decays into two bbb-quarks at the **primary vertex**, which is where the hard scattering took place.
+2. **Parton Showering** (Occurs Almost Instantly):
+    
+    - The outgoing **b-quarks** start radiating gluons immediately after being produced, initiating a **parton shower**. This occurs on an extremely short time scale (~10−2410^{-24}10−24 s).
+    - The showering mostly occurs **very close** to the primary vertex.
+3. **Hadronization** (Formation of B-Hadrons):
+    
+    - The b-quarks then hadronize into **b-hadrons** (e.g., B0,B+,BsB^0, B^+, B_sB0,B+,Bs​, or Λb\Lambda_bΛb​).
+    - This process happens **right after** the showering and still very close to the primary vertex (~10−2410^{-24}10−24 s).
+    - However, unlike partons, **b-hadrons** are massive (~~5 GeV) and have a long lifetime (~~10−1210^{-12}10−12 s).
+    - Due to their lifetime, **b-hadrons can travel a measurable distance before decaying**, leading to a **secondary vertex**.
+
+What is the purpose of detector vs truth level?
+How deep does the algorithm go from the finals states towards the primary vertex such that it is able to tag the jets? 
+Does the algorithm mimic an actual detector?
+If it goes too deep we call it truth level - and this is not what a detector could do.
+If its only surface level from the final states we call it detector level. Tagging requires a secondary vertex in the case of b-tagging ---> the vetex at which a b-hadron starts decaying. What if this secondary vertex is too deep? 
+
 
 -------------------------------
 ### Week 9 (24.03 - 30.03)
