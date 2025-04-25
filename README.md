@@ -316,7 +316,8 @@ In addition to the wide range of internal BSM models it is possible to use most 
 -------------------------------
 ### Week 4 (17.02 - 23.02)
 
-> [!TIP] Week 4 (17.02 – 23.02) Meeting Verbatim – 20 February 2025  
+> [!TIP]
+>   Meeting Verbatim – 20 February 2025  
 > - We produced two samples of pure CP-even and CP-odd events.  
 > - The framework is designed to track spin correlations. Spin correlations should be implemented here, but we’re not yet certain that they are.  
 > - **Action:** Ask Mike if Herwig provides any verbose output confirming that the spin density matrix has been calculated.  
