@@ -395,39 +395,68 @@ In a typical truth-level analysis, we would expect a roughly Gaussian peak centr
 > - **Send:** ATLAS truth-particle note from the Top group, outlining the rationale and principles behind the truth-level particle definition.
 
 ---------
-#### Detangling the Jets Algorithms
 
-b-tagging = technique  to identify jets that likely originated from bottom (b) quarks. This process involves analyzing several distinctive features of b-quark jets:
+### Detangling the Jets Algorithms b-tagging: what's going on
 
-- **Displaced Vertices:** B-hadrons (particles containing a b-quark) have a relatively long lifetime, so they decay at a measurable distance from the primary collision point. This decay produces a secondary vertex that is displaced from the primary vertex.
-- **Impact Parameters:** The tracks of particles from b-hadron decays tend to have large impact parameters (the shortest distance between the track and the primary vertex), which is a signature used in b-tagging.
-- **Other Characteristics:** Additional variables, such as the presence of soft leptons from semileptonic decays, help in distinguishing b-jets from jets initiated by lighter quarks or gluons.
+b-tagging is the technique used to identify jets that probably come from b-quarks. This is based on a few signatures:
 
-**1. Does the b-hadron appear after initial showering, which is supposed to take place instantaneously very near the primary vertex?**
+- **Displaced vertex**: B-hadrons live long enough (~10⁻¹² s) to travel some distance before decaying. That decay happens at a vertex that's not at the primary collision point — and this secondary vertex is one of the main handles for tagging.
+
+- **Impact parameter**: The tracks from the B-hadron decay tend to have large impact parameters — i.e., they don’t point back neatly to the primary vertex, which helps distinguish them from light-quark jets.
+
+- **Soft leptons & other tricks**: You can also catch things like soft muons or electrons from semileptonic B decays. Useful but not always present.
+
+---
+
+#### When does the b-hadron form?
+
+Yes, b-hadrons come after the initial showering. Here's the rough picture:
+
+1. **Hard scatter**: Happens at the primary vertex. In our case, this is `pp → ZH`, and the Higgs decays to `b b̄` immediately — so the b-quarks are produced right at the primary vertex.
+
+2. **Parton showering**: Almost instantaneous (~10⁻²⁴ s). The b-quarks radiate gluons — this happens close to the primary vertex.
+
+3. **Hadronization**: The b-quarks turn into B-hadrons (e.g., B⁰, B⁺, Λ_b, etc). Still happens very close to the PV.
+
+4. **Decay → secondary vertex**: The B-hadrons then travel some measurable distance before decaying — which is what gives us the displaced vertex for tagging.
+
+---
+
+#### Detector vs Truth Level
+
+This came up in the context of how deep the tagging algorithm is allowed to look.
+
+- **Truth-level tagging**: You go into the generator-level record and trace jet ancestry. You can say: “this jet came from a b-quark” because you have access to the full decay tree. This is not how experiments work — it’s useful for validation, not real analysis.
+
+- **Detector-level tagging**: You only use what a detector would actually see — tracks, hits, vertices, calorimeter deposits. If a vertex is reconstructed well enough and is displaced, and has tracks with large impact parameters, it gets tagged.
+
+**Important:** If your tagging algorithm relies on info that would require you to see inside the event history (like PDG IDs or ancestry), then it’s not detector-level tagging anymore.
+
+---
+
+#### Open questions / things to check
+
+- Is Rivet tagging b-jets using truth info (e.g., looking for a b-hadron in the jet cone)?
+- If yes → that’s not detector-level. It won’t capture real-world inefficiencies.
+- If a b-hadron flies too far before decaying, or decays outside acceptance, does that affect the multiplicity we're seeing?
+- Are we losing jets due to overlap removal with leptons?
+
+These are probably what’s behind the weird 0 or 1 b-jet cases, even in a boosted setup.
+
+---
+
+#### Diagram context
+
+Useful sketch (attached below) shows the full chain: from hard scatter to EM showers, jets, and what the detector "sees." Good for visualizing where things are happening in space/time — especially useful for understanding where the secondary vertex sits and how far we are from truth info when tagging.
 
 ![image](https://github.com/user-attachments/assets/15f4039d-839b-4556-a305-6f7f251b4495)
 
 Yes, b-hadrons are formed **after** the initial parton showering. The process is as follows:
 
-1. **Primary Vertex Production**:
-    
-    - In your process (pp→Z→ZHpp \to Z \to ZHpp→Z→ZH, with H→bbˉH \to b \bar{b}H→bbˉ), the Higgs boson decays into two bbb-quarks at the **primary vertex**, which is where the hard scattering took place.
-2. **Parton Showering** (Occurs Almost Instantly):
-    
-    - The outgoing **b-quarks** start radiating gluons immediately after being produced, initiating a **parton shower**. This occurs on an extremely short time scale (~10−2410^{-24}10−24 s).
-    - The showering mostly occurs **very close** to the primary vertex.
-3. **Hadronization** (Formation of B-Hadrons):
-    
-    - The b-quarks then hadronize into **b-hadrons** (e.g., B0,B+,BsB^0, B^+, B_sB0,B+,Bs​, or Λb\Lambda_bΛb​).
-    - This process happens **right after** the showering and still very close to the primary vertex (~10−2410^{-24}10−24 s).
-    - However, unlike partons, **b-hadrons** are massive (~~5 GeV) and have a long lifetime (~~10−1210^{-12}10−12 s).
-    - Due to their lifetime, **b-hadrons can travel a measurable distance before decaying**, leading to a **secondary vertex**.
+Paragraph on Anti -k
 
-What is the purpose of detector vs truth level?
-How deep does the algorithm go from the finals states towards the primary vertex such that it is able to tag the jets? 
-Does the algorithm mimic an actual detector?
-If it goes too deep we call it truth level - and this is not what a detector could do.
-If its only surface level from the final states we call it detector level. Tagging requires a secondary vertex in the case of b-tagging ---> the vetex at which a b-hadron starts decaying. What if this secondary vertex is too deep? 
+-------------------------------
+### Week 5 (24.02 - 2.03)
 
 
 -------------------------------
