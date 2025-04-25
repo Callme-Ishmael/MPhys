@@ -834,25 +834,21 @@ $$
 \frac{d\sigma}{d\Delta\psi} \propto 1 + A(z_1)B(z_2) \cos(2\Delta\psi)
 $$
 
-where \( z_1 \) and \( z_2 \) are the energy fractions carried by the emissions, and \( A(z) \), \( B(z) \) are functions encoding how the energy distribution affects the strength of the spin correlation.
+where \(z_1\) and \( z_2 \) are the energy fractions carried by the emissions, and \( A(z) \), \( B(z) \) are functions encoding how the energy distribution affects the strength of the spin correlation.
 
 In Figure 6 of the PanScales paper, they plot the ratio \( a_2/a_0 \) as a function of \( z_1 \) and \( z_2 \), where \( a_2 \) corresponds to the coefficient of the \( \cos(2\Delta\psi) \) term, and \( a_0 \) is the overall normalization. The ratio is maximal when both \( z_1 \) and \( z_2 \) are near 0.5, corresponding to symmetric splittings, and vanishes when either energy fraction becomes close to 0 or 1. In the case where both gluons split into quark-antiquark pairs, the correlation is positive and strongest. When one gluon splits into a quark-antiquark pair and the other into gluons, the correlation is negative. When both gluons split into gluons, the spin correlations are very small.
 
 PanScales also places this discussion in the context of Lund planes. In their setup, a Lund plane parametrization is introduced to organize emissions according to their transverse momentum and energy fraction. Each point on the Lund plane corresponds to an emission characterized by:
 
-$$
-\log\left(\frac{1}{\theta}\right), \quad \log(z\theta)
-$$
+$$\log\left(\frac{1}{\theta}\right), \quad \log(z\theta)$$
 
-where \( \theta \) is the angle between the emitting and emitted parton, and \( z \) is the energy fraction. Spin correlations manifest as modulations across the Lund plane, particularly visible when emissions are symmetric in energy fraction and at moderate angles.
+where \(\theta\) is the angle between the emitting and emitted parton, and \(z\) is the energy fraction. Spin correlations manifest as modulations across the Lund plane, particularly visible when emissions are symmetric in energy fraction and at moderate angles.
 
 Thus, both in Richardson and PanScales, spin correlations are not simply an "on/off" effect but are modulated depending on the kinematics of the splittings. The maximal sensitivity is in configurations where splittings are symmetric in energy sharing, and suppressed in strongly asymmetric emissions.
 
-In our case, applying these methods to \( H \to gg \) or \( H \to b\bar{b} \), we must carefully account for the energy fractions of the subsequent splittings and their angular distributions, as spin correlations will be strongest only in specific regions of phase space.
+In our case, applying these methods to \(H \to gg\) or \(H \to b\bar{b}\), we must carefully account for the energy fractions of the subsequent splittings and their angular distributions, as spin correlations will be strongest only in specific regions of phase space.
 
-
-Finlly here is the way I understand it: an ilustration of the steps Richardson takes
-
+To consolidate the method, I’ve sketched the full variable construction as implemented in Richardson’s algorithm. See illustration below.
 ![Drawing 2025-03-12 11 14 512 excalidraw (1)](https://github.com/user-attachments/assets/c08aa6e2-de0c-4aeb-9c71-19cdd30f3260)
 
 Karim implements this analysis I ask for in python: 
