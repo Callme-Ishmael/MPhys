@@ -459,6 +459,80 @@ Paragraph on Anti -k
 ### Week 5 (24.02 - 2.03)
 
 
+### Deconstructing the Rivet Analysis
+
+I'm looking into how `getOption` works in Rivet and how parameters like `PTJMIN` are passed in from the command line. Summary:
+
+- `getOption<T>(...)` pulls in values set via `rivet -a MC_VH2BB:PTJMIN=40`, and stores them in member variables like `_jetptcut` inside the analysis class.
+- Example:
+  ```cpp
+  _jetptcut = getOption<double>("PTJMIN", 30.0) * GeV;
+
+→ Defaults to 30 GeV unless overridden.
+
+### Jet-Lepton Contamination & Vetoing Strategy
+
+I tried vetoing jets if they contain an `e+ e−` pair with invariant mass ≈ `mZ`. The idea was to remove leptons from the Z before they mess with the jet algorithm. But this leads to events with **< 2 jets**, which is a problem since we're after events with **2 b-jets**.
+
+Alternatives:
+
+#### Option 1 — Lepton origin tracing (without hard truth tagging):
+
+- Look at final state leptons.
+- Check `ΔR` between each lepton and secondary vertices (truth-level).
+- If a lepton is close to a b-decay vertex → assume it came from the b-jet.
+- Whatever’s left should be from the Z → mark those as invisible *before* running the jet finder.
+- After jets are built, bring the leptons back for analysis.
+
+This feels like a hack to avoid full truth-level tagging. In a detector, lepton origin is inferred from tracks and EM clusters — so this kind of masking might not be needed or justified.
+
+**Better framing:**
+
+- Identify which leptons come from Z → dR or vertex association.
+- Remove them before jet finding.
+- Add them back after jets are defined.
+
+---
+
+### On QCD Backgrounds
+
+QCD background removal is tempting to do at truth level, but that’s not how real detectors work — we need to avoid this.
+
+---
+
+> [!message] Skype – 26.01.2025  
+> - File issue was due to a truncated HEPMC file.  
+> - Rivet 3.1.8 and 4.0.3 give **same histograms** → we’re good to go.  
+> - Let’s build on `MC_VH2BB` for **2 b-jet selection**.  
+> - **To check**: Are spin correlations on in Herwig?  
+>   - The input file doesn’t mention “spin” at all.  
+>   - Ask Mike if there’s any verbose output that confirms spin matrices are being calculated.  
+> - Reminder: Read the **ATLAS truth particle note** (Top group).
+
+---
+
+### ATLAS ZH Paper Notes (27.01.2025)
+
+- `H → bb̄` = 58% branching ratio.
+- ggF production swamped by QCD → VH production (Z or W + H) is preferred for cleaner triggering.
+- Boosted selection increases S/B ratio.
+
+#### Jet selection:
+
+- Algorithm: anti-kt, R = 0.4
+- Jet pT cuts:
+  - Central: pT > 20 GeV
+  - Forward: pT > 30 GeV
+  - Leading b-jet: pT > 45 GeV
+- b-tag: b-hadron within ΔR < 0.3 and pT > 5 GeV
+- 2 loose leptons; one with pT > 27 GeV
+- m(ll) ≈ mZ
+- Boost regions:
+  - High: pT^V > 150 GeV
+  - Medium: 75 < pT^V < 150 GeV
+
+
+
 -------------------------------
 ### Week 9 (24.03 - 30.03)
 
