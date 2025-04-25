@@ -313,6 +313,11 @@ In addition to the wide range of internal BSM models it is possible to use most 
 > Negative potential consequences of an action.
 > 
 
+### Week 3 (10.02 - 16.02)
+
+![image](https://github.com/user-attachments/assets/fe26d12b-1d49-419a-bf92-8cf59f5d6e62)
+
+
 -------------------------------
 ### Week 4 (17.02 - 23.02)
 
