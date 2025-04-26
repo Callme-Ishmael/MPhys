@@ -69,9 +69,12 @@ You will be logged out after 7200 seconds of inactivity.
 
 Here the shell session of user `mrtest` was teleported to work-node `wn3801320` _under the auspices of the HTCondor scheduler_ (hence the time limit). Note that the working directory `getenv=True` is _not_ `mrtest`'s home directory on Noether! -- it is a _scratch directory_ which is _local to the node_. Heavy IO work should be _confined to these local scratch directories_. However, `mrtest` can easily access his _cluster-wide home directory_ simply by issuing `cd`as follows:
 
+For more details on how to run the cluster efficiently please have a look at: !!!!!!!!
 
+
+
+#### **What is a Docker Image?**
 For testing purposes we will need to run Herwig and Rivet on our own machines. We install them as docker images.
-##### **What is a Docker Image?**
 
 A **Docker image** is a **lightweight, standalone, and executable package** that contains everything needed to run a software application, including: code, libraries, dependencies, system tools, configurations
 
@@ -92,7 +95,7 @@ docker run --rm -it -v /mnt/d/Samples:/data herwigcollaboration/herwig-7.3:7.3.0
 
 ## 01.02.2025
 
-Getting used to Herwig. What can it do?
+Getting used to Herwig.
 
 ```
 cd /Herwig/EventHandlers
@@ -296,22 +299,6 @@ This is will automatically generate the input file for you to use. I'd say keep 
 
 In addition to the wide range of internal BSM models it is possible to use most models using the UFO format with Herwig. **Herwig can currently only handle the perturbative Lorentz structures which arise in the coupling of particles but in most cases this is sufficient.**
 
-
-> [!NOTE]  
-> Highlights information that users should take into account, even when skimming.
-
-> [!TIP]
-> Optional information to help a user be more successful.
-
-> [!IMPORTANT]  
-> Crucial information necessary for users to succeed.
-
-> [!WARNING]  
-> Critical content demanding immediate user attention due to potential risks.
-
-> [!CAUTION]
-> Negative potential consequences of an action.
-> 
 
 # Week 3 (10.02 - 16.02)
 
@@ -640,7 +627,6 @@ This procedure is entirely at truth level and gives us a well-defined way to ver
 
 
 
-
 ### Outstanding Issues
 
 - **Spin correlations may not be enabled.**  
@@ -737,15 +723,13 @@ Reading about the general state of event generators made something clear:
 
 ---
 
-
-![image](https://github.com/user-attachments/assets/e91bfd89-5559-43ff-9173-dd235835b79b)
 ![image](https://github.com/user-attachments/assets/55db4483-acd8-47d0-a2ef-3d3a46a29b91)
 
 
 08.03.2025 - week 6 is ending shortly. At the moment we have trouble picking out why our branching ratios do not match the real world ones. As it has been proven difficult to force the specific decay of the Higgs in the input file - there should be no reason for the ratios to differ. But this could be specific to how Christoph's model is built. This needs to be verified using the SM model that Madgraph uses (CRT model was built on top of this one)
 
 I'm trying out different models: see picture above. UFO2HERWIG and afterwards I look inside the anatomy of the event: ~reference HIGGS_DECAY_ALL
-
+!!!!!!!!!!! needs details of heft and sm 
 
 The current focus is on devising a sure-fire test for the activation of spin correlations. With several papers in mind:
 
@@ -755,6 +739,11 @@ The current focus is on devising a sure-fire test for the activation of spin cor
 
 --------------------------------
 # Week 7 (10.03 - 16.03)
+
+Bernheuter paper is useful but we cannot guarantee the valdity of our check. Uzan is almost impossible to implement due to low stats
+
+
+
 ## Deconstructing the Richardson and closely related PanScales paper: Spin Correlations 
 
 ## 1. Richardson & Webster, _“Spin Correlations in Parton Shower Simulations”_  
