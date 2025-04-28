@@ -592,11 +592,11 @@ This week I focused entirely on understanding the Rivet framework in depth. I im
 
 ### Spin Correlation Test (Adapted from Bernreuther)
 
-Using the method from [hep-ph/9701347](https://arxiv.org/pdf/hep-ph/9701347), originally developed for studying spin correlations in \( t\bar{t} \) decays, I constructed a test to assess whether spin information is preserved in our simulation of \( H \to b\bar{b} \). The procedure is:
+Using the method from [hep-ph/9701347](https://arxiv.org/pdf/hep-ph/9701347), originally developed for studying spin correlations in \( t\bar{t} \) decays, I constructed a test to assess whether spin information is preserved in our simulation of $$H \to b\bar{b}$$. The procedure is:
 
 - Identify the Higgs boson in the event record.
 - Follow its decay to the two b-quarks.
-- Define two decay branches from the b and \( \bar{b} \), and trace each branch through the parton shower and hadronization.
+- Define two decay branches from the b and $$\bar{b}$$, and trace each branch through the parton shower and hadronization.
 - For each branch, identify the **last B-hadron** before decay.
 - Store the momentum and decay structure of that B-hadron as a proxy for the original b-quark spin information.
 
@@ -605,32 +605,49 @@ This allows for a truth-level observable that can potentially capture spin corre
 A second reference [arXiv:1410.6362](https://arxiv.org/pdf/1410.6362) provides context on using truth-level observables to probe CP and spin effects in hadronic decays. Relevant for validating the above method.
 
 
-As part of validating whether Herwig is correctly preserving spin correlations in \( H \to b\bar{b} \), I took a closer look at the theoretical framework laid out in Bernreuther et al. ([hep-ph/9701347](https://arxiv.org/pdf/hep-ph/9701347)). Their analysis is built for the case of \( \phi \to t\bar{t} \), but the methodology generalizes.
+As part of validating whether Herwig is correctly preserving spin correlations in $$H \to b\bar{b}$$, I took a closer look at the theoretical framework laid out in Bernreuther et al. ([hep-ph/9701347](https://arxiv.org/pdf/hep-ph/9701347)). Their analysis is built for the case of $$\phi \to t\bar{t}$$, but the methodology generalizes.
 
 They start from a Yukawa-like interaction for a mixed CP Higgs:
-\[
-\mathcal{L}_Y = -\frac{m_f}{v} \bar{f} (a_f + i \gamma_5 \tilde{a}_f) f \, \phi
-\]
-so the decay products can carry scalar and pseudoscalar components depending on \( a_f, \tilde{a}_f \). The key insight is that this structure imprints itself in the **spin density matrix** of the final-state fermion pair. They write this matrix as:
-\[
-R = A \cdot \mathbb{1} \otimes \mathbb{1} + B_i^+ \sigma^i \otimes \mathbb{1} + B_i^- \mathbb{1} \otimes \sigma^i + C_{ij} \sigma^i \otimes \sigma^j
-\]
-where the \( C_{ij} \) term encodes the spin-spin correlation — the main object of interest.
+
+<p align="center">
+  𝓛<sub>Y</sub> = − (m<sub>f</sub> / v) &nbsp; <b>f̄</b> (a<sub>f</sub> + iγ<sub>5</sub>ã<sub>f</sub>) <b>f</b> φ
+</p>
+
+so the decay products can carry scalar and pseudoscalar components depending on (a<sub>f</sub>, ã<sub>f</sub>).  
+The key insight is that this structure imprints itself in the spin density matrix of the final-state fermion pair.  
+They write this matrix as:
+
+<p align="center">
+  R = A ⋅ 𝟙 ⊗ 𝟙 + B<sub>i</sub><sup>+</sup> σ<sup>i</sup> ⊗ 𝟙 + B<sub>i</sub><sup>-</sup> 𝟙 ⊗ σ<sup>i</sup> + C<sub>ij</sub> σ<sup>i</sup> ⊗ σ<sup>j</sup>
+</p>
+
+where the C<sub>ij</sub> term encodes the spin-spin correlation — the main object of interest.
+
+<br/>
 
 To quantify the effect of CP violation, they build a basis of spin observables:
-\[
-\begin{aligned}
-\mathcal{O}_1 &= \hat{k} \cdot (\vec{s}_1 - \vec{s}_2) \quad &\text{(CP-odd)} \\
-\mathcal{O}_2 &= \hat{k} \cdot (\vec{s}_1 \times \vec{s}_2) \quad &\text{(CP-odd)} \\
-\mathcal{O}_3 &= \vec{s}_1 \cdot \vec{s}_2 \quad &\text{(CP-even)} \\
-\mathcal{O}_4 &= (\hat{k} \cdot \vec{s}_1)(\hat{k} \cdot \vec{s}_2) \quad &\text{(CP-even)}
-\end{aligned}
-\]
+
+<p align="center">
+  𝒪₁ = k̂ ⋅ (s⃗₁ − s⃗₂) &nbsp;&nbsp; (CP-odd)
+</p>
+<p align="center">
+  𝒪₂ = k̂ ⋅ (s⃗₁ &times; s⃗₂) &nbsp;&nbsp; (CP-odd)
+</p>
+<p align="center">
+  𝒪₃ = s⃗₁ ⋅ s⃗₂ &nbsp;&nbsp; (CP-even)
+</p>
+<p align="center">
+  𝒪₄ = (k̂ ⋅ s⃗₁)(k̂ ⋅ s⃗₂) &nbsp;&nbsp; (CP-even)
+</p>
+
 and define expectation values:
-\[
-\langle \mathcal{O}_i \rangle = \frac{\text{Tr}(R \, \mathcal{O}_i)}{\text{Tr}(R)}
-\]
+
+<p align="center">
+  ⟨𝒪<sub>i</sub>⟩ = Tr(R 𝒪<sub>i</sub>) / Tr(R)
+</p>
+
 These are the theoretical quantities they aim to measure.
+
 
 ---
 
