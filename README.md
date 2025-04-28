@@ -6,12 +6,29 @@
 
 ### Summary of last semester
 
-In the preceding semester, we initiated a study of CP violation in Higgs-fermion interactions within the framework of the Standard Model Effective Field Theory (SMEFT). Focusing on processes such as \( pp \to ZH \to e^+e^-b\bar{b} \) and \( pp \to H b\bar{b} \), we employed \texttt{MadGraph5\_aMC@NLO} for event generation, constructing CP-sensitive observables from parton-level kinematic variables. However, a significant limitation emerged: MadGraph fixes the helicities of final-state particles at generation, preventing the preservation of spin correlations crucial for probing CP-violating interference effects. This constraint rendered many CP-sensitive observables ineffective and underscored the need for a more sophisticated treatment of spin.
+In the preceding semester, we initiated a study of CP violation in Higgs-fermion interactions within the framework of the Standard Model Effective Field Theory (SMEFT). Focusing on processes such as $$pp \to ZH \to e^+e^-b\bar{b}$$ and
 
-Consequently, in the present phase of the project, we transitioned to using \texttt{Herwig}, an event generator that preserves spin correlations throughout the hard scattering, parton shower, and hadronization stages. In this semester, the focus is placed on the realistic study of the process \( pp \to Z \to ZH \), with the Higgs boson decaying to \( b\bar{b} \). Crucially, the b-quarks are allowed to shower and hadronize, enabling an analysis of CP-sensitive observables based on the true, physically accessible final states — b-jets — rather than on artificially modified decay chains.
+$$
+pp \to H b\bar{b},
+$$
 
-This transition represents a significant improvement in the physical realism of the study. Unlike previous exploratory work that relied on unphysical setups, the present work targets the direct Higgs decay into bottom quarks under experimentally relevant conditions. By leveraging \texttt{Herwig}'s spin-preserving evolution, we aim to construct and analyze observables capable of revealing the CP nature of the Higgs-bottom coupling, thereby contributing towards a deeper understanding of possible new sources of CP violation in the Higgs sector.
+we employed `MadGraph5_aMC@NLO` for event generation, constructing CP-sensitive observables from parton-level kinematic variables. However, a significant limitation emerged: MadGraph fixes the helicities of final-state particles at generation, preventing the preservation of spin correlations crucial for probing CP-violating interference effects. This constraint rendered many CP-sensitive observables ineffective and underscored the need for a more sophisticated treatment of spin.
 
+Consequently, in the present phase of the project, we transitioned to using `Herwig`, an event generator that preserves spin correlations throughout the hard scattering, parton shower, and hadronization stages. In this semester, the focus is placed on the realistic study of the process
+
+$$
+pp \to Z \to ZH,
+$$
+
+with the Higgs boson decaying to
+
+$$
+b\bar{b}.
+$$
+
+Crucially, the b-quarks are allowed to shower and hadronize, enabling an analysis of CP-sensitive observables based on the true, physically accessible final states — b-jets — rather than on artificially modified decay chains.
+
+This transition represents a significant improvement in the physical realism of the study. Unlike previous exploratory work that relied on unphysical setups, the present work targets the direct Higgs decay into bottom quarks under experimentally relevant conditions. By leveraging `Herwig`'s spin-preserving evolution, we aim to construct and analyze observables capable of revealing the CP nature of the Higgs-bottom coupling, thereby contributing towards a deeper understanding of possible new sources of CP violation in the Higgs sector.
 
 ### The Noether Cluster
 
@@ -73,7 +90,6 @@ Reference: [Noether Basic Usage Tutorial](https://github.com/MANHEP/maf-helpdesk
 For a full guide on efficient Noether usage, troubleshooting common errors, and maximizing cluster resources, please refer to the **Nother.md** tutorial in the **Noether_Managers** folder of this repository.
 
 
-**For more details on how to run the cluster efficiently please have a look at Nother.md inside the Noether Managers folder - this is a "How to use Noether guide" based on all of the experience we gained this semester.** 
 
 A notable limitation: Noether access requires being inside the university network; VPN access is not available. To address this, we plan to also configure a home workstation capable of running Herwig and Rivet using Docker containers.
 
