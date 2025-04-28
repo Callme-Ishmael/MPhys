@@ -1,0 +1,98 @@
+# -*- ThePEG-repository -*-
+
+read snippets/PPCollider.in
+
+read FRModel.model
+
+cd /Herwig/NewPhysics
+
+#############################################################
+## Additionally, you can use new particles as intermediates
+## with the ResConstructor:
+#############################################################
+insert ResConstructor:Incoming 0 /Herwig/Particles/d
+insert ResConstructor:Incoming 0 /Herwig/Particles/dbar
+insert ResConstructor:Incoming 0 /Herwig/Particles/u
+insert ResConstructor:Incoming 0 /Herwig/Particles/ubar
+insert ResConstructor:Incoming 0 /Herwig/Particles/s
+insert ResConstructor:Incoming 0 /Herwig/Particles/sbar
+insert ResConstructor:Incoming 0 /Herwig/Particles/c
+insert ResConstructor:Incoming 0 /Herwig/Particles/cbar
+insert ResConstructor:Incoming 0 /Herwig/Particles/b
+insert ResConstructor:Incoming 0 /Herwig/Particles/bbar
+insert ResConstructor:Incoming 0 /Herwig/Particles/g
+
+insert ResConstructor:Intermediates 0 /Herwig/Particles/Z0
+
+insert ResConstructor:Outgoing 0 /Herwig/Particles/Z0
+insert ResConstructor:Outgoing 1 /Herwig/FRModel/Particles/H
+
+###########################################################
+# Specialized 2->3 higgs constructors are also available,
+# where incoming lines don't need to be set.
+###########################################################
+## Higgs + W/Z, with full 2->3 ME
+# set /Herwig/NewPhysics/HVConstructor:CollisionType Hadron
+# insert /Herwig/NewPhysics/HVConstructor:VectorBoson 0 /Herwig/Particles/Z0
+# insert /Herwig/NewPhysics/HVConstructor:HiggsBoson  0 [HIGGS_NAME]
+set /Herwig/NewPhysics/HVConstructor:CollisionType Hadron
+insert /Herwig/NewPhysics/HVConstructor:VectorBoson 0 /Herwig/Particles/Z0
+insert /Herwig/NewPhysics/HVConstructor:HiggsBoson  0 /Herwig/FRModel/Particles/H
+
+# Decay modes
+do /Herwig/Particles/Z0:SelectDecayModes /Herwig/Particles/Z0/Z0->e-,e+;
+
+# Turn On/Off MPI, Showering, Hadronization
+set /Herwig/EventHandlers/EventHandler:CascadeHandler:MPIHandler NULL
+set /Herwig/EventHandlers/EventHandler:CascadeHandler /Herwig/Shower/ShowerHandler
+set /Herwig/EventHandlers/EventHandler:HadronizationHandler NULL
+set /Herwig/Analysis/Basics:CheckQuark No
+set /Herwig/Shower/ShowerHandler:SpinCorrelations Yes
+
+set /Herwig/Shower/ShowerHandler:Interactions ALL
+
+# For this case, need DecayHandler ON for h0 -> bb (Don't uncomment this line)
+#set EventHandler:DecayHandler NULL
+set /Herwig/Decays/DecayHandler:MaxLifeTime 10*mm
+
+# Branching Ratio Reweighter - Incase BR doesn't add up to 1
+create Herwig::BranchingRatioReweighter /Herwig/Generators/BRReweighter
+insert /Herwig/Generators/EventGenerator:EventHandler:PostHadronizationHandlers 0 /Herwig/Generators/BRReweighter 
+
+####################################
+####################################
+####################################
+
+# Intrinsic pT tune extrapolated to LHC energy
+set /Herwig/Shower/ShowerHandler:IntrinsicPtGaussian 2.2*GeV
+
+# disable default cuts if required
+# cd /Herwig/EventHandlers
+# create ThePEG::Cuts   /Herwig/Cuts/NoCuts
+# set EventHandler:Cuts /Herwig/Cuts/NoCuts
+
+#cd /Herwig/Cuts/
+#insert Cuts:OneCuts 0 ZBosonCut 
+#set ZBosonCut:PtMin 100*GeV
+
+# Other parameters for run
+cd /Herwig/Generators
+set EventGenerator:EventHandler:LuminosityFunction:Energy 13000.0
+set EventGenerator:NumberOfEvents 10000000
+set EventGenerator:RandomNumberGenerator:Seed 31122001
+set EventGenerator:DebugLevel 0
+set EventGenerator:EventHandler:StatLevel Full
+set EventGenerator:PrintEvent 10000000
+set EventGenerator:MaxErrors 100000
+
+#read snippets/HepMC.in
+#set /Herwig/Analysis/HepMC:PrintEvent 100000
+#set /Herwig/Analysis/HepMC:Format GenEvent
+#set /Herwig/Analysis/HepMC:Units GeV_mm
+
+create ThePEG::RivetAnalysis Rivet RivetAnalysis.so
+insert Rivet:Analyses 0 HGG_INTER_QQQQ_THREAD_SAFE
+insert EventGenerator:AnalysisHandlers 0 Rivet
+
+
+saverun embedded_rivet EventGenerator
