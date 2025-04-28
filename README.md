@@ -1,6 +1,6 @@
 # MPhys
 
-# Week 1
+# Week 1 (27.01 - 2.02)
 
 ## 30.01.2025
 
@@ -205,53 +205,92 @@ Drafted a first trial input file (`LHE.in`) that references a MadGraph-generated
 Nonetheless, direct model integration via `ufo2herwig` remains the preferred long-term solution.
 
 
+# Week 2 (03.02.2025 – 09.02.2025)
 
-# Week 2
+## Focus of the Week
 
-> [!success] Meeting Verbatim
-> To do - truth level analysis (whatever sophisticated analysis we want)
-> ROOT file skips over intermediate particle - only contains info about the final particles
-> We managed to output a .hepmc file which has all the intermediate particles
-> To read .hepmc ---> use Rivet / PyHepmc
-> What can we do with jet finding with PyHepmc. In RIVET - everything is built in, you can do the projections and go back through the event record/ the jet record and find the individual clustering
-> RIVET TOOL - fastjet building (jet obsejt where all of the individual clustering associated with) You can go backwards, uncluster jets using fastjet (package called by RIVET)
-> RIVET OBJECTS - projections
-> mpi ??? softjet ???
-> Jet constituents correlations
-> LundNet (lund plane variables - GNNs)
-> Tutorial for model (ask Valentina)
-> 
-> Up until now used Madgraph with SMEFTsim to output the lhe files. Fed said .lhe files into Herwig
-> 
-> (The other way is generating the Matrix elements within Herwig - for this need to convert the UFO file to something Herwig understands)
-> 
-> In the Herwig documentation it says that - they couldn't implement the algorithm from the paper you sent except for the case that the Matrix elements squared are outputted from Madgraph. (speak to Mike)
-> 
-> If it uses the .lhe - the matrix element calculations have already been done by Madgraph. If instead it uses Madgraph to collect the matrix elements, then it can calculate from those.
-> 
-> In the first case it would have to spontaneously inventing information (to compensate for what the .lhe file lacks - spin correlations - Madgraph looses them). It doesn't know how to construct the correlations in phase space cause it was zeroed during the calculation. It has to calculate the proper spin density matrix. 
-> 
-> What we learned in semester one is not consistent with this approach.
-> 
-> What we want in fact is to call in Madgraph just as a matrix element calculator (not the cross sections) From this assemble the spin density matrix. So in this context what file does Madgraph outputs such that it contains the matrix elements. Apparently they should be contained in the HELAS directory
-> 
-> What we have shown in semester one is in fact if you get to the corss section calculation - so after the amplitude the interference effect is killed. The specific physics effect that we are looking for is when the helicity of the bb~ pair come from the Higgs boson is different from the standard model aplitude in the bsm amplitude - we are looking at an interference effect where those helicities aren't the same.
-> When you calculate this in Madgraph then when madgraph will only produce a non zero value when the helicites in the two amplitudes are the same
-> 
-> The reason why we want to use Herwig in the first place is to not fix those helicites of the b's. Andy thinks that by the time the cross section calculation is done and is passed to the lhe file it would have killed the exact physics we want to look at
-> 
-> So, is there a way in which we can use Madgraph as an amplitude generator? - so that the spin density matrix can be calculated. The physics should show in the off diagonal elements of this density matrix
-> 
-> Definition. Spin density matrix - the different helicity contributions
-> 
-> We want the core Madgraph from within Herwig. As long as it know where it is it can call it.
+This week was dedicated to investigating the practical methods for interfacing MadGraph event generation with Herwig showering, while preserving critical spin correlation information necessary for CP-violation studies.
+
+---
+
+## Attempted Strategy: Option 1 (LHE Workflow)
+
+We explicitly tested **Option 1**, namely:
+
+1. Generate `.lhe` files using MadGraph with the SMEFTsim model.
+2. Feed the `.lhe` files into Herwig using `LHEReader` for showering, MPI, and hadronization.
+
+This approach initially succeeded in producing `.hepmc` output files containing both stable final states and intermediate particle information (important for jet substructure studies). We confirmed that `.hepmc` files could be analyzed using **Rivet** and **PyHepMC** for truth-level analyses, such as jet clustering and jet constituent correlations.
+
+---
+
+## Critical Problem: Loss of Spin Correlations
+
+Following deeper discussions with **Sid**, **Aidin**, and input from **Andy**, a fundamental flaw was identified:
+
+- MadGraph, when producing `.lhe` files, **fixes helicities** and **zeroes out** off-diagonal elements of the spin density matrix.
+- Once MadGraph writes the `.lhe` file, the spin correlations relevant to CP-violating interference effects are **irretrievably lost**.
+- Herwig cannot reconstruct or invent this missing spin information after reading the `.lhe`.
+
+The core physics we aim to study — interference effects between different helicity states of the \( b\bar{b} \) pair from the Higgs decay — requires preserving these off-diagonal spin density matrix elements.  
+Thus, **Option 1 is fundamentally insufficient** for the goals of this project.
+
+---
+
+## Investigated Alternative: Option 2 (UFO2Herwig)
+
+As a result, we began exploring **Option 2**:
+
+- Convert the UFO model (SMEFTsim) into a Herwig-usable format using `ufo2herwig`.
+- Generate matrix elements inside Herwig, allowing it to control the amplitude-level information and reconstruct the spin density matrix.
+
+Initial attempts to use UFO2Herwig succeeded in basic event generation at **tree level**. However, limitations were observed:
+- Loop-induced processes like gluon-gluon fusion (ggF) are not fully supported at tree level.
+- Parameter setting within Herwig is nontrivial and might require manual editing of the UFO model's `parameters.py`.
+
+Thus, while Option 2 offers promise, it remains technically challenging and requires further development.
+
+---
+
+## Technical Progress and Cluster Work
+
+- Established personal data directories in `/gluster/data/atlas/` to store run outputs (due to limited home directory quotas).
+- Activated Herwig using:
+  ```bash
+  source /gluster/data/theory/event-generators/herwig/activate_herwig.sh
+  ```
+- Understood basic Herwig workflow:
+  ```bash
+  Herwig read input.in
+  Herwig run input.run
+  ```
+- Gained practical experience with Unix cluster commands (`scp`, `cp`, `rm`, `mv`, `ls`, etc.).
+- Resolved technical issues such as source activation and correct file paths for `.lhe` ingestion.
+
+---
+
+## Summary of Discussions
+
+- **ROOT files** skip intermediate particles — `.hepmc` files must be used for full event record analysis.
+- **Sid** and **Aidin** confirmed that `.lhe` files lose spin correlations.
+- **Matrix element access** through MadGraph (rather than `.lhe`) is necessary for CP studies.
+- **LO (tree-level)** matrix element generation inside Herwig using UFO2Herwig was achieved, but limitations exist for loop processes.
+- Discussions on **future direction** include using **OpenLoops** to supply loops into Herwig for full event simulation.
+
+---
+
+## Immediate Next Steps
+
+- Continue developing UFO2Herwig path and attempt to incorporate loops (via OpenLoops).
+- Set up basic Rivet analysis framework on `.hepmc` output for preliminary truth-level studies (jet reconstruction, b-jet correlations).
+- Investigate manual control of parameters inside SMEFTsim UFO models for flexible generation.
+- Follow up on matrix element interfacing between MadGraph and Herwig to correctly handle helicity amplitudes.
+
+---
+
+> For full technical guidance on cluster operations, refer to the `Noether_Managers/Nother.md` guide inside the repository.
 
 
-
----------------------------------------------
-UFO2Herwig
-
-This is will automatically generate the input file for you to use. I'd say keep the simple input file around too, so you can do comparison, check for anything
 
 In addition to the wide range of internal BSM models it is possible to use most models using the UFO format with Herwig. **Herwig can currently only handle the perturbative Lorentz structures which arise in the coupling of particles but in most cases this is sufficient.**
 
