@@ -79,27 +79,38 @@ Here the shell session of user `mrtest` was teleported to work-node `wn380132
 
 **For more details on how to run the cluster efficiently please have a look at Nother.md - this is a "How to use Noether guide" based on all of the experience we gained with it.** 
 
-Nother suffers from a particular flaw. It can only be used from inside the University Network as the VPN does not work. As such it is important to set up a workstation as home as well and leave only intensive computation to Noether. We install both Herwig and Rivet through Docker.
+A notable limitation: Noether access requires being inside the university network; VPN access is not available. To address this, we plan to also configure a home workstation capable of running Herwig and Rivet using Docker containers.
 
-### **What is a Docker Image?**
-For testing purposes we will need to run Herwig and Rivet on our own machines. We install them as docker images.
+### Local Setup: Using Docker for Herwig and Rivet
 
-A **Docker image** is a **lightweight, standalone, and executable package** that contains everything needed to run a software application, including: code, libraries, dependencies, system tools, configurations
+To enable event generation and analysis outside Noether, we configure **Docker containers** for both Herwig and Rivet. Docker images are lightweight, standalone, and executable packages containing all necessary components — code, libraries, dependencies, and system tools — while sharing the host’s operating system kernel. This makes them significantly more efficient than traditional virtual machines.
 
-**Docker images are like virtual machines but much more efficient** because they share the **host operating system kernel** rather than running a full separate OS.
+### Rivet 4.0.3 Docker Setup
 
+The Rivet environment is launched using:
 
-``` bash
-Rivet 4.0.3 docker activation
-
+```bash
 docker run --rm -it -v /mnt/d/Samples:/data hepstore/rivet bash
+```
 
-root@c026cfba8ef1:/work# rivet -a MC_VH2BB -o /data/MC_VH2BB_output.yoda /data/LHC.hepmc
+Once inside the container, a Rivet analysis can be executed with:
 
-Herwig 7.1.3 docker commands
+```bash
+rivet -a MC_VH2BB -o /data/MC_VH2BB_output.yoda /data/LHC.hepmc
+```
 
+Here, the `.yoda` output file is stored inside the mounted `/data` directory.
+
+### Herwig 7.3.0 Docker Setup
+
+Similarly, the Herwig environment is started using:
+
+```bash
 docker run --rm -it -v /mnt/d/Samples:/data herwigcollaboration/herwig-7.3:7.3.0 Herwig bash
 ```
+
+This allows for local event generation and parton showering directly within the Docker container environment.
+
 
 ## 01.02.2025
 
@@ -114,26 +125,34 @@ set EventHandler:HadronizationHandler NULL
 
 ```
 
-## 02.02.2025
+### Integrating SMEFTsim Couplings into Herwig
 
-Because SMEFTsim (or our adapted Christoph model) are the only models to contain the odd coupling - we will need to intrgrate them inside Herwig somehow. Aidin suggests: 
+**02.02.2025**  
+An essential requirement is the inclusion of CP-odd couplings, as featured in the SMEFTsim or adapted Christoph models. Two approaches are considered:
 
-Option 1 - With Madgraph
-  1: Run Madgraph as you did last sem, but now also do "output madevent mysim"
-  2: This will make a folder "mysim" in which you will find LHE Files
-  3: Use LHEReader in Herwig to Shower, MPI, Hadronize etc
+- **Option 1 – Using LHE Files:**
+  1. Generate events with MadGraph.
+  2. Output LHE (Les Houches Event) files (`output madevent mysim`).
+  3. Import these LHE files into Herwig using the `LHEReader` for showering, MPI, and hadronization.
 
-Option 2 - With UFO2Herwig
-  1: Use the instructions on the website
-  2: Use the input file with the settings Karim and I looked at yesterday
+- **Option 2 – UFO to Herwig Conversion:**
+  1. Use Herwig’s `ufo2herwig` tool.
+  2. Generate a native Herwig model input file directly from the UFO model.
 
-The first thing we can do is try using ufo2herwig:
-https://herwig.hepforge.org/tutorials/bsm/ufo.html
-This is will automatically generate the input file for you to use. I'd say keep the simple input file around too, so you can do comparison, check for anything
+Reference: [Herwig UFO Tutorial](https://herwig.hepforge.org/tutorials/bsm/ufo.html)
 
-Setting up a first trial input file for Herwig to read and run, LHE.in which uses input from Madgraph. The workflow in this case is this : generate a .lhe file through Madgraph. Reference this file in your input file - and it will be used. Have a look at LHE.in in Herwig input files
+We are initially attempting Option 2 to avoid dependency on MadGraph for event generation, aiming for a cleaner, Herwig-native workflow.
 
-Naturally, we will want to avoid Madgraph
+### First Input File Setup
+
+Drafted a first trial input file (`LHE.in`) that references a MadGraph-generated `.lhe` file for Herwig to read and evolve. The workflow:
+
+1. Generate `.lhe` events via MadGraph.
+2. Reference the `.lhe` file in a Herwig input file.
+3. Run Herwig for full event evolution.
+
+Nonetheless, direct model integration via `ufo2herwig` remains the preferred long-term solution.
+
 
 
 # Week 2
