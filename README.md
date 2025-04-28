@@ -108,18 +108,73 @@ docker run --rm -it -v /mnt/d/Samples:/data herwigcollaboration/herwig-7.3:7.3.0
 This allows for local event generation and parton showering directly within the Docker container environment. A lengthy tutorial on how to run Herwig and Rivet on your own machine can be found here: https://phab.hepforge.org/w/herwigtutorial/ but more one this later...
 
 
-## 01.02.2025
+### First Contact with Herwig
 
-Getting used to Herwig.
+**Date:** 01.02.2025
 
-```
-cd /Herwig/EventHandlers
-set EventHandler:CascadeHandler NULL
-set EventHandler:CascadeHandler:MPIHandler NULL
-set EventHandler:DecayHandler NULL
-set EventHandler:HadronizationHandler NULL
+To begin familiarizing ourselves with Herwig, we explored its internal event generation architecture. Herwig's event generation process is modular, with different handlers responsible for various stages of event evolution. Each handler can be individually modified, enabled, or disabled depending on the analysis goals.
 
-```
+#### Understanding Herwig's Modular Structure
+
+The main handlers include:
+
+- **CascadeHandler**:  
+  Responsible for modeling parton showers. Disabling it (`set EventHandler:CascadeHandler NULL`) turns off all showering.
+
+- **MPIHandler**:  
+  Models multiple parton interactions (MPI), i.e., simultaneous secondary interactions in the same proton-proton collision. Disabling it (`set EventHandler:CascadeHandler:MPIHandler NULL`) prevents additional soft/secondary parton-parton scatters.
+
+- **DecayHandler**:  
+  Manages particle decays. Setting it to NULL disables the decay of unstable particles within Herwig.
+
+- **HadronizationHandler**:  
+  Handles the hadronization process, where partons are converted into hadrons. Disabling it (`set EventHandler:HadronizationHandler NULL`) stops the formation of hadrons, leaving the event at the partonic level.
+
+Understanding these components is critical for tailoring the event generation to match different levels of physical realism, depending on the analysis goals.
+
+#### Basic Workflow for Event Generation
+
+Herwig's event generation typically follows a structured workflow:
+
+1. **Reading the Input File**:  
+   Prepare an input file (e.g., `LHC-Matchbox.in`) that specifies the process and settings. Then execute:
+
+   ```bash
+   Herwig read LHC-Matchbox.in
+   ```
+
+   This step initializes the process and creates a `.run` file containing the compiled setup.
+
+2. **Running the Simulation**:  
+   Generate events using the `.run` file:
+
+   ```bash
+   Herwig run LHC-Matchbox.run -N 100
+   ```
+
+   Here, `-N 100` specifies the number of events to generate.
+
+3. **Analyzing the Output**:  
+   The output includes event records and logs that can be analyzed to study the generated events. Tools like Rivet can be integrated for further analysis.
+
+#### Key Observations
+
+- **Disabling CascadeHandler and MPIHandler**:  
+  Leads to events without any parton showers or underlying events, isolating the hard scattering process.
+
+- **Disabling DecayHandler**:  
+  Results in final states where unstable particles (e.g., Higgs, top quark) remain undecayed unless decayed manually.
+
+- **Disabling HadronizationHandler**:  
+  Provides parton-level final states, allowing direct study of quark and gluon distributions without the complications of hadronization.
+
+These explorations are crucial for understanding the impact of each component on the final event structure and for tailoring simulations to specific analysis needs.
+
+#### Additional Resources
+
+For a more in-depth understanding and advanced configurations, refer to the [Herwig Tutorials](https://herwig.hepforge.org/tutorials/) and the [Herwig 7.2 Documentation](https://herwig.hepforge.org/tutorials/gettingstarted/firstrun.html).
+
+---
 
 ### Integrating SMEFTsim Couplings into Herwig
 
