@@ -466,11 +466,21 @@ Useful sketch (attached below) shows the full chain: from hard scatter to EM sho
 
 ### Jet Clustering with the Anti-\(k_t\) Algorithm
 
-In our truth-level analysis, jets were reconstructed using the Anti-\(k_t\) clustering algorithm, which is the standard choice for LHC experiments. Anti-\(k_t\) is a sequential recombination algorithm that clusters particles based on a distance measure, favoring the creation of nearly conical jets. Specifically, it defines a distance between particles \( i \) and \( j \) as
+In our truth-level analysis, jets were reconstructed using the Anti-\(k_t\) clustering algorithm, which is the standard choice for LHC experiments. Anti-\(k_t\) is a sequential recombination algorithm that clusters particles based on a distance measure, favoring the creation of nearly conical jets. Specifically, it defines a distance between particles \(i\) and \(j\) as
 
-\[d_{ij} = \text{min}(p_{Ti}^{-2}, p_{Tj}^{-2}) \frac{\Delta R_{ij}^2}{R^2},\]
+$$
+d_{ij} = \text{min}(p_{Ti}^{-2}, p_{Tj}^{-2}) \frac{\Delta R_{ij}^2}{R^2},
+$$
 
-where \( \Delta R_{ij} \) is the separation in rapidity–azimuth space, and \( R \) is the jet radius parameter. A distance to the beam \( d_{iB} = p_{Ti}^{-2} \) is also defined. The algorithm iteratively merges the pair of objects with the smallest \( d_{ij} \), or declares an object a final jet if \( d_{iB} \) is smaller. Because of the inverse weighting by transverse momentum, hard particles act as centers that draw in softer ones, resulting in regular, circular jets that are resilient against soft contamination and pile-up. This behavior is particularly important for analyses involving boosted Higgs bosons, where closely spaced decay products from \( H \to b\bar{b} \) must be clustered into distinct jets without being excessively broadened by underlying event activity. In our study, we verified that Anti-\(k_t\) appropriately reconstructs well-separated b-jets when the Higgs is modestly boosted, although merging effects may still become non-negligible at higher boosts or tighter radius parameters.
+where \( \Delta R_{ij} \) is the separation in rapidity–azimuth space, and \(R\) is the jet radius parameter. A distance to the beam is also defined as
+
+$$
+d_{iB} = p_{Ti}^{-2}.
+$$
+
+The algorithm iteratively merges the pair of objects with the smallest \( d_{ij} \), or declares an object a final jet if \( d_{iB} \) is smaller. Because of the inverse weighting by transverse momentum, hard particles act as centers that draw in softer ones, resulting in regular, circular jets that are resilient against soft contamination and pile-up.
+
+This behavior is particularly important for analyses involving boosted Higgs bosons, where closely spaced decay products from \( H \to b\bar{b} \) must be clustered into distinct jets without being excessively broadened by underlying event activity. In our study, we verified that Anti-\(k_t\) appropriately reconstructs well-separated b-jets when the Higgs is modestly boosted, although merging effects may still become non-negligible at higher boosts or tighter radius parameters.
 
 
 -----------------------------------
