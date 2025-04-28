@@ -4,8 +4,16 @@
 
 ## 30.01.2025
 
-Summary of last semester
-##### Noether Cluster
+### Summary of last semester
+
+In the preceding semester, we initiated a study of CP violation in Higgs-fermion interactions within the framework of the Standard Model Effective Field Theory (SMEFT). Focusing on processes such as \( pp \to ZH \to e^+e^-b\bar{b} \) and \( pp \to H b\bar{b} \), we employed \texttt{MadGraph5\_aMC@NLO} for event generation, constructing CP-sensitive observables from parton-level kinematic variables. However, a significant limitation emerged: MadGraph fixes the helicities of final-state particles at generation, preventing the preservation of spin correlations crucial for probing CP-violating interference effects. This constraint rendered many CP-sensitive observables ineffective and underscored the need for a more sophisticated treatment of spin.
+
+Consequently, in the present phase of the project, we transitioned to using \texttt{Herwig}, an event generator that preserves spin correlations throughout the hard scattering, parton shower, and hadronization stages. In this semester, the focus is placed on the realistic study of the process \( pp \to Z \to ZH \), with the Higgs boson decaying to \( b\bar{b} \). Crucially, the b-quarks are allowed to shower and hadronize, enabling an analysis of CP-sensitive observables based on the true, physically accessible final states — b-jets — rather than on artificially modified decay chains.
+
+This transition represents a significant improvement in the physical realism of the study. Unlike previous exploratory work that relied on unphysical setups, the present work targets the direct Higgs decay into bottom quarks under experimentally relevant conditions. By leveraging \texttt{Herwig}'s spin-preserving evolution, we aim to construct and analyze observables capable of revealing the CP nature of the Higgs-bottom coupling, thereby contributing towards a deeper understanding of possible new sources of CP violation in the Higgs sector.
+
+
+### The Noether Cluster
 
 https://github.com/MANHEP/maf-helpdesk/blob/master/noether_basic_usage.md
 
@@ -69,11 +77,11 @@ You will be logged out after 7200 seconds of inactivity.
 
 Here the shell session of user `mrtest` was teleported to work-node `wn3801320` _under the auspices of the HTCondor scheduler_ (hence the time limit). Note that the working directory `getenv=True` is _not_ `mrtest`'s home directory on Noether! -- it is a _scratch directory_ which is _local to the node_. Heavy IO work should be _confined to these local scratch directories_. However, `mrtest` can easily access his _cluster-wide home directory_ simply by issuing `cd`as follows:
 
-For more details on how to run the cluster efficiently please have a look at Nother.md - this is a "How to use Noether guide" based on all of the experience we gained with it. 
+**For more details on how to run the cluster efficiently please have a look at Nother.md - this is a "How to use Noether guide" based on all of the experience we gained with it.** 
 
+Nother suffers from a particular flaw. It can only be used from inside the University Network as the VPN does not work. As such it is important to set up a workstation as home as well and leave only intensive computation to Noether. We install both Herwig and Rivet through Docker.
 
-
-#### **What is a Docker Image?**
+### **What is a Docker Image?**
 For testing purposes we will need to run Herwig and Rivet on our own machines. We install them as docker images.
 
 A **Docker image** is a **lightweight, standalone, and executable package** that contains everything needed to run a software application, including: code, libraries, dependencies, system tools, configurations
@@ -108,7 +116,7 @@ set EventHandler:HadronizationHandler NULL
 
 ## 02.02.2025
 
-Because SMEFTsim (or our adapted Chritoph model) are the only
+Because SMEFTsim (or our adapted Christoph model) are the only models to contain the odd coupling - we will need to intrgrate them inside Herwig somehow. Aidin suggests: 
 
 Option 1 - With Madgraph
   1: Run Madgraph as you did last sem, but now also do "output madevent mysim"
@@ -119,135 +127,13 @@ Option 2 - With UFO2Herwig
   1: Use the instructions on the website
   2: Use the input file with the settings Karim and I looked at yesterday
 
-The first thing you can do is try using ufo2herwig:
+The first thing we can do is try using ufo2herwig:
 https://herwig.hepforge.org/tutorials/bsm/ufo.html
 This is will automatically generate the input file for you to use. I'd say keep the simple input file around too, so you can do comparison, check for anything
 
-Setting up a first trial input file for Herwig to read and run, LHE.in which uses input from Madgraph. The workflow in this case is this : generate a .lhe file through Madgraph. Reference this file in your input file - and it will be used
+Setting up a first trial input file for Herwig to read and run, LHE.in which uses input from Madgraph. The workflow in this case is this : generate a .lhe file through Madgraph. Reference this file in your input file - and it will be used. Have a look at LHE.in in Herwig input files
 
-``` cpp
-##################################################
-# Example generator based on LHC parameters
-# Generic Les Houches Event file input
-# Look at customised input files for:
-# MadGraph5/aMC@NLO: LHE-MCatNLO.in
-# POWHEG:	     LHE-POWHEG.in
-# FxFx merging with MG5/aMC@NLO: LHE-FxFx.in
-# Tree-level merging with MG5/aMC@NLO: LHE-MGMerging.in
-# usage: Herwig read LHE.in
-##################################################
-# Technical parameters for this run
-##################################################
-cd /Herwig/Generators
-set EventGenerator:NumberOfEvents 10000
-set EventGenerator:RandomNumberGenerator:Seed 31122001
-set EventGenerator:DebugLevel 0
-set EventGenerator:PrintEvent 10
-set EventGenerator:MaxErrors 10000
-##################################################
-#   Create the Les Houches file handler and reader
-##################################################
-cd /Herwig/EventHandlers
-library LesHouches.so
-# create the event handler
-create ThePEG::LesHouchesEventHandler LesHouchesHandler
-
-# set the various step handlers
-set LesHouchesHandler:PartonExtractor /Herwig/Partons/PPExtractor
-set LesHouchesHandler:CascadeHandler /Herwig/Shower/ShowerHandler
-set LesHouchesHandler:DecayHandler /Herwig/Decays/DecayHandler
-set LesHouchesHandler:HadronizationHandler /Herwig/Hadronization/ClusterHadHandler
-
-# set the weight option (e.g. for MC@NLO)
-set LesHouchesHandler:WeightOption VarNegWeight
-
-# set event hander as one to be used
-set /Herwig/Generators/EventGenerator:EventHandler /Herwig/EventHandlers/LesHouchesHandler
-
-# Set up an EMPTY CUTS object
-# Normally you will have imposed any cuts you want
-# when generating the event file and don't want any more
-# in particular for POWHEG and MC@NLO you must not apply cuts on the
-# the extra jet
-create ThePEG::Cuts /Herwig/Cuts/NoCuts
-
-####################################################################
-# PDF settings #
-####################################################################
-# You may wish to use the same PDF as the events were generated with
-create ThePEG::LHAPDF /Herwig/Partons/LHAPDF ThePEGLHAPDF.so
-set /Herwig/Partons/LHAPDF:PDFName CT14lo
-set /Herwig/Partons/RemnantDecayer:AllowTop Yes
-set /Herwig/Partons/LHAPDF:RemnantHandler /Herwig/Partons/HadronRemnants
-set /Herwig/Particles/p+:PDF /Herwig/Partons/LHAPDF
-set /Herwig/Particles/pbar-:PDF /Herwig/Partons/LHAPDF
-set /Herwig/Partons/PPExtractor:FirstPDF  /Herwig/Partons/LHAPDF
-set /Herwig/Partons/PPExtractor:SecondPDF /Herwig/Partons/LHAPDF
-
-# We would recommend the shower uses the default PDFs with which it was tuned.
-# However it can be argued that the same set as for the sample should be used for
-# matched samples, i.e. MC@NLO (and less so POWHEG)
-#set /Herwig/Shower/ShowerHandler:PDFA /Herwig/Partons/LHAPDF
-#set /Herwig/Shower/ShowerHandler:PDFB /Herwig/Partons/LHAPDF
-
-# You can in principle also change the PDFs for the remnant extraction and
-# multiple scattering. As the generator was tuned with the default values
-# this is STRONGLY DISCOURAGED without retuning the MPI parameters
-# create the reader and set cuts
-create ThePEG::LesHouchesFileReader LesHouchesReader
-set LesHouchesReader:FileName /home/ana/workspace/mad/saves/Events/run_01/unweighted_events.lhe.gz
-set LesHouchesReader:AllowedToReOpen No
-set LesHouchesReader:InitPDFs 0
-set LesHouchesReader:Cuts /Herwig/Cuts/NoCuts
-
-# option to ensure momentum conservation is O.K. due rounding errors (recommended)
-set LesHouchesReader:MomentumTreatment RescaleEnergy
-# set the pdfs
-set LesHouchesReader:PDFA /Herwig/Partons/LHAPDF
-set LesHouchesReader:PDFB /Herwig/Partons/LHAPDF
-# if using BSM models with QNUMBER info
-#set LesHouchesReader:QNumbers Yes
-#set LesHouchesReader:Decayer /Herwig/Decays/Mambo
-# and add to handler
-insert LesHouchesHandler:LesHouchesReaders 0 LesHouchesReader
-
-##################################################
-#  Shower parameters
-##################################################
-# normally, especially for POWHEG, you want
-# the scale supplied in the event files (SCALUP)
-# to be used as a pT veto scale in the parton shower
-set /Herwig/Shower/ShowerHandler:MaxPtIsMuF Yes
-set /Herwig/Shower/ShowerHandler:RestrictPhasespace Yes
-# Shower parameters
-# treatment of wide angle radiation
-set /Herwig/Shower/PartnerFinder:PartnerMethod Random
-set /Herwig/Shower/PartnerFinder:ScaleChoice Partner
-# with MC@NLO these parameters are required for consistency of the subtraction terms
-# suggested parameters (give worse physics results with POWHEG)
-#set /Herwig/Shower/KinematicsReconstructor:InitialInitialBoostOption LongTransBoost
-#set /Herwig/Shower/KinematicsReconstructor:ReconstructionOption General
-#set /Herwig/Shower/KinematicsReconstructor:InitialStateReconOption Rapidity
-#set /Herwig/Shower/ShowerHandler:SpinCorrelations No
-
-##################################################
-# LHC physics parameters (override defaults here) 
-##################################################
-# e.g if different top mass used
-#set /Herwig/Particles/t:NominalMass 173.0
-
-#hepmc
-insert /Herwig/Generators/EventGenerator:AnalysisHandlers[0] /Herwig/Analysis/HepMCFile
-set /Herwig/Analysis/HepMCFile:PrintEvent 100
-set /Herwig/Analysis/HepMCFile:Format GenEvent
-set /Herwig/Analysis/HepMCFile:Units GeV_mm
-
-##################################################
-# Save run for later usage with 'Herwig run'
-##################################################
-cd /Herwig/Generators
-saverun LHE EventGenerator
-```
+Naturally, we will want to avoid Madgraph
 
 
 # Week 2
