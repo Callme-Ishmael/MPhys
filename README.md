@@ -635,13 +635,18 @@ These are the theoretical quantities they aim to measure.
 ---
 
 In practice, they construct CP-odd observables like:
-$$
-\mathcal{E}_1 = \langle \hat{k}_t \cdot \hat{p}_{\ell^+}^* \rangle_{\mathcal{A}} + \langle \hat{k}_t \cdot \hat{p}_{\ell^-}^* \rangle_{\bar{\mathcal{A}}}
-$$
+
+<p align="center">
+  ℰ<sub>1</sub> = ⟨k̂<sub>t</sub> · p̂<sub>ℓ<sup>+</sup></sub>*⟩<sub>𝒜</sub> + ⟨k̂<sub>t</sub> · p̂<sub>ℓ<sup>-</sup></sub>*⟩<sub>𝒜̄</sub>
+</p>
 
 and
-\[\mathcal{E}_2 = \langle \hat{k}_t \cdot (\hat{p}_{\ell^+}^* \times \hat{p}_{\bar{b}}^*) \rangle_{\mathcal{A}} - \langle \hat{k}_t \cdot (\hat{p}_{\ell^-}^* \times \hat{p}_b^*) \rangle_{\bar{\mathcal{A}}}\]
-These are **averages over events**, and that’s the key point — spin correlations aren’t extracted from a single decay but from statistical asymmetries over many events. \( \mathcal{E}_2 \), in particular, is sensitive to spin-spin interference and is strongly CP-odd.
+
+<p align="center">
+  ℰ<sub>2</sub> = ⟨k̂<sub>t</sub> · (p̂<sub>ℓ<sup>+</sup></sub>* × p̂<sub>𝑏̄</sub>*)⟩<sub>𝒜</sub> − ⟨k̂<sub>t</sub> · (p̂<sub>ℓ<sup>-</sup></sub>* × p̂<sub>b</sub>*)⟩<sub>𝒜̄</sub>
+</p>
+
+These are <b>averages over events</b>, and that’s the key point — spin correlations aren’t extracted from a single decay but from statistical asymmetries over many events. ℰ<sub>2</sub>, in particular, is sensitive to spin-spin interference and is strongly CP-odd.
 
 ---
 
