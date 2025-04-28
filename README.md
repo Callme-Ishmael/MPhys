@@ -778,7 +778,7 @@ Bernheuter paper is useful but we cannot guarantee the valdity of our check. Uza
 ----------
 
 
-This week I focused on understanding in full detail the theoretical and algorithmic construction of spin correlations as implemented in the Herwig (Richardson) and PanScales frameworks.
+This week we focused on understanding in full detail the theoretical and algorithmic construction of spin correlations as implemented in the Herwig (Richardson) and PanScales frameworks.
 
 In the Richardson paper (Herwig shower with spin correlations), the central idea is that spin effects are captured by assigning a spin density matrix to each particle at the moment of production or branching. Specifically, when a gluon is produced, for example from a hard process such as \( H \to gg \), it is assigned a spin density matrix \( \rho \) determined by the helicity amplitudes of the production process:
 
@@ -840,6 +840,22 @@ To consolidate the method, I’ve sketched the full variable construction as imp
 ![Drawing 2025-03-12 11 14 512 excalidraw (1)](https://github.com/user-attachments/assets/c08aa6e2-de0c-4aeb-9c71-19cdd30f3260)
 
 Karim implements this analysis I ask for in python: 
+
+This is a fairly specialized particle‐physics analysis script. At a high level, it
+
+Loads a Parquet file of simulated Higgs‐decay events (each with 14 “daughter” particles and weights).
+
+Extracts four-momentum vectors (E,px,py,pz) for each particle using the vector library.
+
+Builds “interjet” and “intrajet” observables — essentially angular separations between subclusters inside each event — via two different formalisms (“Richardson” and “Panscales No-Nonsense”).
+
+Applies channel filters (e.g. H→gg→qq¯qq¯ vs. H→bb→qgqg, etc.) by checking PDG IDs.
+
+Weights, bins, and histograms those angular observables (Δφ or Δψ), computing statistical uncertainties.
+
+Loops over the file in row‐group “chunks,” accumulating all events in per‐channel dictionaries.
+
+At the end, calls plotting routines to write out normalized differential cross-section histograms for each channel, z-cut, and boost‐configuration.
 
 ### References
 
