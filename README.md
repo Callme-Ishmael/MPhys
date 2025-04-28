@@ -1086,7 +1086,7 @@ We use the fact that we do not shower with Herwig this time.
 - Herwig, through **UFO2Herwig**, imports all **interactions and decay widths** from the **UFO model file**.
 - Once the **Higgs production process** is defined, Herwig **automatically applies** the **decay branching ratios** based on the **decay width table**.
 - You don't need to specify **decay chains explicitly**. Herwig will decay **all unstable particles** unless explicitly prevented from doing so.
-  ![image](https://github.com/user-attachments/assets/aa06bd91-625b-4d9c-8a4f-d45a7abbea7f)
+
 
 
 -------------------------------
