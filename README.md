@@ -295,7 +295,35 @@ Thus, while Option 2 offers promise, it remains technically challenging and requ
 In addition to the wide range of internal BSM models it is possible to use most models using the UFO format with Herwig. **Herwig can currently only handle the perturbative Lorentz structures which arise in the coupling of particles but in most cases this is sufficient.**
 
 
-# Week 3 (10.02 - 16.02)
+
+# Week 3 (10.02.2025 – 16.02.2025)
+
+## Focus of the Week
+
+During this week, we officially abandoned the approach of using MadGraph-generated LHE files as input to Herwig, following confirmation that spin correlations are irreversibly lost at the LHE stage. Instead, we moved to the strategy of using MadGraph purely as a matrix element generator, interfaced directly with Herwig through the Matchbox framework. This shift was necessary to preserve the delicate interference effects critical to our CP-violation study.
+
+---
+
+## Summary of Progress
+
+Our first objective was to import the SMEFTsim model into Herwig using the `ufo2herwig` converter. This effort revealed multiple issues. The SMEFTsim UFO was originally written in Python 2, while Herwig expects Python 3 compatible models. We attempted conversion using both the `2to3` tool and the `--convert` option in `ufo2herwig`, but even after these adjustments, the conversion failed. Herwig raised errors about unsupported vertices and unrecognized Lorentz structures, particularly for 4-point interactions.
+
+We then attempted to follow the terminal suggestion of using the `--include-generic` option, but this led to a new Python error inside Herwig’s ThePEG framework, related to a deprecated `sort()` function. Manual modification of ThePEG’s Python files was attempted, but given the scale of the changes needed, we ultimately abandoned this path.
+
+Instead, we adopted a more practical workaround: we modified `general_lorentz.py` to simply skip any unsupported vertices rather than crash. This allowed the conversion to complete, producing `.model` and `.so` files. However, many vertices were skipped, particularly all four-point interactions and some critical three-point vertices like \( Z \to \mu^+ \mu^- \). Fortunately, the \( ggh \) and \( hbb \) vertices required for gluon-gluon fusion and Higgs decay to \( b\bar{b} \) were not among those skipped.
+
+In parallel, we tested Christoph’s custom UFO model. This model converted successfully without any manual intervention. However, Christoph’s model lacks effective gluon-gluon-Higgs vertices, making it unsuitable for simulating gluon fusion processes. As a result, we shifted focus to studying the associated production process \( pp \to ZH \to (\ell^+\ell^-)(b\bar{b}) \), where these vertices are not required.
+
+At this stage, we encountered a new practical limitation. The Herwig installation on the Noether cluster only supported two UFO models, `loop_sm` and `heft`. Custom models such as ours, even after successful conversion, could not be loaded because the corresponding `.so` shared object files were not integrated into the Herwig build. Sid and Aidin began working on patching the Herwig installation to allow loading of external `.so` files.
+
+Following discussions with our supervisor and Herwig experts, we also adopted a stricter philosophy for the event generation chain. We committed to using MadGraph only as a matrix element provider, ensuring that Herwig could assemble the full spin density matrix without introducing artificial spin correlations. OpenLoops was to be excluded wherever possible, with the aim of working purely at tree level for initial tests.
+
+Finally, we started constructing custom `.in` files for Herwig, specifying manual settings for the collision energy, PDF set, matrix element generation, process selection, and event handling, based on the Matchbox formalism. Parallel to this, we continued working on Rivet for future analysis, preparing to handle `.hepmc` outputs and exploring methods to produce `.h5` files for machine learning inputs.
+
+This shift in methodology was summarized and communicated to our supervisor via a detailed series of emails, supported by mind maps outlining the new workflow. Here are the emails for reference
+
+---
+
 
 ![image](https://github.com/user-attachments/assets/fe26d12b-1d49-419a-bf92-8cf59f5d6e62)
 
