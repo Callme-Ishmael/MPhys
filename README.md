@@ -15,69 +15,65 @@ This transition represents a significant improvement in the physical realism of 
 
 ### The Noether Cluster
 
-https://github.com/MANHEP/maf-helpdesk/blob/master/noether_basic_usage.md
+We use the **Noether Cluster** of UoM to perform computationally intensive tasks such as event generation and showering.
 
-- **Login Node:** Used only for file transfers, compiling code, and job submissions. **Do not run heavy computations here.**
-- **Worker Nodes:** Used for computations. You need to request a session on a worker node.
+Access and usage are structured as follows:
 
-It is thus necessary to _copy critical code and data back into one's home or Lab directory_ before the interactive session terminates.
+- **Login Node:**  
+  Used only for lightweight operations such as file transfers, compiling code, and submitting jobs.  
+  **Heavy computations must not be performed here.**
+
+- **Worker Nodes:**  
+  Computations are performed on worker nodes, accessed via the HTCondor scheduler.  
+  Users must _copy critical code and data back_ to permanent storage (e.g., home or Lab directories) before the interactive session ends.
+
+More detailed instructions are available in the repository under **`Noether_Managers/Nother.md`**, which provides a comprehensive "How to use Noether" guide.
+
+Reference: [Noether Basic Usage Tutorial](https://github.com/MANHEP/maf-helpdesk/blob/master/noether_basic_usage.md)
+
+---
+
+### Basic Workflow
+
+1. **Connect to Noether:**
+   ```bash
+   ssh abercaru@noether.hep.manchester.ac.uk
+   ```
+
+2. **Submit an interactive HTCondor session:**
+   ```bash
+   condor_submit -i getenv=True
+   ```
+
+3. **Inside the worker node:**
+   - The current working directory is a **local scratch directory** (e.g., `/scratch/condor_pool/condor/dir_xxxxxxx`).
+   - Heavy I/O operations should be confined to this local directory.
+   - To access your permanent home directory at any time:
+     ```bash
+     cd /gluster/home/abercaru
+     ```
+
+4. **Useful Commands:**
+   - Copy files between Noether and local machine using `scp`. Example:
+     ```bash
+     scp abercaru@noether.hep.manchester.ac.uk:/gluster/data/atlas/abercaru/SM_test/LHC-FRModel.hepmc .
+     ```
+   - Activate Herwig environment:
+     ```bash
+     source /gluster/data/theory/mphysproject/ana-karim/activate_herwig.sh
+     ```
+
+---
+
+**Notes:**
+- The scratch directory is **temporary** and local to the worker node.
+- Sessions are **time-limited** (typically two hours of inactivity will cause logout).
+- _Always copy important results back to permanent storage after the computation ends._
+
+For a full guide on efficient Noether usage, troubleshooting common errors, and maximizing cluster resources, please refer to the **Nother.md** tutorial in the **Noether_Managers** folder of this repository.
 
 
-``` shell
-ssh abercaru@noether.hep.manchester.ac.uk
-Ab1357924680
-
-[abercaru@vm119 ~]$ pwd                           # <---- On Noether's login node!
-/gluster/home/abercaru
-
-condor_submit -i  getenv=True
-[abercaru@wn3802270 dir_1649162]$ pwd
-/scratch/condor_pool/condor/dir_1649162
-
-[mrtest@wn3801320 ~]$ cd $_CONDOR_SCRATCH_DIR
-
-
-cd /gluster/data/theory/event-generators/herwig/herwig730/src-old/Herwig-7.3.0/src/Matchbox
-
-
-scp abercaru@noether.hep.manchester.ac.uk:/gluster/data/atlas/abercaru/SM_test/LHC-FRModel.hepmc .
-
-scp ./Christoph-Model_UFO.tar.gz
-abercaru@noether.hep.manchester.ac.uk:/gluster/data/atlas/abercaru/CRT_test
-
-source ----theory/mphysproject/ana-karim/activate_herwig.sh
-Herwig read .in file (de unde)
-```
-
-``` shell
-C:\Users\anate>ssh abercaru@noether.hep.manchester.ac.uk
-(abercaru@noether.hep.manchester.ac.uk) Password:
-Last login: Tue Feb  4 12:41:44 2025 from 10.204.58.116
-[abercaru@vm119 ~]$ pwd
-/gluster/home/abercaru
-[abercaru@vm119 ~]$ ls
-[abercaru@vm119 ~]$ cd $_CONDOR_SCRATCH_DIR
-[abercaru@vm119 ~]$ ls
-[abercaru@vm119 ~]$ pwd
-/gluster/home/abercaru
-[abercaru@vm119 ~]$ echo $_CONDOR_SCRATCH_DIR
-
-[abercaru@vm119 ~]$ $ condor_submit -i getenv=True
--bash: $: command not found
-[abercaru@vm119 ~]$ condor_submit -i  getenv=True
-Submitting job(s).
-1 job(s) submitted to cluster 5261.
-Waiting for job to start...
-Welcome to slot1_1@wn3802270.hep.manchester.ac.uk!
-You will be logged out after 7200 seconds of inactivity.
-[abercaru@wn3802270 dir_1649162]$ pwd
-/scratch/condor_pool/condor/dir_1649162
-[abercaru@wn3802270 dir_1649162]$
-```
-
-Here the shell session of user `mrtest` was teleported to work-node `wn3801320` _under the auspices of the HTCondor scheduler_ (hence the time limit). Note that the working directory `getenv=True` is _not_ `mrtest`'s home directory on Noether! -- it is a _scratch directory_ which is _local to the node_. Heavy IO work should be _confined to these local scratch directories_. However, `mrtest` can easily access his _cluster-wide home directory_ simply by issuing `cd`as follows:
-
-**For more details on how to run the cluster efficiently please have a look at Nother.md - this is a "How to use Noether guide" based on all of the experience we gained with it.** 
+**For more details on how to run the cluster efficiently please have a look at Nother.md inside the Noether Managers folder - this is a "How to use Noether guide" based on all of the experience we gained this semester.** 
 
 A notable limitation: Noether access requires being inside the university network; VPN access is not available. To address this, we plan to also configure a home workstation capable of running Herwig and Rivet using Docker containers.
 
@@ -109,7 +105,7 @@ Similarly, the Herwig environment is started using:
 docker run --rm -it -v /mnt/d/Samples:/data herwigcollaboration/herwig-7.3:7.3.0 Herwig bash
 ```
 
-This allows for local event generation and parton showering directly within the Docker container environment.
+This allows for local event generation and parton showering directly within the Docker container environment. A lengthy tutorial on how to run Herwig and Rivet on your own machine can be found here: https://phab.hepforge.org/w/herwigtutorial/ but more one this later...
 
 
 ## 01.02.2025
