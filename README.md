@@ -857,15 +857,72 @@ Loops over the file in row‐group “chunks,” accumulating all events in per�
 
 At the end, calls plotting routines to write out normalized differential cross-section histograms for each channel, z-cut, and boost‐configuration.
 
+
+
+
+However this analysis doesn't yield anything FOR h --> bb. Moreover the analysis requires a fiex graph strucutre that ends in 8 children. This doesn't always happen
+
+As this is quite alarming we go back to basics and try a very rudimentary analysis of H --> gg in a nromal input file (see Rudimentary input file). Generating two samples - one with spin correlations on and one with spin correlations off. However we encounter the same issue of not enough particles in the final state.
+
+Input 
 ### References
 
 - P. Richardson, *Spin correlations in Monte Carlo simulations*, [arXiv:1807.01955](https://arxiv.org/abs/1807.01955)
 - PanScales Collaboration, *Towards parton shower precision*, [arXiv:2103.16526](https://arxiv.org/abs/2103.16526)
 
+-------------------------------
+# Week 8 (17.03 - 23.03)
+
+The following image outlines the problem
+![image](https://github.com/user-attachments/assets/0f40c0b1-295b-4531-a649-1adb268425b9)
+
+An email is sent out to Mike about this
+
+
+> [!email]
+> Hi Mike,  
+>   
+> I’m one of Andy’s MPhys students. We had an issue with showering in Herwig and Sid advised us to contact you. We will be grateful if you can point us to the root of the problem. CC’ing Andy, Sid and my MPhys partner, Ana, to keep them in the loop.  
+>   
+> We are simulating Higgs boson production via gluon-gluon fusion with the Higgs decaying to bb and gg. For both the bb and the gg cases, we get very minimal branching (typically the whole bb/gg shower has 2-4 branchings in total). We are using the AO shower. Hadronisation is turned off for computational efficiency. Essentially, we would want to do Lund plane declustering on our jets, so we need the rich substructure of the shower and we don’t care about hadronisation. I’m attaching the input file used for event generation, along with a visualisation of one of the events for clarity.  
+>   
+> Your help and insights are truly appreciated. Thank you for taking the time.  
+>   
+> Best,  
+> Karim
+
+
+
+> [!reply]
+> Dear Karim,
+> 
+> I agree this is a bit surprising, i.e. that there are so few gluon emissions in the Higgs decay to two gluons. But it is hard to tell much from one event. Do you have any information on the distribution of number of gluons produced in the Higgs decay, or their average? This is probably something Sid could also calculate using his standalone calculation (although that is with a different shower algorithm, so it would be a rough indication rather than a precise validation).
+> 
+> @Siddharth Sule: do you know offhand what infrared cutoff the shower is using?
+> 
+> Thanks,
+> 
+> Mike.
+
+The infrared cutoff should be about pT = 0.654714 GeV
+Link: [https://phab.hepforge.org/source/herwighg/browse/default/src/defaults/Shower.in](https://phab.hepforge.org/source/herwighg/browse/default/src/defaults/Shower.in "https://phab.hepforge.org/source/herwighg/browse/default/src/defaults/Shower.in") line 129
+
+With a cutoff of 0.655 GeV, I'd expect H->gg to produce about 13 gluons on average. That's an MLLA estimate, so quite uncertain, but say 10-15 gluons. If the average number is significantly below that, I'd worry that the shower is not working correctly.
+
+![image](https://github.com/user-attachments/assets/873bedb8-ed8c-4c1b-b2f0-1309b37fbfaa)
+
+
+> [!email]
+> Hi Mike,
+> 
+> Thank you for your response. We plotted the distribution of the number of gluons in the final state (attached) and it peaks at around 10 or 11.  Does this mean that the shower is working as it should?
+
+So this is sorted out and there is nothing we can do but adapt. 
+
 
 
 -------------------------------
-### Week 9 (24.03 - 30.03)
+# Week 9 (24.03 - 30.03)
 
 Andy sends in [email](emails/26.03.2025.md) 
 how many events do we even have of this
@@ -874,8 +931,6 @@ First test: write a .csv for the decay chain you have been analysing, i.e. H->b 
 As a matter of fact. We have already done everything he asked. We’re at step 4
 
 Andy suggests contour plot to check 
-<img src="https://github.com/user-attachments/assets/102e2e33-b1be-440f-a683-6a61fa97fea0" width="100" height="100"/>
-
 
 ![image](https://github.com/user-attachments/assets/2a7ec977-1ac8-459a-b681-77429c8771b7)
 
