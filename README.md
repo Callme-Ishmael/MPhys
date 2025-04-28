@@ -132,6 +132,9 @@ The main handlers include:
 
 Understanding these components is critical for tailoring the event generation to match different levels of physical realism, depending on the analysis goals.
 
+![image](https://github.com/user-attachments/assets/b192b794-73e6-4a0c-801f-ab39ece3e0f7)
+
+
 #### Basic Workflow for Event Generation
 
 Herwig's event generation typically follows a structured workflow:
