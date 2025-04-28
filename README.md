@@ -69,7 +69,7 @@ You will be logged out after 7200 seconds of inactivity.
 
 Here the shell session of user `mrtest` was teleported to work-node `wn3801320` _under the auspices of the HTCondor scheduler_ (hence the time limit). Note that the working directory `getenv=True` is _not_ `mrtest`'s home directory on Noether! -- it is a _scratch directory_ which is _local to the node_. Heavy IO work should be _confined to these local scratch directories_. However, `mrtest` can easily access his _cluster-wide home directory_ simply by issuing `cd`as follows:
 
-For more details on how to run the cluster efficiently please have a look at: !!!!!!!!
+For more details on how to run the cluster efficiently please have a look at Nother.md - this is a "How to use Noether guide" based on all of the experience we gained with it. 
 
 
 
