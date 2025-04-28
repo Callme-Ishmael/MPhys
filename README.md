@@ -635,7 +635,10 @@ These are the theoretical quantities they aim to measure.
 ---
 
 In practice, they construct CP-odd observables like:
-$$\mathcal{E}_1 = \langle \hat{k}_t \cdot \hat{p}_{\ell^+}^* \rangle_{\mathcal{A}} + \langle \hat{k}_t \cdot \hat{p}_{\ell^-}^* \rangle_{\bar{\mathcal{A}}}$$
+$$
+\mathcal{E}_1 = \langle \hat{k}_t \cdot \hat{p}_{\ell^+}^* \rangle_{\mathcal{A}} + \langle \hat{k}_t \cdot \hat{p}_{\ell^-}^* \rangle_{\bar{\mathcal{A}}}
+$$
+
 and
 \[\mathcal{E}_2 = \langle \hat{k}_t \cdot (\hat{p}_{\ell^+}^* \times \hat{p}_{\bar{b}}^*) \rangle_{\mathcal{A}} - \langle \hat{k}_t \cdot (\hat{p}_{\ell^-}^* \times \hat{p}_b^*) \rangle_{\bar{\mathcal{A}}}\]
 These are **averages over events**, and that’s the key point — spin correlations aren’t extracted from a single decay but from statistical asymmetries over many events. \( \mathcal{E}_2 \), in particular, is sensitive to spin-spin interference and is strongly CP-odd.
