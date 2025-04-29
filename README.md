@@ -501,7 +501,22 @@ rivet-mkhtml /data/ANALYSIS_X/Rivet.yoda -o /data/ANALYSIS_X/html_plots
 -------------------------------
 # Week 5 (24.02 - 2.03)
 
-~ this needs a lot of Rivet details
+# Understanding Rivet: Projections and Analysis Flow
+
+In Rivet, the structure of an analysis is organized around the concept of **projections**. A projection is a modular algorithm that extracts a particular physical feature from the event record, such as clustering final-state particles into jets (using FastJet), selecting isolated leptons, or computing invariant masses. The design philosophy of Rivet emphasizes modularity and reproducibility, allowing analyses to be portable across different event generators.
+
+Each Rivet analysis consists of two main phases. The first is the `init()` function, which is executed once at the beginning of the run. During this phase, all projections required by the analysis are declared and registered. For instance, if jets are needed, the analysis declares a `FastJets` projection, specifying parameters such as the clustering algorithm (e.g., anti-\(k_T\)) and the radius parameter \( R \). Similarly, projections for identifying final-state leptons or photons are declared here, often using helper projections like `FinalState` or `DressedLeptons`.
+
+The second phase is the `analyze()` function, which is executed once for each event. Here, the previously declared projections are used to retrieve the corresponding objects in the current event. The analysis logic is implemented at this stage: cuts are applied, observables are computed, and histograms are filled. For example, after retrieving a list of reconstructed jets from the `FastJets` projection, the analysis might impose a minimum transverse momentum threshold, select b-tagged jets, and compute the invariant mass of the leading two jets.
+
+Histograms are declared during the `init()` stage using the `book()` function, and filled during `analyze()` using the `fill()` method. This ensures that Rivet manages histogram normalization and output automatically, enforcing consistency across analyses.
+
+At the end of the run, the `finalize()` function is called. This is where the histograms are normalized, scaled if necessary, and prepared for output. Typically, Rivet outputs histograms in the `.yoda` format, a standardized, human-readable data format designed for particle physics analyses.
+
+An essential feature of Rivet is that all projections and analyses are based solely on the truth-level information available in the event record, without reference to detector-specific effects. This ensures that Rivet analyses remain generator-independent and reproducible, allowing for meaningful generator validation and physics comparisons.
+
+When developing a new Rivet analysis, it is crucial to carefully define the selection criteria, object reconstruction, and observable computation exclusively through projections and event record data, avoiding any assumptions about experimental detector performance. This guarantees that the analysis captures only the physics embedded in the event generator, free from detector effects.
+
 
 ### Deconstructing the Rivet Analysis
 
