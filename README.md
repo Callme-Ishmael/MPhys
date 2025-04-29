@@ -501,7 +501,7 @@ rivet-mkhtml /data/ANALYSIS_X/Rivet.yoda -o /data/ANALYSIS_X/html_plots
 -------------------------------
 # Week 5 (24.02 - 2.03)
 
-# Understanding Rivet: Projections and Analysis Flow
+### Understanding Rivet: Projections and Analysis Flow
 
 In Rivet, the structure of an analysis is organized around the concept of **projections**. A projection is a modular algorithm that extracts a particular physical feature from the event record, such as clustering final-state particles into jets (using FastJet), selecting isolated leptons, or computing invariant masses. The design philosophy of Rivet emphasizes modularity and reproducibility, allowing analyses to be portable across different event generators.
 
@@ -573,6 +573,8 @@ QCD background removal is tempting to do at truth level, but that’s not how re
 ### ATLAS ZH Paper Notes (27.01.2025)
 https://arxiv.org/pdf/1808.08238
 
+We want to see how consistent the cuts imposed by MVH2BB are with the ATLAS studies of ZH
+
 - `H → bb̄` = 58% branching ratio.
 - ggF production swamped by QCD → VH production (Z or W + H) is preferred for cleaner triggering.
 - Boosted selection increases S/B ratio.
@@ -600,7 +602,7 @@ https://arxiv.org/pdf/1808.08238
   - A 30 GeV minimum \( p_T \) cut on jets, which is justified.
   - Use of `DileptonFinder` to dress and veto leptons before jet clustering via FastJet, reducing lepton–jet overlap issues.
 
-In principle, this analysis provides a robust starting point for our study.
+So, in principle, this analysis provides a robust starting point for our study.
  
 ----------
 ### Theoretical Note on Spin Correlations
@@ -609,7 +611,7 @@ This week we focused entirely on understanding the Rivet framework in depth. I i
 
 ### Spin Correlation Test (Adapted from Bernreuther)
 
-Using the method from [hep-ph/9701347](https://arxiv.org/pdf/hep-ph/9701347), originally developed for studying spin correlations in $$t\bar{t}$$ decays, I constructed a test to assess whether spin information is preserved in our simulation of $$H \to b\bar{b}$$. The procedure is:
+Using the method from [hep-ph/9701347](https://arxiv.org/pdf/hep-ph/9701347), originally developed for studying spin correlations in $$t\bar{t}$$ decays, we constructed a test to assess whether spin information is preserved in our simulation of $$H \to b\bar{b}$$. The procedure is:
 
 - Identify the Higgs boson in the event record.
 - Follow its decay to the two b-quarks.
@@ -691,23 +693,25 @@ Because b-quarks hadronise, we can’t use spinors directly — but we can still
 - Follow both decay branches forward to the last B-hadron before decay.
 - Use the 3-momenta of the resulting B-hadrons and their decay products as spin analysers.
 
-By analysing angular distributions (e.g. triple products), we can reconstruct CP-odd observables analogously to $$\mathcal{E}_2$$. In particular, we implement:
-\[
-\vec{k}_b \cdot (\vec{n}_{bb} \times \vec{n}_{ee})
-\]
-as a Rivet observable, where \( \vec{n}_{bb} \) and \( \vec{n}_{ee} \) are plane normals built from the decay products of each b-branch and the Z → \( \ell^+ \ell^- \) system respectively.
+<p>
+By analysing angular distributions (e.g., triple products), we can reconstruct CP-odd observables analogously to <b>ℰ₂</b>. In particular, we implement:
+</p>
 
-This procedure is entirely at truth level and gives us a well-defined way to verify whether spin correlations survive in our event generator output.
+<p align="center">
+k⃗<sub>b</sub> · (n⃗<sub>bb</sub> × n⃗<sub>ee</sub>)
+</p>
+
+<p>
+as a Rivet observable, where n⃗<sub>bb</sub> and n⃗<sub>ee</sub> are plane normals built from the decay products of each b-branch and the Z &rarr; ℓ<sup>+</sup>ℓ<sup>-</sup> system respectively.
+</p>
 
 
+This procedure is entirely at truth level and gives us a well-defined way to verify whether spin correlations survive in our event generator output. The relevant Rivet analyses developed for this study are `LAMBDAB` and `HIGGS2BB`, located in the designated analysis folder. The `LAMBDAB` analysis serves as a minimal check, scanning each event for the presence of both a $\Lambda_b$ baryon and an anti-$\Lambda_b$ baryon, thus probing baryon–antibaryon correlations at truth level. In contrast, the `HIGGS2BB` analysis provides a full truth-level reconstruction of the $H \to b\bar{b}$ decay, identifying the final B-hadron descendants, categorizing events based on hadronic and semileptonic decay modes, and recording detailed kinematic information necessary for spin correlation studies. Together, these analyses form the basis for validating the event structure and exploring CP-sensitive observables.
 
 
----
-~ reference rivet analysis LAMBDAB, HIGG2BB
 
 ![image](https://github.com/user-attachments/assets/a93604af-150a-4260-aaff-9d1226ea7fef)![image](https://github.com/user-attachments/assets/a8b6759e-4578-4178-a239-126d4b7fd4aa)
 ![image](https://github.com/user-attachments/assets/21dbe7e6-b539-440d-b98d-85f6a606273d)![image](https://github.com/user-attachments/assets/1e1273f7-192c-4a95-8f32-8b43044068c3)
-
 
 
 ### Outstanding Issues
@@ -723,7 +727,7 @@ issue with Higgs decay ~ reference HIGGS_DECAY_HISTO, HIGGS_2PLUS, HIGGS_DECAY_A
 
 ### Final Note
 
-We now have a working Rivet setup capable of tracing the full event structure and performing spin-sensitive truth-level observables. However, the physical validity of the results — especially regarding spin correlations and model consistency — remains uncertain and requires further checks.
+We now have a working Rivet setup capable of tracing the full event structure and performing spin-sensitive truth-level observables. However, the physical validity of the results, especially regarding spin correlations and model consistency, remains uncertain and requires further checks.
 
 ------------------------------
 ### Week 6 (starting 03.02.2025)
