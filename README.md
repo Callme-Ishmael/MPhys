@@ -1110,7 +1110,7 @@ On March 24, Andy sent the following email summarizing our next steps for deploy
 
 In fact, we had already implemented all the steps outlined above — we are currently beyond step 4. Even though the interjet observable has not provided any significant structure in the H → b b̄ case, Andy recommended we look at the joint distribution of the two **intrajet** variables (b-branch vs. b̄-branch) using a 2D contour plot.
 
-![Intrajet Correlation Contour](https://github.com/user-attachments/assets/2a7ec977-1ac8-459a-b681-77429c8771b7)
+<img src="https://github.com/user-attachments/assets/2a7ec977-1ac8-459a-b681-77429c8771b7" width="500"/>
 
 This plot revealed a need for higher statistics. The requirement that the intermediate gluon splits into two quarks — a rare occurrence — limits the number of valid events.
 
@@ -1255,11 +1255,11 @@ All JOBS done and uploaded on drive (3B events for each sample - odd/even   pi/4
 
 # Week 12 (14.04 - 20.04)
 
-This week, we explored whether the PanScales-inspired splitting plane observable is sensitive to the CP-structure of the effective \( Hgg \) coupling.
+This week, we explored whether the PanScales-inspired splitting plane observable is sensitive to the CP-structure of the effective $$Hgg$$ coupling.
 
 ## Observables & Results
 
-We produced distributions of the **normalised differential cross section** for the observable \( \Delta\Psi \), computed in the lab frame for four CP-mixing angles:
+We produced distributions of the **normalised differential cross section** for the observable $$\Delta\Psi$$, computed in the lab frame for four CP-mixing angles:
 - **CP-even** (\( \alpha = 0 \))
 - **CP-odd** (\( \alpha = \pi/2 \))
 - **Mixed** (\( \alpha = \pm \pi/4 \))
