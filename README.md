@@ -716,7 +716,7 @@ To investigate the presence of unexpected Higgs decay modes and classify the dec
 We now have a working Rivet setup capable of tracing the full event structure and performing spin-sensitive truth-level observables. However, the physical validity of the results, especially regarding spin correlations and model consistency, remains uncertain and requires further checks.
 
 ------------------------------
-### Week 6 (starting 03.02.2025)
+# Week 6 (3.03 - 9.03)
 
 #### Attempt at SHERPA
 
@@ -1097,40 +1097,56 @@ This dramatically improved scalability, paving the way for large-scale dataset g
 -------------------------------
 # Week 10 (31.03 - 6.04)
 
-#### 02.04.2025
-Karim changes the python analysis into a contour plot of the Asymmetry term. The stats are not the issue - we do not in fact see a 2sigma difference
+### 02.04.2025 — Investigating Interjet Differences Using Intrajet Correlations
+
+Karim modified our Python analysis pipeline (see `Python Scripts/intrajet_for_interjet.py`) to produce **2D contour plots** that compare angular observables between the two branches of the H → b b̄ decay. Specifically, the script focuses on the **Panscales “no-nonsense” observable** Δψ, computed for each branch individually, then plotted as a joint distribution.
+
+This approach is designed to reveal **subtle correlations** between decay planes in the presence of CP violation. We had initially believed that by eye we could detect a ~2σ difference between CP-even and CP-odd cases; however, after using this statistical method, **no significant difference** appears — even with high statistics.
+
+#### Summary of What the Script Does
+- Reads cleaned `.parquet` files produced by Rivet, containing particle four-momenta and PDG IDs.
+- Reconstructs **decay chains** such as b → b g and g → q q̄ or g g, separately for each b-branch.
+- Computes Δψ observables for each branch using boosted or unboosted frames.
+- Filters events by decay topology (e.g., bg → qq̄ on both sides).
+- Produces histograms and contour plots for:
+  - Weighted Δψ–Δψ distributions.
+  - Asymmetry between CP-even and CP-odd samples.
+  - Statistical significance of the asymmetry.
+
+#### Conclusion
+While the tool performs as expected, it confirms a lack of measurable **interjet angular correlation** between the two sides of H → b b̄ — consistent with theoretical expectations from the PanScales papers. Those works note that spin correlations are preserved for **gluon-initiated** processes, but **not** for quark-initiated ones like H → q q̄.
+
+This supports the idea that, in the quark decay channel, any CP-odd structure is either:
+- Washed out by parton showering, or
+- Fundamentally absent in the leading-log approximation used by current shower algorithms.
+
+This result will guide our next steps in re-evaluating how CP-violating effects might manifest in the parton-level structure of H → b b̄ decays.
 
 
+### Investigating Skewed Higgs Decay Ratios Using MadGraph vs Herwig
 
-Something that has been bothering me for a while but I had no time to address it is the skewed. Let's try to make sense of it. One way to do this is cross checking with what MadGraph generates for the same settings. 
+A lingering issue throughout the project has been the observation that the Higgs decay branching ratios in our Herwig-based simulations appear skewed compared to Standard Model expectations. This week, we finally addressed this systematically by contrasting how MadGraph and Herwig handle decays, particularly in the absence of hadronisation or showering.
 
-We use the fact that we do not shower with Herwig this time. 
+We begin by disabling the Herwig shower and relying solely on parton-level MadGraph output. The philosophy behind MadGraph becomes immediately relevant: MadGraph is designed to compute matrix elements for hard scatterings, focusing on on-shell final-state particles. Decays must be explicitly included in the process definition. For example, if one wants the Higgs to decay into a b b̄ pair, the correct syntax is `generate g g > h > b b~`. MadGraph otherwise assumes final-state particles are stable, unless decays are defined as subprocesses. This separation is intentional: MadGraph does not mix parton-level generation with decay dynamics or hadronisation, maintaining a modular design philosophy.
 
+In contrast, Herwig operates as a full Monte Carlo event generator, managing not only the hard scattering but also subsequent decays, parton showers, and hadronisation. Herwig's decay logic is tightly coupled to the UFO model it is given. If a model contains non-zero decay widths for a particle, Herwig will automatically decay it according to the defined branching ratios. This is not just a convenience — it's a core feature. Herwig imports decay widths via UFO2Herwig from the UFO model, where all decays and interactions are specified. Once the Higgs production process is defined, Herwig proceeds to decay the Higgs boson according to the width table, even if the user never specifies the decay in the run card or process file.
 
-**1. Philosophy of MadGraph:**
+The root cause of our discrepancy clicked into place when we inspected the `decays.py` file in Christoph’s UFO model. In that file, the Higgs boson's decay to b b̄ is defined as:
 
-- MadGraph is primarily focused on generating **parton-level events** from **hard scatterings**.
-- It works with **on-shell particles** for final states.
-- You must **explicitly specify decays** in the process definition if you want the decays to be handled correctly.
-- MadGraph assumes **final states** are **stable** or at least **treated as stable** during the event generation.
-#### **Why MadGraph Doesn't Automatically Handle Decays:**
+```python
+Decay_H = Decay(name = 'Decay_H',
+                particle = P.H,
+                partial_widths = {
+                  (P.b,P.b__tilde__): '((-12*MB**2*yb**2 - 24*coupbeven*MB**2*yb**2 - 12*coupbeven**2*MB**2*yb**2 + 3*MH**2*yb**2 + 6*coupbeven*MH**2*yb**2 + 3*coupbeven**2*MH**2*yb**2 + 3*coupbodd**2*MH**2*yb**2)*cmath.sqrt(-4*MB**2*MH**2 + MH**4))/(16.*cmath.pi*abs(MH)**3)',
+                  ...
+                })
+```
 
-- MadGraph performs **matrix element calculations** for the **hard scattering process** and not for the **decays**.
-- The decays must be **explicitly included in the process definition**, as they are treated as **subprocesses**.
-- It does **not handle decays on the fly** because that would **mix parton-level generation with hadronization**, which is against the modular philosophy of MadGraph.
+This clearly shows that the partial width is not the Standard Model one but rather depends explicitly on the CP-even and CP-odd couplings coupbeven and coupbodd. Herwig, in turn, uses this formula directly to compute the decay probabilities. That explains the branching ratio skewness we've observed: the UFO model itself modifies the decay widths.
 
- **2. Philosophy of Herwig:**
+To cross-check, we referred to the PDG’s standard decay width formulas for the Higgs boson, which can be found at [Cross-Section Formulae — PDG 2019](https://pdg.lbl.gov/2019/reviews/rpp2018-rev-cross-section-formulae.pdf). Comparing those to Christoph’s expressions confirms that the model modifies the b b̄ width in a non-trivial way depending on the couplings.
 
-- Herwig is primarily a **Monte Carlo event generator** that handles both **hard scattering (like MadGraph)** and **full event simulation (including showers and hadronization)**.
-- It has **built-in decay tables** and **decay widths** from the **UFO model files**.
-- Herwig **automatically decays** any unstable particles it encounters during the event generation, unless explicitly told not to.
-
-**Why Herwig Handles Decays Differently:**
-- Herwig, through **UFO2Herwig**, imports all **interactions and decay widths** from the **UFO model file**.
-- Once the **Higgs production process** is defined, Herwig **automatically applies** the **decay branching ratios** based on the **decay width table**.
-- You don't need to specify **decay chains explicitly**. Herwig will decay **all unstable particles** unless explicitly prevented from doing so.
-
-
+In conclusion, Herwig applies automatic decays using whatever is defined in the UFO’s decay structure, while MadGraph requires explicit instructions and does not alter decay widths unless configured to. The discrepancy in branching ratios is therefore not a bug but a consequence of how the UFO model was constructed and interpreted by Herwig.
 
 -------------------------------
 # Week 11 (7.04 - 13.04)
