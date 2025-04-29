@@ -1,95 +1,109 @@
-# 🌟 Using the Noether Cluster Effectively: A Practical Guide for Physics Students
+# Using the Noether Cluster: A Practical Guide for High-Energy Physics Simulations
 
 ## Introduction
 
-The Noether Cluster is a powerful computing resource provided by the University of Manchester, intended for computationally intensive physics research. However, first-time users often find it challenging to navigate its environment effectively.  
-This guide offers a step-by-step tutorial based on real experience using Noether for high-energy physics simulations (e.g., with **Herwig**, **MadGraph**, and **Rivet**).
+The **Noether Cluster** at the University of Manchester provides extensive computational resources for physics students and researchers engaged in high-performance computing tasks, particularly in particle physics. This guide serves as a practical tutorial for effectively using Noether for simulation workflows involving tools like **Herwig**, **MadGraph5_aMC@NLO**, and **Rivet**, and covers best practices based on real user experience.
 
 ---
 
-## 1. Accessing Noether
+## 1. Cluster Specifications
 
-### Step 1: Request an Account
+As of the current configuration, Noether comprises:
 
-- Apply for a Noether account through your supervisor or course organizer.
-- Once approved, you’ll receive a username and limited storage quota (~20 GB in your home directory).
+- **8 high-performance nodes**  
+  - 96 cores, 384 GB RAM (4 GB/core)  
+  - Intel(R) Xeon(R) Gold 5220R CPU @ 2.20GHz  
 
-### Step 2: SSH into Noether
+- **20 standard nodes**  
+  - 16 cores, 64 GB RAM (4 GB/core)  
+  - Intel(R) Xeon(R) CPU E5-2620 v4 @ 2.10GHz  
+
+- **3 GPU nodes**  
+  - 32 cores, 128 GB RAM  
+  - 3x NVIDIA Tesla V100 GPUs each  
+  - Same CPU as standard nodes  
+
+> Total: **31 compute nodes**, **1184 cores**, **9 GPUs**. Hardware availability may vary slightly with maintenance and upgrades.
+
+---
+
+## 2. Getting Started
+
+### Account Request and Access
+
+- Apply for access through your course leader or supervisor.
+- Upon approval, you'll receive a username and access to your home directory (`/home/YOURNAME/`, ~20 GB quota).
+
+### Connecting to Noether
 
 ```bash
-ssh USERNAME@noether.cld.manchester.ac.uk
+ssh YOURNAME@noether.hep.manchester.ac.uk
 ```
 
-Replace `USERNAME` with your Noether username.
+Windows users are encouraged to use WSL, VSCode Remote SSH, or MobaXterm for smoother SSH workflows.
 
-If you're on Windows, it’s easiest to use **WSL (Windows Subsystem for Linux)** or a terminal like **MobaXterm** or **VSCode Remote-SSH**.
+## 3. Storage: Home Directory vs Shared Space
 
----
-
-## 2. Understanding Storage: Home Directory vs `/gluster/data`
-
-- Your **home directory** (`/home/USERNAME/`) has limited space (~20 GB).
-- For **large event files, analysis outputs, or Condor jobs**, use the shared `/gluster/data/atlas/USERNAME/` space:
-  - Unlimited for practical purposes.
-  - Accessible across nodes.
-
-Create your folder structure:
+Your home directory has limited capacity. Use the shared group space:
 
 ```bash
-mkdir -p /gluster/data/atlas/YOURNAME/your_project/
+/gluster/data/atlas/YOURNAME/
 ```
 
-> 🔔 **Important**: Always work and run from `/gluster/data`, not your home directory, for big jobs.
+Create a working project folder:
 
----
+```bash
+mkdir -p /gluster/data/atlas/YOURNAME/my_project/
+cd /gluster/data/atlas/YOURNAME/my_project/
+```
 
-## 3. Loading Software (Herwig, MadGraph, Rivet, etc.)
+Always run simulations and store large output files in `/gluster/data`, not in your home directory.
 
-Noether uses module files or manual activation scripts.
+## 4. Activating Software Environments
 
-### Example: Activating Herwig
+**Example: Herwig**
 
 ```bash
 source /gluster/data/theory/event-generators/herwig/activate_herwig.sh
 ```
 
-### Installing MadGraph Locally
+This script sets the necessary environment variables and paths for using Herwig.
+
+**Installing MadGraph Locally**
 
 ```bash
 cd /gluster/data/atlas/YOURNAME/
 wget https://launchpad.net/mg5amcnlo/3.0/3.4.x/+download/MG5_aMC_v3.4.2.tar.gz
-tar -xzvf MG5_aMC_v3.4.2.tar.gz
+tar -xzf MG5_aMC_v3.4.2.tar.gz
 cd MG5_aMC_v3_4_2
 ./bin/mg5_aMC
 ```
 
-Then install models inside MadGraph as needed (e.g., SMEFTsim, HC).
+Install BSM models (e.g., SMEFTsim, Higgs Characterisation) within MadGraph as needed.
 
----
+## 5. Running Batch Jobs with HTCondor
 
-## 4. Running Jobs with Condor
+HTCondor allows you to submit and manage batch jobs across Noether nodes.
 
-Use Condor for batch job submissions.
-
-### 4.1 Create a Submission File (`submit.sub`)
+### 5.1 Submission File (`submit.sub`)
 
 ```text
 executable = run_script.sh
 arguments = $(ProcId)
 output = logs/job_$(ProcId).out
-error = logs/job_$(ProcId).err
-log = logs/job_$(ProcId).log
+error  = logs/job_$(ProcId).err
+log    = logs/job_$(ProcId).log
 request_cpus = 1
 request_memory = 2GB
 queue 10
 ```
 
-### 4.2 Create the Run Script (`run_script.sh`)
+### 5.2 Execution Script (`run_script.sh`)
 
 ```bash
 #!/bin/bash
 source /gluster/data/theory/event-generators/herwig/activate_herwig.sh
-python3 your_analysis.py --option whatever
+python3 my_analysis.py --sample $(($1))
 ```
 
 Make it executable:
@@ -98,88 +112,83 @@ Make it executable:
 chmod +x run_script.sh
 ```
 
-### 4.3 Submit Jobs
+### 5.3 Submit Jobs
 
 ```bash
 condor_submit submit.sub
 ```
 
-> 🔔 Important: Always write outputs to `/gluster/data/atlas/YOURNAME/`, not your home directory.
-
----
-
-## 5. Monitoring Jobs
-
-Check running jobs:
+## 6. Monitoring and Managing Jobs
 
 ```bash
-condor_q $USER
+condor_q $USER         # View current jobs
+condor_rm $USER        # Cancel all running jobs
+condor_status          # View available nodes
+tail -f logs/job_X.out # Live monitoring of output
 ```
 
-Remove all your jobs (if needed):
+## 7. Using DAGMan for Job Dependencies and Persistence
 
-```bash
-condor_rm $USER
-```
+DAGMan (Directed Acyclic Graph Manager) allows you to chain jobs with defined dependencies (e.g., preprocessing → simulation → postprocessing). DAGMan is especially useful for structured simulations or parameter scans.
 
-Check cluster machine status:
+More importantly, DAGMan jobs are not subject to the 24-hour execution limit imposed on standalone jobs. On Noether, any job that runs longer than 24 hours will be automatically killed by the system. DAGMan bypasses this limitation by submitting jobs incrementally through its own meta-scheduler, which is treated as a "pseudo-job" by Condor. This makes it ideal for long-running workflows.
 
-```bash
-condor_status
-```
-
-Tail job output for live checking:
-
-```bash
-tail -f logs/job_X.out
-```
-
----
-
-## 6. Best Practices & Tips
-
-- Use random seeds carefully in event generators when running multiple jobs.
-- Parallelize parameter scans (e.g., varying coupling constants) over multiple Condor jobs.
-- Always log outputs, parameters, and runtime info.
-- Clean up old event files to save space.
-- Use `screen` or `tmux` if running long interactive jobs to avoid losing progress.
-- Keep Condor submission scripts modular to easily vary seeds, parameters, and output paths.
-
----
-
-## 7. Advanced: Setting up Notifications (Optional)
-
-Set up an automatic script that monitors:
-
-- When `condor_q $USER` returns empty (no running jobs), trigger a webhook or send yourself an email.
-- You can use a simple script or services like IFTTT or PythonAnywhere.
-
----
-
-## 8. Common Issues
-
-| Issue | Solution |
-|:------|:---------|
-| `Permission Denied` on `/gluster/data` | Check folder permissions with `chmod -R 755 your_folder` |
-| Condor jobs stuck | Kill them with `condor_rm $USER` and check your submission files |
-| Herwig activation fails | Ensure correct activation script is sourced |
-| MadGraph crashes | Reinstall model or regenerate process |
-| Large LHE files | Apply parton-level cuts to reduce event sizes |
-
----
-
-## 9. Recommended Project Folder Structure
+**Example DAG file:**
 
 ```text
-/gluster/data/atlas/YOURNAME/project_name/
+Job A preprocess.sub
+Job B run_simulation.sub
+Job C postprocess.sub
+
+Parent A Child B
+Parent B Child C
+```
+
+Submit the DAG:
+
+```bash
+condor_submit_dag job_chain.dag
+```
+
+Use this approach for all workflows that may exceed 24 hours in wall time or that require interdependent stages.
+
+## 8. Using tmux for Long Interactive Sessions
+
+When running long or interactive jobs directly:
+
+```bash
+tmux new -s mysession
+```
+
+Detach with Ctrl+B, then D, and resume later with:
+
+```bash
+tmux attach -t mysession
+```
+
+This prevents loss of session state due to dropped SSH connections.
+
+## 9. Best Practices
+
+- Work only in `/gluster/data/atlas/YOURNAME/` for heavy jobs.
+- Use random seeds properly to avoid identical event samples.
+- Structure your job outputs into folders (e.g., `events/`, `logs/`, `plots/`).
+- Use `tmux` when running scripts interactively.
+- Keep job scripts modular and well-documented.
+- Use DAGMan to organize sequential or conditional job logic and bypass 24h limits.
+- Clear unused files periodically to manage space responsibly.
+- Record software versions and parameters in a `README.md`.
+
+## 10. Sample Folder Structure
+
+```text
+/gluster/data/atlas/YOURNAME/my_project/
 ├── code/
-│   ├── run_analysis.py
-│   └── run_jobs.sh
+│   └── analysis.py
 ├── events/
-│   ├── alpha_0/
 │   └── alpha_90/
 ├── logs/
-│   └── condor_logs/
+│   └── condor/
 ├── results/
 │   └── plots/
 ├── submit/
@@ -188,6 +197,23 @@ Set up an automatic script that monitors:
 └── README.md
 ```
 
----
+## 11. Optional: Job Completion Notification
 
-# 🚀 Good Luck and Happy Simulations!
+You can automate job completion alerts using a simple script that monitors `condor_q` and sends a notification via:
+
+- Python email script
+- IFTTT webhook
+- Slack integration
+
+**Example polling loop:**
+
+```bash
+while condor_q $USER | grep "$USER" > /dev/null; do sleep 60; done
+python3 manager_jobs.py --run
+```
+
+## 12. Further References and Support
+
+Noether Cluster FAQ
+
+For additional support, contact: `noether-helpdesk@manchester.ac.uk`
