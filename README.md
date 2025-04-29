@@ -1011,69 +1011,91 @@ This week marks a conceptual turning point: **we have to change what we expect t
 -------------------------------
 # Week 9 (24.03 - 30.03)
 
-Andy sends in [email](emails/26.03.2025.md) 
-how many events do we even have of this
+# Week 9 (24.03 – 30.03)
 
-First test: write a .csv for the decay chain you have been analysing, i.e. H->b bbar, with b->gb and g-> q qbar [same for bbar decay].
-As a matter of fact. We have already done everything he asked. We’re at step 4
+### GN2 Pipeline: Planning and Implementation
 
-Andy suggests contour plot to check 
+On March 24, Andy sent the following email summarizing our next steps for deploying the GN2 graph network architecture on Rivet output:
 
-![image](https://github.com/user-attachments/assets/2a7ec977-1ac8-459a-b681-77429c8771b7)
+> Hi both,  
+>
+> I spoke to Valentina (in cc) today about the final steps for the project. She convinced me that GN2 is going to be implementable.  
+>
+> To use GN2 you need a `.h5` file. It seems at first sight that we can produce this directly from a `.csv` file. This would mean outputting the information needed to a `.csv` from Rivet.  
+>
+> (1) First test: write a `.csv` for the decay chain you have been analysing, i.e. H → b b̄, with b → g b and g → q q̄ (same for the b̄ decay). This means 6 particles in the final state and each particle has 5 pieces of information: E, px, py, pz, ID. Hence a `.csv` with 30 columns.  
+>
+> (2) At this point you write the Python code to convert the `.csv` to `.h5`.  
+>
+> (3) Then use GN2. Valentina will send tutorial and publicly available code.  
+>
+> (4) After this first test, you can extend the `.csv` to include more branchings. We can discuss this at the point you get to (2).  
+>
+> Cheers,  
+> Andy
 
-we need better stats 
+In fact, we had already implemented all the steps outlined above — we are currently beyond step 4. Even though the interjet observable has not provided any significant structure in the H → b b̄ case, Andy recommended we look at the joint distribution of the two **intrajet** variables (b-branch vs. b̄-branch) using a 2D contour plot.
 
-#### Re-alignment and Dataset Preparation for Gluon Splitting Study
+![Intrajet Correlation Contour](https://github.com/user-attachments/assets/2a7ec977-1ac8-459a-b681-77429c8771b7)
 
-##### 25.03.2025 — Recalibrating Goals, Preparing Gluon Splitting Analysis
+This plot revealed a need for higher statistics. The requirement that the intermediate gluon splits into two quarks — a rare occurrence — limits the number of valid events.
 
-- After reading Mike's feedback, we realised we had already progressed beyond his outlined steps.
-- I suggested we meet to realign our goals and focus on building the GNN pipeline with the remaining time.
-- Karim began writing a Rivet analysis to:
-    - Count gluons and quarks in the final state.
-    - Specifically trace decay chains: H → b b̄, then b → b g, and finally g → q q̄ or g → g g.
-- We clarified that g→gg is much more likely than g→qq̄, and that both types of events should be accepted.
-    
+To explain this rarity, we refer to the explanation provided by Mrinal:
 
-##### 26.03.2025 — First Parquet → HDF5 Conversion, Rivet CSV Format
 
-- Reviewed our infrastructure: CSVs from Rivet output (initially Parquet) can be converted to HDF5.
-- Using DuckDB to handle large files and filter before writing.
-- Final CSV format began to take shape, recording:
-    - The **child b-quark** from b → b g (not the parent),
-    - Children of the gluon: q₁/q₂ and q₃/q₄, for each branch.
-- Removed redundant columns: gluon itself, Higgs children.
-- We decided to filter out events where both gluon branches don't produce at least **one valid split**, to reduce CSV size.
-- Began debugging why only ~44K out of 82K H→bb̄ events showed valid decay chains — suspected asymmetric showering.
 
-##### 27.03.2025 — Matching Analyses and Visual Debugging
+Gluon splittings of the form $$g \to q \bar{q}$$ are proportional to $$\text{Tr}(t^a t^b)$$, giving a factor of $$1/2 \cdot n_f$$, and are not enhanced in the infrared, unlike $$g \to gg$$ and $$q \to qg$$, which scale with $$C_A$$ and $$C_F$$ respectively. Consequently, gluons are far more likely to undergo $$g \to gg$$ rather than $$g \to q\bar{q}$$, especially at low transverse momenta.
 
-- Visualised suspect events using `pyhepmc` and `graphviz`. Inspected events 1, 2, 5, 6.
-- Karim confirmed that the Richardson routine matched the Rivet output exactly, with correct PID and momentum conservation.
-- Confirmed that **hadronisation being turned on** is the likely reason for getting more g→qq̄ events (~28% hit rate vs 0.015% without).
-- New filtering logic added in Rivet: remove all-zero rows, only write events where both b and b̄ split via b→b g, and the g splits.
+---
 
-Herwig run structure for visualisation:
+### Re-alignment and Dataset Preparation for Gluon Splitting Study
 
-```
-cd /Herwig/Generators
-set /Herwig/Analysis/Plot:EventNumber 106
-insert EventGenerator:AnalysisHandlers 0 /Herwig/Analysis/Plot
-Herwig run runfile.run -N100000000 -j16
-dot -Tpng LHC-Matchbox-Plot-106.dot > plot.png
-```
+#### 25.03.2025 — Recalibrating Goals
 
-##### 28.03.2025 — Full Integration of Rivet into Herwig
+After reading Andy’s message, we re-evaluated our goals. I suggested that we consolidate efforts on building the GN2-ready dataset and begin with a new Rivet analysis designed to:
 
-- Karim managed to run **Rivet from inside Herwig**, on multiple cores, without producing `.hepmc` output.
-- Each job writes a single `.csv` file with Rivet output — massive performance gain.
-- Estimated: 100M events in ~2 hours on 16 cores.
-- This becomes our new strategy for handling large-scale analysis with minimal disk I/O.
+- Count final-state gluons and quarks.
+- Trace specific decay chains:  
+  H → b b̄ → b g, and subsequently g → q q̄ or g → g g.
+
+The new insight was that both gluon decay modes (q q̄ and g g) are physically relevant and should be retained in the dataset.
+
+#### 26.03.2025 — CSV Structuring and Filtering Logic
+
+We streamlined the CSV schema exported from Rivet:
+
+- Dropped the Higgs and gluon rows.
+- Kept only the child b-quark (from b → g b) and all final-state products from the gluon splits.
+- Ensured each row had 6 particles (30 columns).
+- Added filtering logic: exclude events where either branch does not yield a full decay tree (i.e., b → b g → q q̄).
+
+The CSV-to-HDF5 conversion was tested using Python and DuckDB, enabling efficient pre-filtering of large Rivet outputs.
+
+We noticed that only ~44k out of 82k H → b b̄ events had the full decay structure. We hypothesized this was due to asymmetric showering.
+
+#### 27.03.2025 — Visual Debugging of Event Topologies
+
+To investigate, we visualized the shower histories using `graphviz` and `pyhepmc`. Matching between the Richardson routine and the Rivet-generated CSV was verified. The likely culprit for the missing decay topologies was identified as **hadronisation settings**.
+
+- With hadronisation off: ~0.015% of events contain g → q q̄.
+- With hadronisation on: ~28% of events have at least one such split.
+
+We updated the filtering logic to exclude all-zero entries and retain only cleanly split events on both b and b̄ sides.
+
+#### 28.03.2025 — Efficient Event Processing via Internal Rivet Hook
+
+Karim successfully ran Rivet **inside Herwig** via direct analysis hooks, bypassing `.hepmc` file generation and I/O bottlenecks. The new workflow supports:
+
+- Multicore parallelism.
+- Direct `.csv` output from each job.
+- Estimated throughput: ~100 million events in under 2 hours using 16 threads.
+
+This dramatically improved scalability, paving the way for large-scale dataset generation suitable for GN2 training.
 
 
 
 -------------------------------
-### Week 10 (31.03 - 6.04)
+# Week 10 (31.03 - 6.04)
 
 #### 02.04.2025
 Karim changes the python analysis into a contour plot of the Asymmetry term. The stats are not the issue - we do not in fact see a 2sigma difference
@@ -1111,7 +1133,7 @@ We use the fact that we do not shower with Herwig this time.
 
 
 -------------------------------
-### Week 11 (7.04 - 13.04)
+# Week 11 (7.04 - 13.04)
 
 #### 07.04.2025 — Scaled-Up Production & DAGMan Job Management
 
