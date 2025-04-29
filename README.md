@@ -562,6 +562,8 @@ https://arxiv.org/pdf/1808.08238
 - ggF production swamped by QCD → VH production (Z or W + H) is preferred for cleaner triggering.
 - Boosted selection increases S/B ratio.
 
+![image](https://github.com/user-attachments/assets/31b31e17-a126-489a-9efa-16e0bf7024a9)
+
 #### Jet selection:
 
 - Algorithm: anti-kt, R = 0.4
@@ -588,15 +590,15 @@ In principle, this analysis provides a robust starting point for our study.
 ----------
 ### Theoretical Note on Spin Correlations
 
-This week I focused entirely on understanding the Rivet framework in depth. I implemented custom projections, which now allow me to search the event record at truth level. This includes access to the full decay structure and particle ancestry, enabling me to track spin-relevant quantities from the initial hard process down to the final-state observables.
+This week we focused entirely on understanding the Rivet framework in depth. I implemented custom projections, which now allow us to search the event record at truth level. This includes access to the full decay structure and particle ancestry, enabling us to track spin-relevant quantities from the initial hard process down to the final-state observables.
 
 ### Spin Correlation Test (Adapted from Bernreuther)
 
-Using the method from [hep-ph/9701347](https://arxiv.org/pdf/hep-ph/9701347), originally developed for studying spin correlations in \( t\bar{t} \) decays, I constructed a test to assess whether spin information is preserved in our simulation of $$H \to b\bar{b}$$. The procedure is:
+Using the method from [hep-ph/9701347](https://arxiv.org/pdf/hep-ph/9701347), originally developed for studying spin correlations in $$t\bar{t}$$ decays, I constructed a test to assess whether spin information is preserved in our simulation of $$H \to b\bar{b}$$. The procedure is:
 
 - Identify the Higgs boson in the event record.
 - Follow its decay to the two b-quarks.
-- Define two decay branches from the b and $$\bar{b}$$, and trace each branch through the parton shower and hadronization.
+- Define two decay branches from the b and $$\bar{b}$$, and trace each branch through the parton shower and hadronisation.
 - For each branch, identify the **last B-hadron** before decay.
 - Store the momentum and decay structure of that B-hadron as a proxy for the original b-quark spin information.
 
@@ -605,7 +607,7 @@ This allows for a truth-level observable that can potentially capture spin corre
 A second reference [arXiv:1410.6362](https://arxiv.org/pdf/1410.6362) provides context on using truth-level observables to probe CP and spin effects in hadronic decays. Relevant for validating the above method.
 
 
-As part of validating whether Herwig is correctly preserving spin correlations in $$H \to b\bar{b}$$, I took a closer look at the theoretical framework laid out in Bernreuther et al. ([hep-ph/9701347](https://arxiv.org/pdf/hep-ph/9701347)). Their analysis is built for the case of $$\phi \to t\bar{t}$$, but the methodology generalizes.
+As part of validating whether Herwig is correctly preserving spin correlations in $$H \to b\bar{b}$$, I took a closer look at the theoretical framework laid out in Bernreuther et al. ([hep-ph/9701347](https://arxiv.org/pdf/hep-ph/9701347)). Their analysis is built for the case of $$\phi \to t\bar{t}$$, but the methodology generalises.
 
 They start from a Yukawa-like interaction for a mixed CP Higgs:
 
@@ -667,14 +669,14 @@ These are <b>averages over events</b>, and that’s the key point — spin corre
 
 ---
 
-### Adaptation to \( H \to b\bar{b} \)
+### Adaptation to $$H \to b\bar{b}$$
 
-Because b-quarks hadronize, we can’t use spinors directly — but we can still probe spin-sensitive structure if we trace:
-- Higgs → b, \( \bar{b} \)
+Because b-quarks hadronise, we can’t use spinors directly — but we can still probe spin-sensitive structure if we trace:
+- Higgs → b, $$\bar{b}$$
 - Follow both decay branches forward to the last B-hadron before decay.
-- Use the 3-momenta of the resulting B-hadrons and their decay products as spin analyzers.
+- Use the 3-momenta of the resulting B-hadrons and their decay products as spin analysers.
 
-By analyzing angular distributions (e.g. triple products), we can reconstruct CP-odd observables analogously to \( \mathcal{E}_2 \). In particular, we implement:
+By analysing angular distributions (e.g. triple products), we can reconstruct CP-odd observables analogously to $$\mathcal{E}_2$$. In particular, we implement:
 \[
 \vec{k}_b \cdot (\vec{n}_{bb} \times \vec{n}_{ee})
 \]
@@ -683,7 +685,7 @@ as a Rivet observable, where \( \vec{n}_{bb} \) and \( \vec{n}_{ee} \) are plane
 This procedure is entirely at truth level and gives us a well-defined way to verify whether spin correlations survive in our event generator output.
 
 
-  ![image](https://github.com/user-attachments/assets/31b31e17-a126-489a-9efa-16e0bf7024a9)
+
 
 ---
 ~ reference rivet analysis LAMBDAB, HIGG2BB
