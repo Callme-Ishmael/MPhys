@@ -1211,3 +1211,105 @@ arxiv.org
 (4) If/when all fails: you have the NN…..
 
 
+# References
+
+## Spin Correlations and Parton Showers
+
+- [Spin Correlations — Herwig Manual](https://herwig.hepforge.org/tutorials/hardprocess/matchbox.html#spin-correlations)
+- [Spin Correlations in Parton Shower Simulations — Richardson & Webster](https://arxiv.org/pdf/1807.01955)
+- [Soft Spin Correlations in Final-State Parton Showers](https://arxiv.org/pdf/2111.01161)
+- [Spin Correlations in Final-State Parton Showers and Jet Observables — PanScales](https://arxiv.org/pdf/2103.16526)
+- [New Formalism for QCD Parton Showers](https://arxiv.org/pdf/hep-ph/0310083)
+- [Improved Monte Carlo Simulations of Massive Quarks](https://etheses.dur.ac.uk/12954/2/thesis.pdf?DDD25+)
+
+## Event Generators and Matrix Elements
+
+- [Matrix Element Providers — Herwig Tutorial](https://herwig.hepforge.org/tutorials/gettingstarted/extmatrix.html)
+- [UFO to Herwig Conversion](https://herwig.hepforge.org/tutorials/bsm/ufo.html)
+- [ISAJET 7.91 — Monte Carlo Event Generator Manual](https://www.nhn.ou.edu/~isajet/isajet791.pdf)
+- [General-Purpose Event Generators for LHC Physics](https://arxiv.org/pdf/1101.2599)
+- [Status of C++ Event Generators](https://indico.cern.ch/event/411610/contributions/985714/attachments/838223/1164753/summaryMC.pdf)
+- [SciPost Review — Event Generators for High-Energy Physics](https://www.scipost.org/SciPostPhys.16.5.130/pdf)
+- [Event Generators for HEP Experiments (Fermilab PUB)](https://www.zora.uzh.ch/id/eprint/229175/1/fermilab_pub_22_116_scd_t.pdf)
+- [PEPPER: A Portable Parton-Level Event Generator](https://indico.cern.ch/event/1330797/papers/5791236/files/13277-Enrico-Bothmann-Pepper-Portable-Event-Generation.pdf)
+- [Sherpa Manual](https://sherpa-team.gitlab.io/sherpa/master/sherpamanual.pdf)
+- [Beyond Standard Model Calculations with Sherpa](https://s3.cern.ch/inspire-prod-files-b/b086f56388637757bf0102afad4cb74b)
+- [Herwig Release Note](https://arxiv.org/pdf/1512.01178)
+- [History of Herwig](https://www.hep.phy.cam.ac.uk/theory/webber/HerwigHistory.pdf)
+
+## Rivet, LHAPDF, and HEPMC
+
+- [Rivet User Manual](https://arxiv.org/pdf/1003.0694)
+- [Potential Rivet Analysis — MC_VH2BB](https://rivet.hepforge.org/analyses/MC_VH2BB.html)
+- [Prompt vs Non-Prompt Particles (Rivet Tutorial)](https://indico.cern.ch/event/1131739/contributions/4749497/attachments/2395141/4101021/rivet-tutorial%20(1).pdf)
+- [PyHepmc Interface Documentation](https://pyfeyn2.readthedocs.io/en/stable/interfaces/hepmc/hepmc.html)
+- [LHAPDF IDs](https://lhapdf.hepforge.org/pdfsets.html)
+- [HEPMC Particle IDs](https://pdg.lbl.gov/2007/reviews/montecarlorpp.pdf)
+
+## CP Violation and Higgs Sector Studies
+
+- [CP Violation and Higgs — ATLAS 2024 Slide](https://cds.cern.ch/record/2904951/files/ATL-PHYS-SLIDE-2024-250.pdf)
+- [Studies of Higgs Boson CP Properties](https://cds.cern.ch/record/2841144/files/ATL-PHYS-SLIDE-2022-596.pdf)
+- [Looking for CP Violation in the Higgs Sector — Warwick Seminar](https://warwick.ac.uk/fac/sci/physics/research/epp/events/seminars/WarwickSeminar_HiggsCP_KB_040620.pdf)
+- [Nonlinear Top-Higgs CP Violation](https://arxiv.org/pdf/2308.11722)
+- [Approaching Robust EFT Limits for Higgs CP Violation](https://arxiv.org/pdf/1901.05982)
+- [Machine-Enhanced CP-Asymmetries in the Electroweak Sector](https://journals.aps.org/prd/pdf/10.1103/PhysRevD.107.016008)
+- [Machine-Enhanced CP-Asymmetries in the Higgs Sector](https://www.sciencedirect.com/science/article/pii/S037026932200380X?ref=pdf_download&fr=RR-2&rr=8f0c1769392aef3e)
+- [Andy’s Paper on Machine-Enhanced CP Asymmetries](https://arxiv.org/pdf/2112.05052)
+
+### Specific Papers on H → bb and ττ
+
+- [Bernreuther Paper on CP-sensitive Observables (H→tt, H→ττ)](https://arxiv.org/pdf/hep-ph/9701347)
+- [Bernreuther Paper — Higgs CP-mixing in τ Decay](https://arxiv.org/pdf/1410.6362)
+- [Bernreuther — Determining Higgs CP Parity in τ Channels](https://arxiv.org/pdf/0801.2297)
+- [ATLAS Measurement of Higgs CP Properties with τ-leptons](https://arxiv.org/pdf/2212.05833)
+- [Spin Correlations and Top Mass Trick — Higgs→bb](https://arxiv.org/pdf/2311.08226)
+
+- [H → bb with Λ Mapping](https://link.springer.com/article/10.1007/JHEP08(2021)167)
+
+## Jet Algorithms and Polarization
+
+- [Anti-\(k_T\) Jet Algorithm — Cacciari et al.](https://indico.cern.ch/event/1112883/contributions/4677589/attachments/2395256/4095349/Matteo_Cacciari_2008_J._High_Energy_Phys._2008_063.pdf)
+- [Polarization in B Decays](https://pdg.lbl.gov/2019/reviews/rpp2019-rev-b-decays-polarization.pdf)
+- [Helicity Suppression Explanation](https://physics.stackexchange.com/questions/704458/confused-about-helicity-suppression-in-the-decay-pi-rightarrow-mu-overl#:~:text=,convert%20one%20into%20the%20other)
+
+## SMEFT, FeynRules, and EFT Tools
+
+- [SMEFTsim 3.0 Guide](https://arxiv.org/pdf/2012.11343)
+- [Hands-on SMEFTsim — Ilaria Brivio](https://arxiv.org/pdf/2012.11343)
+- [FeynRules 2.0 Toolbox](https://arxiv.org/pdf/1310.1921)
+
+## Additional References
+
+- [Observation of CP Symmetry Breaking in Baryon Decays](https://arxiv.org/pdf/2503.16954)
+- [DETECTING HIGGS BOSON DECAYS TO NEUTRALINOS](https://arxiv.org/pdf/hep-ph/9402265)
+- [Two-Component Spinor Techniques](https://arxiv.org/pdf/0812.1594)
+- [Mapping Kinematical Regimes in SIDIS](https://arxiv.org/pdf/1904.12882)
+
+## Machine Learning in HEP
+
+- [AnalysisG GitHub Project](https://github.com/woywoy123/AnalysisG)
+- [Harvard Data Science Review: Machine Learning in HEP](https://hdsr.mitpress.mit.edu/pub/xqle7lat/release/5)
+- [IML Working Group — Living Review](https://iml-wg.github.io/HEPML-LivingReview/)
+- [Physics Projects Using Data Science (Reddit Discussion)](https://www.reddit.com/r/ParticlePhysics/comments/13uwfoj/what_are_some_physics_projects_using_data_science/)
+
+## Condor and Cluster Job Submission
+
+- [HTCondor Submit Manual](https://htcondor.readthedocs.io/en/latest/man-pages/condor_submit.html)
+
+---
+### Key Classical References (Operators and CP Observables)
+
+- Collins & Knowles, *Nucl. Phys.* B304 (1988) 794: **Coherent Spin Evolution Algorithm**.
+- Richardson & Webster, *Spin Correlations in Parton Showers*, [arXiv:1807.01955](https://arxiv.org/pdf/1807.01955).
+- ATLAS Collaboration, *CP-sensitive Observables for Higgs–Fermion Interactions*, [arXiv:2406.03950](https://arxiv.org/abs/2406.03950).
+
+---
+
+_Work in progress references:_
+- Higgs→ττ paper analysis.
+- Andy’s own papers on machine-enhanced asymmetries.
+- Lund plane spin-sensitive decomposition [PanScales Project](https://gsalam.web.cern.ch/panscales/).
+- Tau polarimeters for \( e^+e^- \to \tau^+\tau^- \) setups.
+
+
