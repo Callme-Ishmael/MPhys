@@ -1009,7 +1009,6 @@ This week marks a conceptual turning point: **we have to change what we expect t
 
 
 -------------------------------
-# Week 9 (24.03 - 30.03)
 
 # Week 9 (24.03 – 30.03)
 
@@ -1112,6 +1111,10 @@ This approach is designed to reveal **subtle correlations** between decay planes
   - Weighted Δψ–Δψ distributions.
   - Asymmetry between CP-even and CP-odd samples.
   - Statistical significance of the asymmetry.
+
+
+![bg_gg_asymmetry (1)](https://github.com/user-attachments/assets/221e8b96-9452-403d-a3e8-987d11652ae9)
+
 
 #### Conclusion
 While the tool performs as expected, it confirms a lack of measurable **interjet angular correlation** between the two sides of H → b b̄ — consistent with theoretical expectations from the PanScales papers. Those works note that spin correlations are preserved for **gluon-initiated** processes, but **not** for quark-initiated ones like H → q q̄.
