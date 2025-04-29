@@ -646,18 +646,22 @@ where the C<sub>ij</sub> term encodes the spin-spin correlation — the main obj
 
 To quantify the effect of CP violation, they build a basis of spin observables:
 
-<p align="center">
-  𝒪₁ = k̂ ⋅ (s⃗₁ − s⃗₂) &nbsp;&nbsp; (CP-odd)
-</p>
-<p align="center">
-  𝒪₂ = k̂ ⋅ (s⃗₁ &times; s⃗₂) &nbsp;&nbsp; (CP-odd)
-</p>
-<p align="center">
-  𝒪₃ = s⃗₁ ⋅ s⃗₂ &nbsp;&nbsp; (CP-even)
-</p>
-<p align="center">
-  𝒪₄ = (k̂ ⋅ s⃗₁)(k̂ ⋅ s⃗₂) &nbsp;&nbsp; (CP-even)
-</p>
+$$
+\mathcal{O}_1 = \hat{k} \cdot (\vec{s}_1 - \vec{s}_2) \quad \text{(CP-odd)}
+$$
+
+$$
+\mathcal{O}_2 = \hat{k} \cdot (\vec{s}_1 \times \vec{s}_2) \quad \text{(CP-odd)}
+$$
+
+$$
+\mathcal{O}_3 = \vec{s}_1 \cdot \vec{s}_2 \quad \text{(CP-even)}
+$$
+
+$$
+\mathcal{O}_4 = (\hat{k} \cdot \vec{s}_1)(\hat{k} \cdot \vec{s}_2) \quad \text{(CP-even)}
+$$
+
 
 and define expectation values:
 
@@ -808,15 +812,13 @@ Using the UFO2HERWIG translation, we generate events and subsequently inspect th
 The current focus is on devising a sure-fire test for the activation of spin correlations. With several papers in mind:
 
 - Berheuter (which has been tried this week)
-- Uzan
+- Uzan: https://arxiv.org/pdf/2311.08226
 - Richardson & Webster
 
 --------------------------------
 # Week 7 (10.03 - 16.03)
 
-Bernheuter paper is useful but we cannot guarantee the valdity of our check. Uzan is almost impossible to implement due to low stats - they are asking for semileptonic decays of the lambdab baryon which do not occur as often as we would like. The more often b-baryon in which the b quark hadronisez is a B meson in fact. Not only this but full hadronic decays of the lambda b dominate over 
-
-
+The Bernreuther paper provides useful guidance, but we cannot fully guarantee the validity of our cross-check based on it. As for the Uzan method, implementing it is extremely challenging due to limited statistics: it requires semileptonic decays of the Lambda_b baryon, which occur far less frequently than needed. In practice, the b-quark most often hadronizes into a B meson rather than a baryon. Moreover, even when Lambda_b baryons are produced, their decays are predominantly fully hadronic, further reducing the availability of the desired semileptonic channels.
 
 ## Deconstructing the Richardson and closely related PanScales paper: Spin Correlations 
 
@@ -864,7 +866,7 @@ where $$M_{\lambda_g}$$ is the helicity amplitude for the gluon with helicity $$
 
 When the gluon subsequently branches, for instance via $$g \to q\bar{q}$$, the azimuthal angle $$\phi$$ of the branching is not chosen randomly, but according to a distribution proportional to:
 
-$$\rho_{\lambda_g \lambda^\prime_g} M_{\lambda_g \lambda_q \lambda_{\bar{q}}} M^*_{\lambda^\prime_g \lambda_q \lambda_{\bar{q}}}$$
+$$\rho_{\lambda_g \lambda^\prime_g} M_{\lambda_g \lambda_q \lambda_{\bar{q}}} M_{\lambda^\prime_g \lambda_q \lambda_{\bar{q}}}$$
 
 where $$M_{\lambda_g \lambda_q \lambda_{\bar{q}}}$$ are the helicity amplitudes for the branching.  
 This construction ensures that the azimuthal distribution between the daughter partons encodes the spin information of the parent particle.
@@ -976,13 +978,13 @@ We contacted Mike Seymour to investigate this behaviour further:
 
 > **Email – Karim to Mike**  
 >  
-> We are simulating Higgs boson production via gluon-gluon fusion with the Higgs decaying to either \( b\bar{b} \) or \( gg \). For both channels, we observe very few parton-level branchings — typically only 2–4 in total. This is despite using the Angular-Ordered (AO) shower in Herwig. Hadronisation is disabled to save resources, as we aim to study jet substructure via Lund plane declustering and require the shower to develop properly. Input files and a representative event visualisation were included for reference.
+> We are simulating Higgs boson production via gluon-gluon fusion with the Higgs decaying to either $$b\bar{b}$$ or $$gg$$. For both channels, we observe very few parton-level branchings — typically only 2–4 in total. This is despite using the Angular-Ordered (AO) shower in Herwig. Hadronisation is disabled to save resources, as we aim to study jet substructure via Lund plane declustering and require the shower to develop properly. Input files and a representative event visualisation were included for reference.
 
 Mike’s reply was cautiously optimistic:
 
 > **Reply – Mike Seymour**  
 >  
-> That is indeed surprising. For \( H \to gg \), I would expect on average around 10–15 gluons to be emitted during showering, based on an MLLA estimate with the default infrared cutoff at \( p_T = 0.655 \, \text{GeV} \). If your distributions significantly undershoot this, it may indicate a problem with the shower setup.
+> That is indeed surprising. For $$H \to gg$$, I would expect on average around 10–15 gluons to be emitted during showering, based on an MLLA estimate with the default infrared cutoff at $$p_T = 0.655 \, \text{GeV}$$. If your distributions significantly undershoot this, it may indicate a problem with the shower setup.
 
 
 Link: [https://phab.hepforge.org/source/herwighg/browse/default/src/defaults/Shower.in](https://phab.hepforge.org/source/herwighg/browse/default/src/defaults/Shower.in "https://phab.hepforge.org/source/herwighg/browse/default/src/defaults/Shower.in") line 129
@@ -993,31 +995,31 @@ We subsequently produced the following distribution of gluons per event:
 
 
 
-With the peak around 10–11 gluons, the shower appears to be functioning nominally. As such, we conclude that this “incomplete shower” behaviour is expected for \( H \to b\bar{b} \), especially without hadronisation — and must be worked around rather than “fixed.”
+With the peak around 10–11 gluons, the shower appears to be functioning nominally. As such, we conclude that this “incomplete shower” behaviour is expected for $$H \to b\bar{b}$$, especially without hadronisation — and must be worked around rather than “fixed.”
 
-Using these samples, we confirm that **interjet spin correlations** do appear in \( H \to gg \). However, we are confronted with a significant theoretical caveat, clearly noted in the PanScales paper ([arXiv:2103.16526](https://arxiv.org/abs/2103.16526)):
+Using these samples, we confirm that **interjet spin correlations** do appear in $$H \to gg$$. However, we are confronted with a significant theoretical caveat, clearly noted in the PanScales paper ([arXiv:2103.16526](https://arxiv.org/abs/2103.16526)):
 
-> *That particular case, with a \( q\bar{q} \) hard process, would have zero correlation, but the correlation is non-zero for a \( gg \) hard process.*
+> *That particular case, with a \( q\bar{q} \) hard process, would have zero correlation, but the correlation is non-zero for a $$gg$$ hard process.*
 
-This explains why **no azimuthal structure** is observed between the two b-branches in \( H \to b\bar{b} \) — a key disappointment, but also an important finding.
+This explains why **no azimuthal structure** is observed between the two b-branches in $$H \to b\bar{b}$$ — a key disappointment, but also an important finding.
 
 To clarify the issue for ourselves, we framed the following question:
 
 ---
 
-#### On the Absence of Spin Correlations in \( H \to b\bar{b} \) after Showering
+#### On the Absence of Spin Correlations in $$H \to b\bar{b}$$ after Showering
 
-I'm studying the CP structure of \( H \to b\bar{b} \) using Herwig at generator level. With showering on (but hadronisation off), spin correlations between the b and \( \bar{b} \) branches appear completely washed out, even when tracing all the way to the final B-hadrons.
+I'm studying the CP structure of $$H \to b\bar{b}$$ using Herwig at generator level. With showering on (but hadronisation off), spin correlations between the b and $$\bar{b}$$ branches appear completely washed out, even when tracing all the way to the final B-hadrons.
 
-At first, this was puzzling — because in \( H \to gg \), spin correlations are clearly visible, e.g., in the azimuthal angle between splitting planes. This is understood to result from gluon polarisation being retained through the shower (see [arXiv:1807.01955](https://arxiv.org/abs/1807.01955) and PanScales [arXiv:2103.16526](https://arxiv.org/abs/2103.16526)).
+At first, this was puzzling — because in $$H \to gg$$, spin correlations are clearly visible, e.g., in the azimuthal angle between splitting planes. This is understood to result from gluon polarisation being retained through the shower (see [arXiv:1807.01955](https://arxiv.org/abs/1807.01955) and PanScales [arXiv:2103.16526](https://arxiv.org/abs/2103.16526)).
 
 But PanScales explicitly footnotes that for \( q\bar{q} \) final states, **no inter-branch spin correlation** is expected. This makes sense: gluons carry polarisation states, but spin information in quark lines seems less resilient, and the collinear approximation fails to capture it.
 
 Still, this raises the question:  
-**Could spin correlations in \( H \to b\bar{b} \) be recovered in any setup?**  
-Could going beyond collinear approximations — or considering \( H \to b\bar{b}g \) explicitly — restore this structure? Do current showers (e.g., Collins–Knowles implementation in Herwig) encode any spin entanglement between fermion branches at all?
+**Could spin correlations in $$H \to b\bar{b}$$ be recovered in any setup?**  
+Could going beyond collinear approximations — or considering $$H \to b\bar{b}g$$ explicitly — restore this structure? Do current showers (e.g., Collins–Knowles implementation in Herwig) encode any spin entanglement between fermion branches at all?
 
-If such correlations are fundamentally lost in quark final states at shower level, then attempts to probe CP-odd angular asymmetries in \( H \to b\bar{b} \) at generator level must account for this loss carefully.
+If such correlations are fundamentally lost in quark final states at shower level, then attempts to probe CP-odd angular asymmetries in $$H \to b\bar{b}$$ at generator level must account for this loss carefully.
 
 ---
 
@@ -1163,7 +1165,7 @@ Decay_H = Decay(name = 'Decay_H',
 
 This clearly shows that the partial width is not the Standard Model one but rather depends explicitly on the CP-even and CP-odd couplings coupbeven and coupbodd. Herwig, in turn, uses this formula directly to compute the decay probabilities. That explains the branching ratio skewness we've observed: the UFO model itself modifies the decay widths.
 
-To cross-check, we referred to the PDG’s standard decay width formulas for the Higgs boson, which can be found at [Cross-Section Formulae — PDG 2019](https://pdg.lbl.gov/2019/reviews/rpp2018-rev-cross-section-formulae.pdf). Comparing those to Christoph’s expressions confirms that the model modifies the b b̄ width in a non-trivial way depending on the couplings.
+To cross-check, we referred to the PDG’s standard decay width formulas for the Higgs boson, which can be found at [Cross-Section Formulae — PDG 2019](https://pdg.lbl.gov/2019/reviews/rpp2018-rev-cross-section-formulae.pdf). Comparing those to Christoph’s expressions confirms that the model modifies the bb̄ width in a non-trivial way depending on the couplings.
 
 In conclusion, Herwig applies automatic decays using whatever is defined in the UFO’s decay structure, while MadGraph requires explicit instructions and does not alter decay widths unless configured to. The discrepancy in branching ratios is therefore not a bug but a consequence of how the UFO model was constructed and interpreted by Herwig.
 
@@ -1196,35 +1198,66 @@ All JOBS done and uploaded on drive (3B events for each sample - odd/even   pi/4
 
 # Week 12 (14.04 - 20.04)
 
-Ana and I think the panscales observable is sensitive to the CP-structure of the effective Hgg coupling. I’m attaching plots of the normalised differential cross section distribution of the observable of CP mixing angles:  0, pi/2, pi/4 and -pi/4 in the lab frame.
+This week, we explored whether the PanScales-inspired splitting plane observable is sensitive to the CP-structure of the effective \( Hgg \) coupling.
 
-EVEN
+## Observables & Results
+
+We produced distributions of the **normalised differential cross section** for the observable \( \Delta\Psi \), computed in the lab frame for four CP-mixing angles:
+- **CP-even** (\( \alpha = 0 \))
+- **CP-odd** (\( \alpha = \pi/2 \))
+- **Mixed** (\( \alpha = \pm \pi/4 \))
+
+### Plots:
+
+**CP-even (\( \alpha = 0 \))**  
 ![image](https://github.com/user-attachments/assets/fecb12f1-2999-4b48-a333-7bf18092ac1b)
 
-ODD
+**CP-odd (\( \alpha = \pi/2 \))**  
 ![image](https://github.com/user-attachments/assets/e24a5898-eb31-44c6-9102-88430ae21879)
 
-PI/4
+**Mixed (\( \alpha = +\pi/4 \))**  
 ![image](https://github.com/user-attachments/assets/70ed5c85-3e8e-4bc9-ac34-af2700cdfea1)
 
--PI/4
+**Mixed (\( \alpha = -\pi/4 \))**  
 ![image](https://github.com/user-attachments/assets/aad17700-9720-4ae6-8d60-4eb89420e7b2)
 
-In case we don’t meet today (likely), the immediate thing that I notice is (i) the even vs odd is very different with peaks/troughs shifted by pi/2, (ii) the mixed looks like the pure-even contribution with suppressed peaks. 
+### Observations:
 
-For the mixed case, I was expecting a phase shift to the distribution so that it peaked half way between odd and even. I wonder whether there is some lack of directionality in the DeltaPsi definition (i.e. equivalent to a modulus) that then partially maps the peaks onto troughs in the mixed case…..this is the first thing to look at.
+- **CP-even vs CP-odd**:  
+  Clear distinction — distributions are phase-shifted by approximately \( \pi/2 \).
+  
+- **Mixed cases**:  
+  Appear similar in shape to the even distribution but with **suppressed peaks**, instead of the expected phase shift.
 
-Spoke to Christoph, he agrees it is interesting. There would be a lot of work to do to flesh this out after MPhys if we wanted to carry on and we have to decide whether this is worth it for you. Ultimately there is clearly an effect, but we would (i) have to understand it more and (ii) build in some realism in terms of not being able to trace the shower in real life.
+This suggests there may be a **loss of directionality** in the definition of \( \Delta\Psi \), possibly due to it being defined modulo \( \pi \), effectively folding parts of the distribution and mapping peaks to troughs.
 
-We bounced around a few ideas for your Mphys
-(1) Look at this paper: https://arxiv.org/pdf/1010.0676
-Measuring spin and CP from semihadronic ZZ decays using jet substructure - arXiv.org
-zz zz + cp + + + = ...
-arxiv.org
- and look at the variable defined in (1e). This projects out the correlations for Higgs decaying to two spin one particles. You’ll have to play with the definitions of alpha, beta and plus, minus, to get it to work, but gives you another variable
-(2) The above variables are defined with some rapidity ordering: it is worth you playing around with the ordering in your splitting plane definitions  to see if it makes a difference.
-(3) Similarly, you could try n_i dot n_(i-1) (n is the normal to the planes) for different orderings to see if something interesting happens.
-(4) If/when all fails: you have the NN…..
+---
+
+## Reflections
+
+- **There is clearly a physical effect** in how CP structure influences the angular correlations in the shower.
+- Christoph agrees the observation is promising, but **significant follow-up work** would be needed to turn this into a full project:
+  - Understanding the observable’s mathematical structure and symmetries in more depth.
+  - Accounting for realistic detector effects — in real-life analysis, we cannot trace the full shower history as in simulation.
+
+---
+
+## Potential Follow-up Ideas (MPhys & Beyond)
+
+- **(1) Jet-substructure variable from [arXiv:1010.0676](https://arxiv.org/pdf/1010.0676)**  
+  Look at variable (1e), which isolates spin and CP information in \( H \to ZZ \to 4j \).  
+  Requires adapting definitions of angles (\( \alpha, \beta \)) and sign conventions.
+
+- **(2) Rapidity ordering:**  
+  Play with rapidity ordering in the splitting plane definitions to test if it affects correlation strength.
+
+- **(3) New observables:**  
+  Try observables like \( \vec{n}_i \cdot \vec{n}_{i-1} \) (dot product of plane normals in successive branchings) to test sensitivity.
+
+- **(4) Neural Network backup:**  
+  If none of the above yield clear results — fallback to the **neural network analysis**, which already shows classification power between CP cases.
+
+---
 
 
 # References
