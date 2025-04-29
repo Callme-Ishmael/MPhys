@@ -208,7 +208,7 @@ Drafted a first trial input file (`LHE.in`) that references a MadGraph-generated
 Nonetheless, direct model integration via `ufo2herwig` remains the preferred long-term solution.
 
 
-# Week 2 (03.02.2025 – 09.02.2025)
+# Week 2 (03.02 – 09.02)
 
 ## Focus of the Week
 
