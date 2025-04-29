@@ -971,6 +971,63 @@ Input
 -------------------------------
 # Week 8 (17.03 - 23.03)
 
+## Efficient Handling of Large Output Files
+
+At a later stage of our analysis, we increased production throughput by running event generation and observable extraction in **parallel across multiple cores**. Each parallel job wrote its own large `.csv` output file (often several hundred MB in size), containing the observable values for thousands of events.
+
+### Problem
+
+Concatenating these large `.csv` files with `pandas` was **infeasible** due to memory constraints and performance bottlenecks:
+
+- `pandas.concat([...])` loads the entire files into memory.
+- The process was slow and could crash for very large datasets.
+
+### Solution: `shutil`-based File Handling
+
+We implemented a lightweight and scalable solution using the `shutil` module to **concatenate files at the I/O level**, rather than parsing them in memory. The method:
+
+- Avoided loading the full `.csv` content with `pandas`.
+- Worked by **copying headers from only the first file**, and then appending the rest line by line.
+- Was written in an **object-oriented style** for modularity and reuse.
+
+```python
+import shutil
+import os
+
+def concatenate_csvs(file_list, output_file):
+    with open(output_file, 'wb') as wfd:
+        for i, f in enumerate(file_list):
+            with open(f, 'rb') as fd:
+                if i != 0:
+                    next(fd)  # Skip header in all but first file
+                shutil.copyfileobj(fd, wfd)
+```
+
+This allowed us to merge tens of .csv files efficiently and produce a single unified dataset.
+
+## Compression and Archival Using DuckDB
+
+To further reduce disk space and accelerate downstream analysis, we compressed our final `.csv` outputs into the **`.parquet` format** using **DuckDB**, which supports multiple compression codecs and allows columnar storage optimized for analytics.
+
+### One-liner Compression with DuckDB
+
+DuckDB lets you convert and compress `.csv` files into `.parquet` format with a single SQL command. You can choose the compression method (`ZSTD`, `GZIP`, `BROTLI`) and specify its level. We ultimately chose **Zstandard (ZSTD)** at **compression level 20** for its excellent balance between speed and file size.
+
+Example one-liner:
+
+```python
+import duckdb
+
+duckdb.sql("""
+COPY (SELECT * FROM 'combined.csv') 
+TO 'output.parquet' 
+(FORMAT PARQUET, COMPRESSION 'zstd', COMPRESSION_LEVEL 20)
+""")
+```
+Other compression algorithms were tested - such as gzip and brotli but zstd proved the most efficient.
+
+### Shower final states issue
+
 The figure below illustrates the issue encountered during this week's work: a visualisation of the event record reveals unexpectedly limited parton showering structure, particularly in Higgs decays to gluon or b-quark pairs.
 ![image](https://github.com/user-attachments/assets/0f40c0b1-295b-4531-a649-1adb268425b9)
 
