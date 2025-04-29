@@ -235,7 +235,7 @@ Following deeper discussions with **Sid**, **Aidin**, and input from **Andy**, a
 - Once MadGraph writes the `.lhe` file, the spin correlations relevant to CP-violating interference effects are **irretrievably lost**.
 - Herwig cannot reconstruct or invent this missing spin information after reading the `.lhe`.
 
-The core physics we aim to study — interference effects between different helicity states of the \( b\bar{b} \) pair from the Higgs decay — requires preserving these off-diagonal spin density matrix elements.  
+The core physics we aim to study — interference effects between different helicity states of the $$b\bar{b}$$ pair from the Higgs decay — requires preserving these off-diagonal spin density matrix elements.  
 Thus, **Option 1 is fundamentally insufficient** for the goals of this project.
 
 ---
@@ -313,9 +313,9 @@ Our first objective was to import the SMEFTsim model into Herwig using the `ufo2
 
 We then attempted to follow the terminal suggestion of using the `--include-generic` option, but this led to a new Python error inside Herwig’s ThePEG framework, related to a deprecated `sort()` function. Manual modification of ThePEG’s Python files was attempted, but given the scale of the changes needed, we ultimately abandoned this path.
 
-Instead, we adopted a more practical workaround: we modified `general_lorentz.py` to simply skip any unsupported vertices rather than crash. This allowed the conversion to complete, producing `.model` and `.so` files. However, many vertices were skipped, particularly all four-point interactions and some critical three-point vertices like \( Z \to \mu^+ \mu^- \). Fortunately, the \( ggh \) and \( hbb \) vertices required for gluon-gluon fusion and Higgs decay to \( b\bar{b} \) were not among those skipped.
+Instead, we adopted a more practical workaround: we modified `general_lorentz.py` to simply skip any unsupported vertices rather than crash. This allowed the conversion to complete, producing `.model` and `.so` files. However, many vertices were skipped, particularly all four-point interactions and some critical three-point vertices like $$Z \to \mu^+ \mu^-$$. Fortunately, the $$ggh$$ and $$hbb$$ vertices required for gluon-gluon fusion and Higgs decay to $$b\bar{b}$$ were not among those skipped.
 
-In parallel, we tested Christoph’s custom UFO model. This model converted successfully without any manual intervention. However, Christoph’s model lacks effective gluon-gluon-Higgs vertices, making it unsuitable for simulating gluon fusion processes. As a result, we shifted focus to studying the associated production process \( pp \to ZH \to (\ell^+\ell^-)(b\bar{b}) \), where these vertices are not required.
+In parallel, we tested Christoph’s custom UFO model. This model converted successfully without any manual intervention. However, Christoph’s model lacks effective gluon-gluon-Higgs vertices, making it unsuitable for simulating gluon fusion processes. As a result, we shifted focus to studying the associated production process $$pp \to ZH \to (\ell^+\ell^-)(b\bar{b})$$, where these vertices are not required.
 
 At this stage, we encountered a new practical limitation. The Herwig installation on the Noether cluster only supported two UFO models, `loop_sm` and `heft`. Custom models such as ours, even after successful conversion, could not be loaded because the corresponding `.so` shared object files were not integrated into the Herwig build. Sid and Aidin began working on patching the Herwig installation to allow loading of external `.so` files.
 
@@ -505,7 +505,7 @@ rivet-mkhtml /data/ANALYSIS_X/Rivet.yoda -o /data/ANALYSIS_X/html_plots
 
 In Rivet, the structure of an analysis is organized around the concept of **projections**. A projection is a modular algorithm that extracts a particular physical feature from the event record, such as clustering final-state particles into jets (using FastJet), selecting isolated leptons, or computing invariant masses. The design philosophy of Rivet emphasizes modularity and reproducibility, allowing analyses to be portable across different event generators.
 
-Each Rivet analysis consists of two main phases. The first is the `init()` function, which is executed once at the beginning of the run. During this phase, all projections required by the analysis are declared and registered. For instance, if jets are needed, the analysis declares a `FastJets` projection, specifying parameters such as the clustering algorithm (e.g., anti-\(k_T\)) and the radius parameter \( R \). Similarly, projections for identifying final-state leptons or photons are declared here, often using helper projections like `FinalState` or `DressedLeptons`.
+Each Rivet analysis consists of two main phases. The first is the `init()` function, which is executed once at the beginning of the run. During this phase, all projections required by the analysis are declared and registered. For instance, if jets are needed, the analysis declares a `FastJets` projection, specifying parameters such as the clustering algorithm (e.g., anti-\(k_T\)) and the radius parameter $$R$$. Similarly, projections for identifying final-state leptons or photons are declared here, often using helper projections like `FinalState` or `DressedLeptons`.
 
 The second phase is the `analyze()` function, which is executed once for each event. Here, the previously declared projections are used to retrieve the corresponding objects in the current event. The analysis logic is implemented at this stage: cuts are applied, observables are computed, and histograms are filled. For example, after retrieving a list of reconstructed jets from the `FastJets` projection, the analysis might impose a minimum transverse momentum threshold, select b-tagged jets, and compute the invariant mass of the leading two jets.
 
@@ -598,8 +598,8 @@ We want to see how consistent the cuts imposed by MVH2BB are with the ATLAS stud
 ### Key Observations
 
 - The `MC_VH2BB` Rivet analysis functions correctly. We've now fully understood its logic and structure.
-- It mirrors the ATLAS Run 2 analysis for \( ZH, H \to b\bar{b} \) closely, including:
-  - A 30 GeV minimum \( p_T \) cut on jets, which is justified.
+- It mirrors the ATLAS Run 2 analysis for $$ZH, H \to b\bar{b}$$ closely, including:
+  - A 30 GeV minimum $$p_T$$ cut on jets, which is justified.
   - Use of `DileptonFinder` to dress and veto leptons before jet clustering via FastJet, reducing lepton–jet overlap issues.
 
 So, in principle, this analysis provides a robust starting point for our study.
@@ -1056,7 +1056,7 @@ With the peak around 10–11 gluons, the shower appears to be functioning nomina
 
 Using these samples, we confirm that **interjet spin correlations** do appear in $$H \to gg$$. However, we are confronted with a significant theoretical caveat, clearly noted in the PanScales paper ([arXiv:2103.16526](https://arxiv.org/abs/2103.16526)):
 
-> *That particular case, with a \( q\bar{q} \) hard process, would have zero correlation, but the correlation is non-zero for a $$gg$$ hard process.*
+> *That particular case, with a $$q\bar{q}$$ hard process, would have zero correlation, but the correlation is non-zero for a $$gg$$ hard process.*
 
 This explains why **no azimuthal structure** is observed between the two b-branches in $$H \to b\bar{b}$$ — a key disappointment, but also an important finding.
 
@@ -1070,7 +1070,7 @@ I'm studying the CP structure of $$H \to b\bar{b}$$ using Herwig at generator le
 
 At first, this was puzzling — because in $$H \to gg$$, spin correlations are clearly visible, e.g., in the azimuthal angle between splitting planes. This is understood to result from gluon polarisation being retained through the shower (see [arXiv:1807.01955](https://arxiv.org/abs/1807.01955) and PanScales [arXiv:2103.16526](https://arxiv.org/abs/2103.16526)).
 
-But PanScales explicitly footnotes that for \( q\bar{q} \) final states, **no inter-branch spin correlation** is expected. This makes sense: gluons carry polarisation states, but spin information in quark lines seems less resilient, and the collinear approximation fails to capture it.
+But PanScales explicitly footnotes that for $$q\bar{q}$$ final states, **no inter-branch spin correlation** is expected. This makes sense: gluons carry polarisation states, but spin information in quark lines seems less resilient, and the collinear approximation fails to capture it.
 
 Still, this raises the question:  
 **Could spin correlations in $$H \to b\bar{b}$$ be recovered in any setup?**  
@@ -1260,33 +1260,33 @@ This week, we explored whether the PanScales-inspired splitting plane observable
 ## Observables & Results
 
 We produced distributions of the **normalised differential cross section** for the observable $$\Delta\Psi$$, computed in the lab frame for four CP-mixing angles:
-- **CP-even** (\( \alpha = 0 \))
-- **CP-odd** (\( \alpha = \pi/2 \))
-- **Mixed** (\( \alpha = \pm \pi/4 \))
+- **CP-even** ($$\alpha = 0$$)
+- **CP-odd** ($$\alpha = \pi/2$$)
+- **Mixed** ($$\alpha = \pm \pi/4$$)
 
 ### Plots:
 
-**CP-even (\( \alpha = 0 \))**  
+**CP-even ($$\alpha = 0$$)**  
 ![image](https://github.com/user-attachments/assets/fecb12f1-2999-4b48-a333-7bf18092ac1b)
 
-**CP-odd (\( \alpha = \pi/2 \))**  
+**CP-odd ($$\alpha = \pi/2$$)**  
 ![image](https://github.com/user-attachments/assets/e24a5898-eb31-44c6-9102-88430ae21879)
 
-**Mixed (\( \alpha = +\pi/4 \))**  
+**Mixed ($$\alpha = +\pi/4$$)**  
 ![image](https://github.com/user-attachments/assets/70ed5c85-3e8e-4bc9-ac34-af2700cdfea1)
 
-**Mixed (\( \alpha = -\pi/4 \))**  
+**Mixed ($$\alpha = -\pi/4$$)**  
 ![image](https://github.com/user-attachments/assets/aad17700-9720-4ae6-8d60-4eb89420e7b2)
 
 ### Observations:
 
 - **CP-even vs CP-odd**:  
-  Clear distinction — distributions are phase-shifted by approximately \( \pi/2 \).
+  Clear distinction — distributions are phase-shifted by approximately $$\pi/2$$.
   
 - **Mixed cases**:  
   Appear similar in shape to the even distribution but with **suppressed peaks**, instead of the expected phase shift.
 
-This suggests there may be a **loss of directionality** in the definition of \( \Delta\Psi \), possibly due to it being defined modulo \( \pi \), effectively folding parts of the distribution and mapping peaks to troughs.
+This suggests there may be a **loss of directionality** in the definition of $$\Delta\Psi$$, possibly due to it being defined modulo $$\pi$$, effectively folding parts of the distribution and mapping peaks to troughs.
 
 ---
 
@@ -1302,14 +1302,14 @@ This suggests there may be a **loss of directionality** in the definition of \( 
 ## Potential Follow-up Ideas (MPhys & Beyond)
 
 - **(1) Jet-substructure variable from [arXiv:1010.0676](https://arxiv.org/pdf/1010.0676)**  
-  Look at variable (1e), which isolates spin and CP information in \( H \to ZZ \to 4j \).  
-  Requires adapting definitions of angles (\( \alpha, \beta \)) and sign conventions.
+  Look at variable (1e), which isolates spin and CP information in $$H \to ZZ \to 4j$$.  
+  Requires adapting definitions of angles ($$\alpha, \beta$$) and sign conventions.
 
 - **(2) Rapidity ordering:**  
   Play with rapidity ordering in the splitting plane definitions to test if it affects correlation strength.
 
 - **(3) New observables:**  
-  Try observables like \( \vec{n}_i \cdot \vec{n}_{i-1} \) (dot product of plane normals in successive branchings) to test sensitivity.
+  Try observables like $$\vec{n}_i \cdot \vec{n}_{i-1}$$ (dot product of plane normals in successive branchings) to test sensitivity.
 
 - **(4) Neural Network backup:**  
   If none of the above yield clear results — fallback to the **neural network analysis**, which already shows classification power between CP cases.
@@ -1416,6 +1416,6 @@ _Work in progress references:_
 - Higgs→ττ paper analysis.
 - Andy’s own papers on machine-enhanced asymmetries.
 - Lund plane spin-sensitive decomposition [PanScales Project](https://gsalam.web.cern.ch/panscales/).
-- Tau polarimeters for \( e^+e^- \to \tau^+\tau^- \) setups.
+- Tau polarimeters for $$e^+e^- \to \tau^+\tau^-$$ setups.
 
 
