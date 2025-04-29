@@ -299,7 +299,7 @@ In addition to the wide range of internal BSM models it is possible to use most 
 
 
 
-# Week 3 (10.02.2025 – 16.02.2025)
+# Week 3 (10.02 – 16.02)
 
 ## Focus of the Week
 
