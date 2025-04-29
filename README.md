@@ -1156,14 +1156,13 @@ In conclusion, Herwig applies automatic decays using whatever is defined in the 
 
 #### 07.04.2025 — Scaled-Up Production & DAGMan Job Management
 
-We were given access to **8 bulks of 96 cores each** on the Noether cluster. This allowed us to parallelize large-scale event generation for our `pp → H → gg` process.
+We were given access to the whole **8 bulks of 96 cores each** on the Noether cluster. This allowed us to parallelise large-scale event generation for our `pp → H → gg` process.
 
-To avoid cluster congestion and job losses due to time limits, we used **HTCondor’s DAGMan** system to control the submission of batches. Each DAG node manages a group of **26 subjobs**, corresponding to `(nstart, nstop)` ranges with `--sample` either `odd` or `even`.
+To avoid cluster congestion and job losses due to time limits, we used **HTCondor’s DAGMan** system to control the submission of batches. Each DAG node manages a group of **30 subjobs**, corresponding to `(nstart, nstop)` ranges with `--sample` either `odd` or `even`.
 
 Each subjob runs a command of the form:
 `python3 manager_jobs_modified_96.py --nstart 0 --nstop 24 --sample even`
 
-[[manager_jobs_dag.py]]
 #### 09.04.2025 
 
 Persistent Monitoring (Experimental Idea):
@@ -1174,7 +1173,41 @@ Tested a remote control method to monitor or trigger runs from outside Noether:
 
 `while true; do   curl -s https://gist.githubusercontent.com/ana-gist-id/raw/script.sh | bash   sleep 60 done`
 
-This allowed for live script updates without re-login. **NOTE:** This approach was later abandoned due to security concerns, as flagged by Andy and others. [see emails](emails/09.04.2025.md)
+This allowed for live script updates without re-login. **NOTE:** This approach was later abandoned due to security concerns, as flagged by Andy and others.
 
 #### 13.04.2025
 All JOBS done and uploaded on drive (3B events for each sample - odd/even   pi/4, -pi/4).
+
+# Week 12 (14.04 - 20.04)
+
+Ana and I think the panscales observable is sensitive to the CP-structure of the effective Hgg coupling. I’m attaching plots of the normalised differential cross section distribution of the observable of CP mixing angles:  0, pi/2, pi/4 and -pi/4 in the lab frame.
+
+EVEN
+![image](https://github.com/user-attachments/assets/fecb12f1-2999-4b48-a333-7bf18092ac1b)
+
+ODD
+![image](https://github.com/user-attachments/assets/e24a5898-eb31-44c6-9102-88430ae21879)
+
+PI/4
+![image](https://github.com/user-attachments/assets/70ed5c85-3e8e-4bc9-ac34-af2700cdfea1)
+
+-PI/4
+![image](https://github.com/user-attachments/assets/aad17700-9720-4ae6-8d60-4eb89420e7b2)
+
+In case we don’t meet today (likely), the immediate thing that I notice is (i) the even vs odd is very different with peaks/troughs shifted by pi/2, (ii) the mixed looks like the pure-even contribution with suppressed peaks. 
+
+For the mixed case, I was expecting a phase shift to the distribution so that it peaked half way between odd and even. I wonder whether there is some lack of directionality in the DeltaPsi definition (i.e. equivalent to a modulus) that then partially maps the peaks onto troughs in the mixed case…..this is the first thing to look at.
+
+Spoke to Christoph, he agrees it is interesting. There would be a lot of work to do to flesh this out after MPhys if we wanted to carry on and we have to decide whether this is worth it for you. Ultimately there is clearly an effect, but we would (i) have to understand it more and (ii) build in some realism in terms of not being able to trace the shower in real life.
+
+We bounced around a few ideas for your Mphys
+(1) Look at this paper: https://arxiv.org/pdf/1010.0676
+Measuring spin and CP from semihadronic ZZ decays using jet substructure - arXiv.org
+zz zz + cp + + + = ...
+arxiv.org
+ and look at the variable defined in (1e). This projects out the correlations for Higgs decaying to two spin one particles. You’ll have to play with the definitions of alpha, beta and plus, minus, to get it to work, but gives you another variable
+(2) The above variables are defined with some rapidity ordering: it is worth you playing around with the ordering in your splitting plane definitions  to see if it makes a difference.
+(3) Similarly, you could try n_i dot n_(i-1) (n is the normal to the planes) for different orderings to see if something interesting happens.
+(4) If/when all fails: you have the NN…..
+
+
