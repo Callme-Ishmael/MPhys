@@ -953,52 +953,59 @@ Input
 -------------------------------
 # Week 8 (17.03 - 23.03)
 
-The following image outlines the problem
+The figure below illustrates the issue encountered during this week's work: a visualisation of the event record reveals unexpectedly limited parton showering structure, particularly in Higgs decays to gluon or b-quark pairs.
 ![image](https://github.com/user-attachments/assets/0f40c0b1-295b-4531-a649-1adb268425b9)
 
-An email is sent out to Mike about this
+We contacted Mike Seymour to investigate this behaviour further:
+
+> **Email – Karim to Mike**  
+>  
+> We are simulating Higgs boson production via gluon-gluon fusion with the Higgs decaying to either \( b\bar{b} \) or \( gg \). For both channels, we observe very few parton-level branchings — typically only 2–4 in total. This is despite using the Angular-Ordered (AO) shower in Herwig. Hadronisation is disabled to save resources, as we aim to study jet substructure via Lund plane declustering and require the shower to develop properly. Input files and a representative event visualisation were included for reference.
+
+Mike’s reply was cautiously optimistic:
+
+> **Reply – Mike Seymour**  
+>  
+> That is indeed surprising. For \( H \to gg \), I would expect on average around 10–15 gluons to be emitted during showering, based on an MLLA estimate with the default infrared cutoff at \( p_T = 0.655 \, \text{GeV} \). If your distributions significantly undershoot this, it may indicate a problem with the shower setup.
 
 
-> [!email]
-> Hi Mike,  
->   
-> I’m one of Andy’s MPhys students. We had an issue with showering in Herwig and Sid advised us to contact you. We will be grateful if you can point us to the root of the problem. CC’ing Andy, Sid and my MPhys partner, Ana, to keep them in the loop.  
->   
-> We are simulating Higgs boson production via gluon-gluon fusion with the Higgs decaying to bb and gg. For both the bb and the gg cases, we get very minimal branching (typically the whole bb/gg shower has 2-4 branchings in total). We are using the AO shower. Hadronisation is turned off for computational efficiency. Essentially, we would want to do Lund plane declustering on our jets, so we need the rich substructure of the shower and we don’t care about hadronisation. I’m attaching the input file used for event generation, along with a visualisation of one of the events for clarity.  
->   
-> Your help and insights are truly appreciated. Thank you for taking the time.  
->   
-> Best,  
-> Karim
-
-
-
-> [!reply]
-> Dear Karim,
-> 
-> I agree this is a bit surprising, i.e. that there are so few gluon emissions in the Higgs decay to two gluons. But it is hard to tell much from one event. Do you have any information on the distribution of number of gluons produced in the Higgs decay, or their average? This is probably something Sid could also calculate using his standalone calculation (although that is with a different shower algorithm, so it would be a rough indication rather than a precise validation).
-> 
-> @Siddharth Sule: do you know offhand what infrared cutoff the shower is using?
-> 
-> Thanks,
-> 
-> Mike.
-
-The infrared cutoff should be about pT = 0.654714 GeV
 Link: [https://phab.hepforge.org/source/herwighg/browse/default/src/defaults/Shower.in](https://phab.hepforge.org/source/herwighg/browse/default/src/defaults/Shower.in "https://phab.hepforge.org/source/herwighg/browse/default/src/defaults/Shower.in") line 129
 
-With a cutoff of 0.655 GeV, I'd expect H->gg to produce about 13 gluons on average. That's an MLLA estimate, so quite uncertain, but say 10-15 gluons. If the average number is significantly below that, I'd worry that the shower is not working correctly.
+We subsequently produced the following distribution of gluons per event:
 
 ![image](https://github.com/user-attachments/assets/873bedb8-ed8c-4c1b-b2f0-1309b37fbfaa)
 
 
-> [!email]
-> Hi Mike,
-> 
-> Thank you for your response. We plotted the distribution of the number of gluons in the final state (attached) and it peaks at around 10 or 11.  Does this mean that the shower is working as it should?
 
-So this is sorted out and there is nothing we can do but adapt. 
+With the peak around 10–11 gluons, the shower appears to be functioning nominally. As such, we conclude that this “incomplete shower” behaviour is expected for \( H \to b\bar{b} \), especially without hadronisation — and must be worked around rather than “fixed.”
 
+Using these samples, we confirm that **interjet spin correlations** do appear in \( H \to gg \). However, we are confronted with a significant theoretical caveat, clearly noted in the PanScales paper ([arXiv:2103.16526](https://arxiv.org/abs/2103.16526)):
+
+> *That particular case, with a \( q\bar{q} \) hard process, would have zero correlation, but the correlation is non-zero for a \( gg \) hard process.*
+
+This explains why **no azimuthal structure** is observed between the two b-branches in \( H \to b\bar{b} \) — a key disappointment, but also an important finding.
+
+To clarify the issue for ourselves, we framed the following question:
+
+---
+
+#### On the Absence of Spin Correlations in \( H \to b\bar{b} \) after Showering
+
+I'm studying the CP structure of \( H \to b\bar{b} \) using Herwig at generator level. With showering on (but hadronisation off), spin correlations between the b and \( \bar{b} \) branches appear completely washed out, even when tracing all the way to the final B-hadrons.
+
+At first, this was puzzling — because in \( H \to gg \), spin correlations are clearly visible, e.g., in the azimuthal angle between splitting planes. This is understood to result from gluon polarisation being retained through the shower (see [arXiv:1807.01955](https://arxiv.org/abs/1807.01955) and PanScales [arXiv:2103.16526](https://arxiv.org/abs/2103.16526)).
+
+But PanScales explicitly footnotes that for \( q\bar{q} \) final states, **no inter-branch spin correlation** is expected. This makes sense: gluons carry polarisation states, but spin information in quark lines seems less resilient, and the collinear approximation fails to capture it.
+
+Still, this raises the question:  
+**Could spin correlations in \( H \to b\bar{b} \) be recovered in any setup?**  
+Could going beyond collinear approximations — or considering \( H \to b\bar{b}g \) explicitly — restore this structure? Do current showers (e.g., Collins–Knowles implementation in Herwig) encode any spin entanglement between fermion branches at all?
+
+If such correlations are fundamentally lost in quark final states at shower level, then attempts to probe CP-odd angular asymmetries in \( H \to b\bar{b} \) at generator level must account for this loss carefully.
+
+---
+
+This week marks a conceptual turning point: **we have to change what we expect to be visible in our data**, and realign our analysis strategy accordingly.
 
 
 -------------------------------
