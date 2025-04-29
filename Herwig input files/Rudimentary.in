@@ -1,0 +1,85 @@
+# -*- ThePEG-repository -*-
+
+##################################################
+# Ana and Karim's MPhys Project
+# -----------------------------
+# This is the main input file for Herwig 7. It
+# contains the settings for the LHC Higgs to bbbar
+# process. The optional module HwSim is used to
+# generate a ROOT file with the final state.
+##################################################
+
+##################################################
+# LHC: Proton Proton
+##################################################
+read snippets/PPCollider.in
+cd /Herwig/Generators
+
+# Luminosity 13 TeV
+set EventGenerator:EventHandler:LuminosityFunction:Energy 13000.0
+
+##################################################
+# Matrix Element: Higgs to bbbar
+##################################################
+cd /Herwig/MatrixElements/
+
+#  Higgs Process: # gg/qqbar -> Higgs
+insert SubProcess:MatrixElements[0] MEHiggs
+
+# Also recommend including q qbar->Hg as not in ME correction - off for now
+# insert SubProcess:MatrixElements[0] MEHiggsJet
+# set MEHiggsJet:Process qqbar
+# set /Herwig/Cuts/JetKtCut:MinKT 0.0*GeV
+
+#  Higgs Process: # gg/qqbar -> Higgs -> bbbar only
+set /Herwig/Particles/h0/h0->b,bbar;:OnOff Off
+set /Herwig/Particles/h0/h0->Z0,gamma;:OnOff Off
+set /Herwig/Particles/h0/h0->s,sbar;:OnOff Off
+set /Herwig/Particles/h0/h0->W+,W-;:OnOff Off
+set /Herwig/Particles/h0/h0->tau-,tau+;:OnOff Off
+set /Herwig/Particles/h0/h0->g,g;:OnOff On
+set /Herwig/Particles/h0/h0->c,cbar;:OnOff Off
+set /Herwig/Particles/h0/h0->Z0,Z0;:OnOff Off
+set /Herwig/Particles/h0/h0->gamma,gamma;:OnOff Off
+set /Herwig/Particles/h0/h0->mu-,mu+;:OnOff Off
+set /Herwig/Particles/h0/h0->t,tbar;:OnOff Off
+do /Herwig/Particles/g:PrintDecayModes
+
+
+set /Herwig/EventHandlers/EventHandler:CascadeHandler:MPIHandler NULL
+set /Herwig/EventHandlers/EventHandler:CascadeHandler /Herwig/Shower/ShowerHandler
+set /Herwig/EventHandlers/EventHandler:HadronizationHandler NULL
+#/Herwig/Hadronization/ClusterHadHandler
+set /Herwig/Analysis/Basics:CheckQuark No
+
+set /Herwig/Shower/ShowerHandler:Interactions QCD
+set /Herwig/Shower/ShowerHandler:SpinCorrelations Yes
+
+set /Herwig/Decays/DecayHandler:MaxLifeTime 10*mm
+
+# Branching Ratio Reweighter - Incase BR doesn't add up to 1
+create Herwig::BranchingRatioReweighter /Herwig/Generators/BRReweighter
+insert /Herwig/Generators/EventGenerator:EventHandler:PostHadronizationHandlers 0 /Herwig/Generators/BRReweighter 
+
+
+#cd /Herwig/Cuts/
+#insert Cuts:OneCuts 0 ZBosonCut 
+#set ZBosonCut:PtMin 100*GeV
+
+
+cd /Herwig/Generators
+set EventGenerator:EventHandler:LuminosityFunction:Energy 13000.0
+set EventGenerator:NumberOfEvents 100000
+set EventGenerator:DebugLevel 1
+set EventGenerator:EventHandler:StatLevel Full
+set EventGenerator:PrintEvent 100000
+set EventGenerator:MaxErrors 100000
+set EventGenerator:RandomNumberGenerator:Seed 31122001
+set /Herwig/Analysis/Plot:EventNumber 1
+insert EventGenerator:AnalysisHandlers 0 /Herwig/Analysis/Plot
+
+read snippets/HepMC.in
+set /Herwig/Analysis/HepMC:PrintEvent 100000
+set /Herwig/Analysis/HepMC:Format GenEvent
+set /Herwig/Analysis/HepMC:Units GeV_mm
+saverun LHC_with_correl EventGenerator
