@@ -773,7 +773,7 @@ Investigating Sherpa as an alternative to Herwig, because Herwig steering turned
 
 ---
 
-## Context Check: Event Generators
+### Context Check: Event Generators
 
 Reading about the general state of event generators made something clear:
 
@@ -799,10 +799,11 @@ Reading about the general state of event generators made something clear:
 ![image](https://github.com/user-attachments/assets/55db4483-acd8-47d0-a2ef-3d3a46a29b91)
 
 
-08.03.2025 - week 6 is ending shortly. At the moment we have trouble picking out why our branching ratios do not match the real world ones. As it has been proven difficult to force the specific decay of the Higgs in the input file - there should be no reason for the ratios to differ. But this could be specific to how Christoph's model is built. This needs to be verified using the SM model that Madgraph uses (CRT model was built on top of this one)
+08.03.2025
 
-I'm trying out different models: see picture above. UFO2HERWIG and afterwards I look inside the anatomy of the event: ~reference HIGGS_DECAY_ALL
-!!!!!!!!!!! needs details of heft and sm 
+By the end of this week, we encountered persistent difficulties in reconciling the branching ratios obtained from our generated events with the expected Standard Model values. In principle, since we do not explicitly force Higgs decays in the input file, the branching ratios should naturally reproduce the Standard Model predictions. The observed discrepancies raise concerns about the underlying model implementation, particularly Christoph’s customized UFO model, which was built on top of the Standard Model (SM) UFO provided with MadGraph. To diagnose the issue, we initiated a systematic comparison between different models, including the default SM model and the HEFT (Higgs Effective Field Theory) model.
+
+Using the UFO2HERWIG translation, we generate events and subsequently inspect the event structure at the particle level, making extensive use of the HIGGS_DECAY_ALL Rivet analysis to map all decay modes observed. This procedure allows us to check whether the deviations arise already at the UFO level or later during the event generation or showering steps. Further verification is ongoing, focusing particularly on distinguishing whether the branching ratio shifts originate from the modifications introduced in Christoph’s model or from subtleties in how Herwig treats different models internally.
 
 The current focus is on devising a sure-fire test for the activation of spin correlations. With several papers in mind:
 
@@ -912,30 +913,36 @@ In our case, applying these methods to \(H \to gg\) or \(H \to b\bar{b}\), we mu
 To consolidate the method, I’ve sketched the full variable construction as implemented in Richardson’s algorithm. See illustration below.
 ![Drawing 2025-03-12 11 14 512 excalidraw (1)](https://github.com/user-attachments/assets/c08aa6e2-de0c-4aeb-9c71-19cdd30f3260)
 
-Karim implements this analysis I ask for in python: 
+Towards the end of Week 7, Karim implemented a Python-based analysis, located in `Python Scripts/global_analysis.py`. This script performs a specialized truth-level study of Higgs decays. At a high level, it:
 
-This is a fairly specialized particle‐physics analysis script. At a high level, it
+- Loads a Parquet file containing simulated Higgs decay events, with each event consisting of 14 final-state daughter particles and associated event weights.
+- Extracts four-momentum components (E, px, py, pz) for each particle using the `vector` library.
+- Constructs "interjet" and "intrajet" observables, which are angular variables characterizing separations between subclusters within an event. Two different approaches are used: the "Richardson formalism" and the "Panscales No-Nonsense" formalism.
+- Applies channel selection cuts based on PDG ID information (e.g., distinguishing between Higgs decays into gg → qq̄qq̄ versus bb → qgqg topologies).
+- Weights, bins, and histograms the computed angular observables (Δφ or Δψ), with proper treatment of statistical uncertainties.
+- Loops through the file in row-group "chunks," accumulating histograms per decay channel.
+- At the end of the analysis, normalized differential cross-section plots are produced for each decay channel, z-cut, and boost configuration.
 
-Loads a Parquet file of simulated Higgs‐decay events (each with 14 “daughter” particles and weights).
+Initial results confirm that the **intrajet** observables are sensitive to spin correlations, as expected. This indicates that spin correlations are correctly preserved within the **parton shower** itself. Two figures illustrate the relevant angular structures:
 
-Extracts four-momentum vectors (E,px,py,pz) for each particle using the vector library.
+- ![image](https://github.com/user-attachments/assets/c199f38d-c063-4907-b269-79c9763619b6)  
+  *Angle between a bg plane where the gluon subsequently decays into two quarks.*
 
-Builds “interjet” and “intrajet” observables — essentially angular separations between subclusters inside each event — via two different formalisms (“Richardson” and “Panscales No-Nonsense”).
+- ![image](https://github.com/user-attachments/assets/cdb49e9b-8eaa-4ace-a4f1-117e494890a6)  
+  *Plane formed between two gluons, with one gluon decaying to two quarks.*
 
-Applies channel filters (e.g. H→gg→qq¯qq¯ vs. H→bb→qgqg, etc.) by checking PDG IDs.
+However, an important limitation emerges: the **interjet** observable, which probes correlations between the two primary branches linking the hard process to the shower (i.e., between the two b quarks originating from H → bb), yields a **flat distribution** for the H → bb channel. No significant angular correlations are observed.
 
-Weights, bins, and histograms those angular observables (Δφ or Δψ), computing statistical uncertainties.
+Upon further inspection of the parton structure using Rivet, it became clear that our initial assumptions about the decay topology were oversimplified. Specifically, we had assumed that the Higgs always decays into two "parent" b-quarks, each of which subsequently splits into a b and a gluon ("children"), followed by further splitting into two "grandchildren." In practice, however, several issues arise:
 
-Loops over the file in row‐group “chunks,” accumulating all events in per‐channel dictionaries.
+- In many events, the parent b-quarks do not split further at all.
+- Even when splitting occurs, the number of final-state partons is often smaller than expected.
+- Disabling hadronization, which we did to reduce event file sizes and generation time, exacerbates these issues. Without hadronization, some partons begin to hadronize before full parton showers develop, leaving incomplete decay chains.
 
-At the end, calls plotting routines to write out normalized differential cross-section histograms for each channel, z-cut, and boost‐configuration.
+Given these problems, it became evident that the lack of final-state structure was intrinsic to the simulation setup. In response, we planned for Week 8 to go "back to basics" by conducting a very rudimentary test using a clean H → gg process in a standard input file (see "Rudimentary input file" reference). The plan was to generate two samples—one with spin correlations activated and one with spin correlations turned off—allowing us to directly probe the behavior of the interjet variable. 
 
+Although the final state particle multiplicity remains low even in this simplified setup, the situation is manageable because our primary interest lies in the **interjet variable**, where sufficient statistics can still be extracted.
 
-
-
-However this analysis doesn't yield anything FOR h --> bb. Moreover the analysis requires a fiex graph strucutre that ends in 8 children. This doesn't always happen
-
-As this is quite alarming we go back to basics and try a very rudimentary analysis of H --> gg in a nromal input file (see Rudimentary input file). Generating two samples - one with spin correlations on and one with spin correlations off. However we encounter the same issue of not enough particles in the final state.
 
 Input 
 ### References
