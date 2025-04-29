@@ -693,22 +693,7 @@ Because b-quarks hadronise, we can’t use spinors directly — but we can still
 - Follow both decay branches forward to the last B-hadron before decay.
 - Use the 3-momenta of the resulting B-hadrons and their decay products as spin analysers.
 
-<p>
-By analysing angular distributions (e.g., triple products), we can reconstruct CP-odd observables analogously to <b>ℰ₂</b>. In particular, we implement:
-</p>
-
-<p align="center">
-k⃗<sub>b</sub> · (n⃗<sub>bb</sub> × n⃗<sub>ee</sub>)
-</p>
-
-<p>
-as a Rivet observable, where n⃗<sub>bb</sub> and n⃗<sub>ee</sub> are plane normals built from the decay products of each b-branch and the Z &rarr; ℓ<sup>+</sup>ℓ<sup>-</sup> system respectively.
-</p>
-
-
 This procedure is entirely at truth level and gives us a well-defined way to verify whether spin correlations survive in our event generator output. The relevant Rivet analyses developed for this study are `LAMBDAB` and `HIGGS2BB`, located in the designated analysis folder. The `LAMBDAB` analysis serves as a minimal check, scanning each event for the presence of both a $\Lambda_b$ baryon and an anti-$\Lambda_b$ baryon, thus probing baryon–antibaryon correlations at truth level. In contrast, the `HIGGS2BB` analysis provides a full truth-level reconstruction of the $H \to b\bar{b}$ decay, identifying the final B-hadron descendants, categorizing events based on hadronic and semileptonic decay modes, and recording detailed kinematic information necessary for spin correlation studies. Together, these analyses form the basis for validating the event structure and exploring CP-sensitive observables.
-
-
 
 ![image](https://github.com/user-attachments/assets/a93604af-150a-4260-aaff-9d1226ea7fef)![image](https://github.com/user-attachments/assets/a8b6759e-4578-4178-a239-126d4b7fd4aa)
 ![image](https://github.com/user-attachments/assets/21dbe7e6-b539-440d-b98d-85f6a606273d)![image](https://github.com/user-attachments/assets/1e1273f7-192c-4a95-8f32-8b43044068c3)
@@ -722,7 +707,8 @@ This procedure is entirely at truth level and gives us a well-defined way to ver
 - **Christoph’s UFO model may be misconfigured.**  
   Approximately 17% of events show bottom-loop contributions, which should not be allowed by the model. This may be a limitation of the UFO → Herwig translation (e.g., via UFO2Herwig). Needs further inspection.
 
-issue with Higgs decay ~ reference HIGGS_DECAY_HISTO, HIGGS_2PLUS, HIGGS_DECAY_ALL
+To investigate the presence of unexpected Higgs decay modes and classify the decay topologies at truth level, we developed three dedicated Rivet analyses: HIGGS_DECAY_HISTO, which records two-body decay frequencies; HIGGS_3PLUS, which catalogs decays involving three or more final-state particles; and HIGGS_DECAY_ALL, which provides a complete inventory of all Higgs decays with two or more daughters.
+
 ---
 
 ### Final Note
